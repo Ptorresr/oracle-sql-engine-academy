@@ -11,10 +11,11 @@ window.oracleAcademyModules = Object.freeze([
   {
     id: "performance",
     title: "SQL Performance",
-    track: "Optimización · Próximamente",
-    description: "Cardinalidad, predicados, acceso a datos y diagnóstico responsable.",
-    action: "Planificado para Sprint 2",
-    status: "future"
+    track: "Optimización · Laboratorio",
+    description: "HASH JOIN determinista, cardinalidad, memoria, Buffer Cache y TEMP conceptuales.",
+    action: "Abrir visualizador",
+    target: "hashjoin",
+    status: "available"
   },
   {
     id: "ai-database",

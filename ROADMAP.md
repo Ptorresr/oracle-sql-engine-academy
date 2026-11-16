@@ -19,7 +19,7 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 ## Sprint 1 — Shell educativo y arquitectura modular
 
-**Estado:** implementación local en `feature/interactive-learning-portal`, pendiente de revisión y publicación autorizada.
+**Estado:** completado y publicado en `origin/feature/interactive-learning-portal`; pendiente de revisión/merge autorizado.
 
 **Objetivo:** convertir la demo conservada en una experiencia RunBook navegable y preparar el primer módulo modular sin ampliar el alcance del motor.
 
@@ -35,6 +35,8 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 ## Sprint 2 — Motor determinista y HASH JOIN
 
+**Estado:** cerrado y publicado en `origin/feature/database-engine-visualizer`; pendiente únicamente de revisión/merge autorizado hacia `main`.
+
 **Objetivo:** extraer un motor de eventos reutilizable y aplicarlo a HASH JOIN.
 
 **Criterios de aceptación**
@@ -43,6 +45,8 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 - Developer, Execution Plan e Internals se sincronizan al avanzar, pausar, reiniciar y cambiar velocidad.
 - Se distinguen cache hit/miss conceptuales, workarea PGA, posible spill a TEMP y resultado lógico.
 - Tres casos de uso, SQL Oracle, `NULL`, cardinalidad y leyendas de métricas ilustrativas están validados.
+
+**Entrega implementada:** escenarios declarativos de Retail, Finanzas y Data Warehouse; timeline con `READ_BLOCK`, `CACHE_HIT`, `CACHE_MISS`, `TABLE_ACCESS`, `HASH_BUILD`, `HASH_PROBE`, `EMIT_ROW` y `SPILL_TEMP`; vistas sincronizadas Developer, Execution Plan e Internals; controles Play/Pause/Next/Previous/Reset/velocidad; tutor local y What If? didáctico.
 
 ## Sprint 3 — Comparación de operadores y modos
 

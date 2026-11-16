@@ -5,6 +5,7 @@
     { id: "que", label: "¿Qué es?" },
     { id: "como", label: "¿Cómo funciona?" },
     { id: "simulador", label: "Simulador" },
+    { id: "hashjoin", label: "HASH JOIN Engine" },
     { id: "casos", label: "Casos reales" },
     { id: "dba", label: "Para DBAs" },
     { id: "internals", label: "Motor interno" },

@@ -21,6 +21,34 @@ La primera evolución mantiene `index.html` como composición del módulo JOINs 
 
 El workspace no ejecuta otro plan ni introduce un motor HASH JOIN. Resume los controles del simulador de JOINs, la explicación de plan y el visualizador de internals ya existentes. La fuente de progreso es solo el navegador del estudiante; no se envían datos ni se requiere backend.
 
+## HASH JOIN Engine — Sprint 2
+
+La implementación incremental agrega un laboratorio independiente dentro del módulo JOINs, sin sustituir los simuladores originales:
+
+```text
+content/hash-join-scenarios.js
+  └─ escenarios + SQL + datasets + resultados esperados
+       │
+simulation/hash-join-engine.js
+  └─ timeline puro e inmutable de eventos tipados
+       │
+renderer/hash-join-renderer.js
+  └─ tablas Developer + plan conceptual + SVG accesible
+       │
+ui/hash-join-visualizer.js
+  └─ índice de timeline, controles y explicaciones locales
+```
+
+El motor siempre recibe un escenario declarativo y produce la misma secuencia de eventos. Cada evento conserva el contrato `{ step, type, source, target, rowIds, blockIds, label, illustrativeMetrics }`, más una explicación y, cuando aplica, IDs de coincidencia o de salida. El renderer no altera datos ni decide eventos; la UI solo mueve la posición del timeline.
+
+### Event Inspector
+
+El inspector mantiene una selección independiente de la posición del timeline: evento, fila, bloque, operador o componente. El evento activo continúa siendo la única fuente del estado sincronizado; seleccionar otro elemento no genera una nueva simulación ni modifica los resultados. El renderer expone selectores semánticos para filas, bloques, operadores y nodos SVG, y la UI muestra qué ocurre, dónde, cómo, para qué, datos y una advertencia DBA. Los elementos tienen foco o son botones cuando corresponde.
+
+La opción **Ver SQL relacionado** enlaza los eventos lógicos de Build/Probe/Emit con la condición `ON` del escenario. Para cache, PGA, TEMP y acceso físico declara expresamente que no existe una cláusula SQL que los fuerce: son decisiones del optimizador o de la ejecución, no semántica SQL.
+
+El escenario Data Warehouse usa una capacidad de workarea artificialmente baja para emitir `SPILL_TEMP`. Cache hits/misses, lectura física ilustrativa, hash buckets, PGA y TEMP son recursos de aprendizaje; no son una traza ni una métrica real de Oracle. El SVG mantiene una referencia visual Anatomy-style, pero no incorpora código, assets ni dependencias de Anatomy.
+
 ## Anatomy
 Referencia: https://github.com/wheresryan22/anatomy
 Acción pendiente: revisar código, licencia, dependencias y guía SKILL.md de upstream antes de incorporar assets o lógica. No copiar código de un repositorio no inspeccionado.

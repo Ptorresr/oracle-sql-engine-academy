@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprint 1 — portal educativo interactivo completado en `feature/interactive-learning-portal`; pendiente únicamente de revisión/merge hacia `main`.
+**Estado:** Sprint 2 — visualizador determinista de HASH JOIN implementado y validado localmente en `feature/database-engine-visualizer`; pendiente de revisión, commit y publicación autorizados.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 
@@ -9,6 +9,8 @@
 La academia explica Oracle SQL intermedio-avanzado, optimización y funcionamiento interno de Oracle AI Database mediante módulos visuales, reproducibles y técnicamente prudentes. Debe servir tanto al desarrollador que busca entender los resultados y el SQL como al DBA que analiza operadores, memoria, I/O, cardinalidad y plan.
 
 La implementación actual conserva la demo de JOINs, el recorrido conceptual del motor y los laboratorios locales de AI. Sprint 1 añadió un dashboard de aprendizaje, navegación RunBook, progreso local y un workspace sincronizado, sin sustituir los laboratorios ni introducir un nuevo motor de JOIN.
+
+Sprint 2 añade un motor puro para un HASH JOIN didáctico. Sus escenarios, eventos, renderizado SVG y controles se mantienen en capas distintas y siguen funcionando sin backend en GitHub Pages.
 
 ## Entrega Sprint 1
 
@@ -30,6 +32,15 @@ La implementación actual conserva la demo de JOINs, el recorrido conceptual del
 | Métricas | Las derivadas de la simulación se rotulan como ilustrativas; no son AWR, SQL Monitor ni estadísticas observadas. |
 | IA v1 | Reglas y datasets locales etiquetados como simulación; una IA real exige backend seguro y aprobación posterior. |
 | Dependencias | Preferir navegador nativo. Toda dependencia externa requiere revisión técnica, licencia y versión fijada. |
+
+## Implementación Sprint 2
+
+- `content/hash-join-scenarios.js` define los datasets, SQL, resultados esperados y contexto educativo de Retail, Finanzas y Data Warehouse.
+- `simulation/hash-join-engine.js` produce eventos inmutables y reproducibles para accesos a bloque, Buffer Cache, Build/Probe, salida lógica y spill conceptual a TEMP.
+- `renderer/hash-join-renderer.js` transforma el estado actual en tablas, plan conceptual y SVG accesible sin alterar el modelo.
+- `ui/hash-join-visualizer.js` mantiene una única posición de timeline para las tres vistas, controles de reproducción, explicaciones de componentes, tutor local y What If? explícitamente hipotético.
+- El Event Inspector separa la selección de evento, fila, bloque, operador o componente del estado determinista; contextualiza SQL, datos y advertencias DBA sin convertir métricas ilustrativas en telemetría.
+- Los valores de lecturas, buckets, particiones y TEMP son ilustrativos. No representan contadores, PGA ni I/O de Oracle Database.
 
 ## Arquitectura de referencia para módulos futuros
 
