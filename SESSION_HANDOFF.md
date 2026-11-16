@@ -3,11 +3,12 @@
 ## Estado actual
 
 - **Fecha:** 2026-11-16
-- **Rama:** `feature/database-engine-visualizer` (creada desde `feature/interactive-learning-portal` en `caebdbb`)
-- **Sprint:** 2 — Oracle Database Execution Engine Visualizer
+- **Rama:** `feature/sql-execution-comparison` (creada desde `feature/database-engine-visualizer` en `c65071f`)
+- **Sprint:** 3 — SQL Execution Comparison Lab
 - **Referencia base:** `f7dc9e6` (`feat: add interactive learning portal`).
 - **Cierre:** `9411fc8` (`chore: close sprint 1 validation`).
-- **Estado de entrega:** Sprint 1 permanece publicado en `origin/feature/interactive-learning-portal`. Sprint 2 está cerrado, validado y publicado en `origin/feature/database-engine-visualizer`; no hay PR ni merge a `main`.
+- **Cierre Sprint 2:** `c65071f` (`feat: add deterministic hash join visualizer`).
+- **Estado de entrega:** Sprint 1, Sprint 2 y Sprint 3 permanecen publicados en sus ramas. No hay PR ni merge a `main`.
 
 ## Trabajo realizado
 
@@ -22,6 +23,7 @@
 | Cierre Sprint 1 | Se corrigió el desbordamiento horizontal confirmado a 375 px en los casos de uso, permitiendo que los elementos internos de la cuadrícula se contraigan sin alterar las simulaciones. |
 | Sprint 2 engine | Se añadieron escenarios declarativos, motor determinista, renderer SVG/UI sincronizada y pruebas del visualizador HASH JOIN sin sustituir los laboratorios existentes. |
 | Auditoría Sprint 2 | Se incorporó Event Inspector: selección de eventos, filas, bloques, operadores y componentes; SQL relacionado con límites explícitos, resaltado sincronizado y prueba de regresión en navegador. |
+| Sprint 3 comparison | Se añadieron tres motores deterministas equivalentes, comparación sincronizada/independiente, inspector y What If? local, sin modificar el laboratorio HASH JOIN original. |
 
 ## Decisiones vigentes
 
@@ -52,6 +54,13 @@
 - `assets/hash-join-visualizer.css`
 - `tests/hash-join-engine.test.js`
 - `tests/hash-join-renderer.test.js`
+- `content/execution-comparison-scenarios.js`
+- `simulation/join-comparison-engine.js`
+- `renderer/join-comparison-renderer.js`
+- `ui/join-comparison-lab.js`
+- `assets/join-comparison.css`
+- `tests/join-comparison-engine.test.js`
+- `tests/join-comparison-renderer.test.js`
 
 ## Pruebas
 
@@ -76,6 +85,10 @@
 - Correcto: auditoría de navegador selecciona eventos, filas, bloques, operadores y nodos Internals; valida el inspector, SQL relacionado, tutor local, navegación por teclado, 375 px, 768 px y las experiencias JOIN/AI existentes.
 - Correcto: `tests/hash-join-renderer.test.js` verifica los contratos de selección del renderer para filas, bloques, operadores y componentes SVG.
 - Correcto: cierre aprobado revisó cambios exclusivos de Sprint 2, secretos, artefactos temporales, dependencias y recursos locales antes de publicar la rama.
+- Correcto: `tests/join-comparison-engine.test.js` valida determinismo, `NULL`, duplicados, eventos tipados y resultados lógicos equivalentes para los tres métodos y escenarios.
+- Correcto: Chrome headless valida comparación HASH/NESTED/MERGE, modo sincronizado e independiente, controles, inspector, What If?, foco, 375 px, 768 px y regresiones de JOINs, HASH JOIN y AI Labs.
+- Correcto: con `prefers-reduced-motion: reduce`, el Play del laboratorio comparativo y los autoplay existentes quedan desactivados.
+- Correcto: cierre aprobado volvió a validar alcance exclusivo de Sprint 3, equivalencia HASH/NESTED/MERGE, simulaciones originales, responsive, movimiento reducido, secretos, dependencias y recursos locales.
 - No se ejecutaron scripts de Anatomy ni se hicieron llamadas a una base de datos Oracle.
 
 ## Limitaciones pendientes
@@ -84,6 +97,7 @@
 - Las métricas, planes y recorridos del motor son educativos; no sustituyen `DBMS_XPLAN.DISPLAY_CURSOR`, SQL Monitor, AWR ni una ejecución observada.
 - El motor reutilizable y HASH JOIN ya se entregan en Sprint 2; los demás operadores permanecen pendientes para los sprints posteriores.
 - El HASH JOIN está limitado a INNER JOIN por igualdad, datasets sintéticos y una selección determinista de Build/Probe; no modela paralelismo, particionado real, adaptive plans, estadísticas ni gestión real de memoria.
+- La comparación cubre INNER JOIN por igualdad; no pretende reproducir orden físico, adaptive joins, paralelismo, costos ni la selección real del optimizador.
 
 ## Integración Obsidian
 
@@ -92,5 +106,5 @@
 ## Siguiente actividad
 
 1. Abrir o revisar un Pull Request hacia `main` solo cuando se solicite; no hacer merge sin aprobación.
-2. Mantener el portal sin backend; antes de instalar Anatomy, fijar versión y revisar los scripts concretos que se pretendan ejecutar.
-3. Para Sprint 3, reutilizar el contrato de eventos del motor al comparar NESTED LOOPS y MERGE JOIN sin afirmaciones absolutas de rendimiento.
+2. Iniciar Sprint 4 con explicaciones locales de planes y What If?, conservando los límites entre hipótesis y observación.
+3. Mantener el portal sin backend; antes de instalar Anatomy, fijar versión y revisar los scripts concretos que se pretendan ejecutar.

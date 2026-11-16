@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprint 2 — visualizador determinista de HASH JOIN implementado y validado localmente en `feature/database-engine-visualizer`; pendiente de revisión, commit y publicación autorizados.
+**Estado:** Sprint 3 — SQL Execution Comparison Lab cerrado y publicado en `origin/feature/sql-execution-comparison`; pendiente únicamente de revisión/merge autorizado hacia `main`.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 
@@ -11,6 +11,8 @@ La academia explica Oracle SQL intermedio-avanzado, optimización y funcionamien
 La implementación actual conserva la demo de JOINs, el recorrido conceptual del motor y los laboratorios locales de AI. Sprint 1 añadió un dashboard de aprendizaje, navegación RunBook, progreso local y un workspace sincronizado, sin sustituir los laboratorios ni introducir un nuevo motor de JOIN.
 
 Sprint 2 añade un motor puro para un HASH JOIN didáctico. Sus escenarios, eventos, renderizado SVG y controles se mantienen en capas distintas y siguen funcionando sin backend en GitHub Pages.
+
+Sprint 3 compara HASH JOIN, NESTED LOOPS y SORT MERGE JOIN sobre datasets equivalentes. Cada método conserva su timeline determinista, mientras una comprobación canónica confirma que los tres entregan el mismo resultado lógico del INNER JOIN educativo.
 
 ## Entrega Sprint 1
 
@@ -41,6 +43,14 @@ Sprint 2 añade un motor puro para un HASH JOIN didáctico. Sus escenarios, even
 - `ui/hash-join-visualizer.js` mantiene una única posición de timeline para las tres vistas, controles de reproducción, explicaciones de componentes, tutor local y What If? explícitamente hipotético.
 - El Event Inspector separa la selección de evento, fila, bloque, operador o componente del estado determinista; contextualiza SQL, datos y advertencias DBA sin convertir métricas ilustrativas en telemetría.
 - Los valores de lecturas, buckets, particiones y TEMP son ilustrativos. No representan contadores, PGA ni I/O de Oracle Database.
+
+## Implementación Sprint 3
+
+- `content/execution-comparison-scenarios.js` define tres escenarios equivalentes para Retail, Finanzas y Data Warehouse, con SQL Oracle, duplicados y `NULL` visibles.
+- `simulation/join-comparison-engine.js` implementa timelines tipados de HASH JOIN, NESTED LOOPS y SORT MERGE JOIN bajo el mismo contrato de evento.
+- `renderer/join-comparison-renderer.js` ofrece vistas Developer, Execution Plan e Internals por método, además de un SVG isométrico educativo sin dependencias externas.
+- `ui/join-comparison-lab.js` permite comparar dos algoritmos en modo sincronizado o independiente, inspeccionar eventos y usar AI What If? basado en hipótesis locales.
+- La igualdad de resultados se evalúa sobre pares canónicos de filas; no presupone orden físico de salida ni predice el plan de Oracle.
 
 ## Arquitectura de referencia para módulos futuros
 

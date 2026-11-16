@@ -49,6 +49,25 @@ La opción **Ver SQL relacionado** enlaza los eventos lógicos de Build/Probe/Em
 
 El escenario Data Warehouse usa una capacidad de workarea artificialmente baja para emitir `SPILL_TEMP`. Cache hits/misses, lectura física ilustrativa, hash buckets, PGA y TEMP son recursos de aprendizaje; no son una traza ni una métrica real de Oracle. El SVG mantiene una referencia visual Anatomy-style, pero no incorpora código, assets ni dependencias de Anatomy.
 
+## SQL Execution Comparison Lab — Sprint 3
+
+El laboratorio comparativo reutiliza el contrato de evento sin modificar el motor HASH JOIN de Sprint 2:
+
+```text
+content/execution-comparison-scenarios.js
+  └─ misma consulta lógica, tres datasets y pares esperados
+       │
+simulation/join-comparison-engine.js
+  ├─ HASH JOIN: HASH_BUILD / HASH_PROBE
+  ├─ NESTED LOOPS: NESTED_OUTER_ROW / INDEX_LOOKUP
+  └─ SORT MERGE JOIN: SORT_INPUT / MERGE_ADVANCE
+       │
+renderer + ui/join-comparison-*.js
+  └─ dos timelines independientes o sincronizados + inspector
+```
+
+Cada timeline conserva eventos inmutables y métricas ilustrativas. La comparación usa pares canónicos `leftId:rightId` para comprobar equivalencia lógica sin afirmar orden físico de salida. Los métodos exponen costos y accesos como hipótesis educativas: el selector de algoritmos no es un optimizador ni sustituye estadísticas, plan real o ejecución observada.
+
 ## Anatomy
 Referencia: https://github.com/wheresryan22/anatomy
 Acción pendiente: revisar código, licencia, dependencias y guía SKILL.md de upstream antes de incorporar assets o lógica. No copiar código de un repositorio no inspeccionado.

@@ -12,9 +12,9 @@ window.oracleAcademyModules = Object.freeze([
     id: "performance",
     title: "SQL Performance",
     track: "Optimización · Laboratorio",
-    description: "HASH JOIN determinista, cardinalidad, memoria, Buffer Cache y TEMP conceptuales.",
-    action: "Abrir visualizador",
-    target: "hashjoin",
+    description: "Comparación reproducible entre HASH JOIN, NESTED LOOPS y SORT MERGE JOIN.",
+    action: "Abrir comparación",
+    target: "comparison",
     status: "available"
   },
   {

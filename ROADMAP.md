@@ -50,6 +50,8 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 ## Sprint 3 — Comparación de operadores y modos
 
+**Estado:** cerrado y publicado en `origin/feature/sql-execution-comparison`; pendiente únicamente de revisión/merge autorizado hacia `main`.
+
 **Objetivo:** incorporar NESTED LOOPS, MERGE JOIN y comparativas de acceso sin reglas absolutas.
 
 **Criterios de aceptación**
@@ -58,6 +60,8 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 - Los modos Developer y DBA enfocan información distinta sin divergir en el estado.
 - Se explican estimaciones, filas reales conceptuales, selectividad, índices, memoria y TEMP con advertencias.
 - La accesibilidad y la reproducción determinista se prueban en todos los operadores.
+
+**Entrega implementada:** laboratorio con selección de dos métodos, timelines sincronizados o independientes, controles Play/Pause/Previous/Next/Reset/velocidad, Event Inspector, AI What If? local y validación de resultados equivalentes entre HASH JOIN, NESTED LOOPS y SORT MERGE JOIN.
 
 ## Sprint 4 — Planes y laboratorios AI locales
 

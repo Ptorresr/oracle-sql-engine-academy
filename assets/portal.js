@@ -6,6 +6,7 @@
     { id: "como", label: "¿Cómo funciona?" },
     { id: "simulador", label: "Simulador" },
     { id: "hashjoin", label: "HASH JOIN Engine" },
+    { id: "comparison", label: "Comparar operadores" },
     { id: "casos", label: "Casos reales" },
     { id: "dba", label: "Para DBAs" },
     { id: "internals", label: "Motor interno" },
