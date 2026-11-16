@@ -10,6 +10,64 @@ GitHub Pages (HTML/CSS/JS estáticos). Simulaciones deterministas del navegador,
 - `ui`: navegación estilo RunBook, vistas sincronizadas, controles y métricas.
 - `ai`: explicaciones locales predefinidas y laboratorio de vectores; LLM real solo mediante backend seguro optativo.
 
+## Learning Portal — Sprint 1
+
+La primera evolución mantiene `index.html` como composición del módulo JOINs y añade una capa de portal sin reescribir sus laboratorios existentes:
+
+- `content/module-catalog.js`: metadatos declarativos del catálogo de rutas. Los módulos futuros no apuntan a páginas inexistentes.
+- `assets/portal.css`: tokens y componentes visuales del dashboard, breadcrumbs, workspace, pestañas y navegación responsive.
+- `assets/portal.js`: navegación RunBook, progreso local aislado en `localStorage`, catálogo y resúmenes de vistas sincronizados con los controles existentes.
+- `index.html`: shell semántico que conecta el dashboard con el módulo JOINs, sus secciones y los laboratorios de AI ya presentes.
+
+El workspace no ejecuta otro plan ni introduce un motor HASH JOIN. Resume los controles del simulador de JOINs, la explicación de plan y el visualizador de internals ya existentes. La fuente de progreso es solo el navegador del estudiante; no se envían datos ni se requiere backend.
+
+## HASH JOIN Engine — Sprint 2
+
+La implementación incremental agrega un laboratorio independiente dentro del módulo JOINs, sin sustituir los simuladores originales:
+
+```text
+content/hash-join-scenarios.js
+  └─ escenarios + SQL + datasets + resultados esperados
+       │
+simulation/hash-join-engine.js
+  └─ timeline puro e inmutable de eventos tipados
+       │
+renderer/hash-join-renderer.js
+  └─ tablas Developer + plan conceptual + SVG accesible
+       │
+ui/hash-join-visualizer.js
+  └─ índice de timeline, controles y explicaciones locales
+```
+
+El motor siempre recibe un escenario declarativo y produce la misma secuencia de eventos. Cada evento conserva el contrato `{ step, type, source, target, rowIds, blockIds, label, illustrativeMetrics }`, más una explicación y, cuando aplica, IDs de coincidencia o de salida. El renderer no altera datos ni decide eventos; la UI solo mueve la posición del timeline.
+
+### Event Inspector
+
+El inspector mantiene una selección independiente de la posición del timeline: evento, fila, bloque, operador o componente. El evento activo continúa siendo la única fuente del estado sincronizado; seleccionar otro elemento no genera una nueva simulación ni modifica los resultados. El renderer expone selectores semánticos para filas, bloques, operadores y nodos SVG, y la UI muestra qué ocurre, dónde, cómo, para qué, datos y una advertencia DBA. Los elementos tienen foco o son botones cuando corresponde.
+
+La opción **Ver SQL relacionado** enlaza los eventos lógicos de Build/Probe/Emit con la condición `ON` del escenario. Para cache, PGA, TEMP y acceso físico declara expresamente que no existe una cláusula SQL que los fuerce: son decisiones del optimizador o de la ejecución, no semántica SQL.
+
+El escenario Data Warehouse usa una capacidad de workarea artificialmente baja para emitir `SPILL_TEMP`. Cache hits/misses, lectura física ilustrativa, hash buckets, PGA y TEMP son recursos de aprendizaje; no son una traza ni una métrica real de Oracle. El SVG mantiene una referencia visual Anatomy-style, pero no incorpora código, assets ni dependencias de Anatomy.
+
+## SQL Execution Comparison Lab — Sprint 3
+
+El laboratorio comparativo reutiliza el contrato de evento sin modificar el motor HASH JOIN de Sprint 2:
+
+```text
+content/execution-comparison-scenarios.js
+  └─ misma consulta lógica, tres datasets y pares esperados
+       │
+simulation/join-comparison-engine.js
+  ├─ HASH JOIN: HASH_BUILD / HASH_PROBE
+  ├─ NESTED LOOPS: NESTED_OUTER_ROW / INDEX_LOOKUP
+  └─ SORT MERGE JOIN: SORT_INPUT / MERGE_ADVANCE
+       │
+renderer + ui/join-comparison-*.js
+  └─ dos timelines independientes o sincronizados + inspector
+```
+
+Cada timeline conserva eventos inmutables y métricas ilustrativas. La comparación usa pares canónicos `leftId:rightId` para comprobar equivalencia lógica sin afirmar orden físico de salida. Los métodos exponen costos y accesos como hipótesis educativas: el selector de algoritmos no es un optimizador ni sustituye estadísticas, plan real o ejecución observada.
+
 ## Anatomy
 Referencia: https://github.com/wheresryan22/anatomy
 Acción pendiente: revisar código, licencia, dependencias y guía SKILL.md de upstream antes de incorporar assets o lógica. No copiar código de un repositorio no inspeccionado.
