@@ -44,6 +44,6 @@ Cada módulo debe cumplir `skills/oracle-sql-academy-builder/references/module-c
 
 ## Git y documentación
 
-- Trabajar en una rama `feature/*`; para este sprint, `feature/project-foundation`. No modificar `main`, hacer merge ni push sin aprobación explícita.
+- Trabajar en la rama `feature/*` aprobada para el sprint activo. No modificar `main`, hacer merge ni push sin aprobación explícita.
 - Mantener commits pequeños con Conventional Commits cuando se solicite un commit; no crear commits automáticos.
 - Conservar documentación en Markdown dentro del repositorio para que Obsidian pueda indexarla. No duplicar ni mover el repositorio desde `Documents/CODEX`.

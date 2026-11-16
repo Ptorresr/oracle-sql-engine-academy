@@ -65,11 +65,16 @@ button.module-card { cursor: pointer; font: inherit; }
 .side a[aria-current="location"] { color: #fff; background: #1b4054; box-shadow: inset 3px 0 0 var(--cyan); }
 .chapter-nav { display: flex; justify-content: space-between; gap: 14px; align-items: center; margin-top: 34px; padding-top: 20px; border-top: 1px solid var(--line); }
 .chapter-nav span { color: var(--muted); font-size: .88rem; text-align: center; }
+.case-grid > div { min-width: 0; }
+.case-grid .diagram,
+.case-grid .scroll { max-width: 100%; }
 
 @media (max-width: 950px) {
   .dashboard { grid-template-columns: 1fr; }
   .dashboard-guide { max-width: none; }
   .module-catalog { grid-template-columns: 1fr; }
+  .shell, .side, .main { min-width: 0; width: 100%; }
+  .side { max-width: 100%; }
   .workspace { margin: 20px 16px 0; }
   .workspace-heading { display: block; }
   .workspace-status { margin-top: 12px; max-width: none; }
@@ -79,7 +84,8 @@ button.module-card { cursor: pointer; font: inherit; }
 @media (max-width: 650px) {
   .top { padding: 12px 16px; }
   .status { display: none; }
-  .portal-action { margin-left: auto; }
+  .brand { font-size: .78rem; letter-spacing: .09em; }
+  .portal-action { flex: 0 0 100%; margin-left: 0; text-align: center; }
   .dashboard { padding: 29px 16px 22px; }
   .dashboard-guide { grid-template-columns: 76px 1fr; padding: 16px; }
   .guide-orbit { transform: scale(.78); transform-origin: center; }

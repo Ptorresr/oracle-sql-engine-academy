@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprint 0 — fundación documentada.
+**Estado:** Sprint 1 — portal educativo interactivo completado en `feature/interactive-learning-portal`; pendiente únicamente de revisión/merge hacia `main`.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 
@@ -8,7 +8,15 @@
 
 La academia explica Oracle SQL intermedio-avanzado, optimización y funcionamiento interno de Oracle AI Database mediante módulos visuales, reproducibles y técnicamente prudentes. Debe servir tanto al desarrollador que busca entender los resultados y el SQL como al DBA que analiza operadores, memoria, I/O, cardinalidad y plan.
 
-La demo actual enseña JOINs, incluye un recorrido conceptual del motor y laboratorios locales de AI. Es una base que se preserva; Sprint 0 no añade simulaciones ni sustituye su implementación monolítica.
+La implementación actual conserva la demo de JOINs, el recorrido conceptual del motor y los laboratorios locales de AI. Sprint 1 añadió un dashboard de aprendizaje, navegación RunBook, progreso local y un workspace sincronizado, sin sustituir los laboratorios ni introducir un nuevo motor de JOIN.
+
+## Entrega Sprint 1
+
+- El Learning Dashboard muestra el catálogo declarativo, diferencia módulos disponibles y futuros, y persiste el progreso del módulo JOINs en `localStorage`.
+- La navegación incorpora breadcrumbs, índice lateral RunBook, enlaces anterior/siguiente y una ruta accesible hacia el contenido del módulo.
+- El Simulation Workspace unifica las vistas Developer, Execution Plan e Internals como lecturas del estado de los controles existentes.
+- Los AI Labs, el simulador de JOINs y los tres casos de uso originales permanecen locales, deterministas y claramente rotulados como demostraciones, reglas o corpus didáctico.
+- La presentación mantiene tema oscuro, tokens CSS, SVG y JavaScript nativo para conservar la compatibilidad con GitHub Pages.
 
 ## Decisiones arquitectónicas
 
