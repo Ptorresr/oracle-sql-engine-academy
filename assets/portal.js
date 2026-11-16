@@ -88,7 +88,8 @@
     activeChapter = Math.max(0, Math.min(index, chapters.length - 1));
     const chapter = chapters[activeChapter];
     document.querySelectorAll(".side a[data-chapter]").forEach((link) => {
-      link.toggleAttribute("aria-current", link.dataset.chapter === chapter.id);
+      if (link.dataset.chapter === chapter.id) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
     });
     byId("breadcrumbChapter").textContent = chapter.label;
     byId("chapterPosition").textContent = `Capítulo ${activeChapter + 1} de ${chapters.length}`;

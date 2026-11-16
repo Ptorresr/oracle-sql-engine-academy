@@ -89,6 +89,7 @@
 - Correcto: Chrome headless valida comparación HASH/NESTED/MERGE, modo sincronizado e independiente, controles, inspector, What If?, foco, 375 px, 768 px y regresiones de JOINs, HASH JOIN y AI Labs.
 - Correcto: con `prefers-reduced-motion: reduce`, el Play del laboratorio comparativo y los autoplay existentes quedan desactivados.
 - Correcto: cierre aprobado volvió a validar alcance exclusivo de Sprint 3, equivalencia HASH/NESTED/MERGE, simulaciones originales, responsive, movimiento reducido, secretos, dependencias y recursos locales.
+- Correcto: preparación del PR corrigió el enlace RunBook activo para exponer `aria-current="location"`; navegación por teclado y las pestañas del workspace pasan nuevamente en navegador.
 - No se ejecutaron scripts de Anatomy ni se hicieron llamadas a una base de datos Oracle.
 
 ## Limitaciones pendientes
