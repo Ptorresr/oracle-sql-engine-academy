@@ -6,7 +6,8 @@
 - **Rama:** `feature/interactive-learning-portal` (creada desde `feature/project-foundation` en `175acc3`)
 - **Sprint:** 1 — Interactive Learning Portal
 - **Referencia base:** `f7dc9e6` (`feat: add interactive learning portal`).
-- **Estado de entrega:** Sprint 1 validado; el cierre documental y un ajuste responsive confirmado forman parte del cierre de esta rama. La publicación de la rama está pendiente; no hay PR ni merge a `main`.
+- **Cierre:** `9411fc8` (`chore: close sprint 1 validation`).
+- **Estado de entrega:** Sprint 1 validado y publicado en `origin/feature/interactive-learning-portal`; no hay PR ni merge a `main`.
 
 ## Trabajo realizado
 
