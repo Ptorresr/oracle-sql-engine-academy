@@ -2,10 +2,11 @@
 
 ## Estado actual
 
-- **Fecha:** 2026-11-04
-- **Rama:** `feature/project-foundation`
-- **Sprint:** 0 — Project Foundation & Development Environment
-- **Objetivo de la sesión:** documentar la fundación, preservar la demo y preparar la adopción segura de Skills. No implementar nuevas simulaciones.
+- **Fecha:** 2026-11-05
+- **Rama:** `feature/interactive-learning-portal` (creada desde `feature/project-foundation` en `175acc3`)
+- **Sprint:** 1 — Interactive Learning Portal
+- **Objetivo de la sesión:** entregar el shell educativo y navegación RunBook sin sustituir los laboratorios JOIN existentes ni implementar un motor HASH JOIN nuevo.
+- **Estado de entrega:** validado y registrado en un commit local de la rama feature; no se ha hecho push, PR ni merge.
 
 ## Trabajo realizado
 
@@ -16,6 +17,7 @@
 | Foundation | Se completaron `AGENTS.md`, `PROJECT_CONTEXT.md`, `ROADMAP.md` y este documento. |
 | Skills | La Skill `oracle-sql-academy-builder` conserva `SKILL.md`, contrato y manifiesto `agents/openai.yaml`; se expone mediante el enlace relativo `.agents/skills/oracle-sql-academy-builder`. |
 | Anatomy | Se revisaron licencia MIT, compatibilidad, requisitos y workflow upstream; no se instaló ni ejecutó código externo. Ver `docs/ANATOMY_EVALUATION.md`. |
+| Sprint 1 portal | Se añadió un catálogo declarativo, dashboard de progreso local, breadcrumbs, índice RunBook, navegación anterior/siguiente y workspace con pestañas Developer, Execution Plan e Internals. |
 
 ## Decisiones vigentes
 
@@ -34,6 +36,11 @@
 - `SESSION_HANDOFF.md`
 - `docs/ANATOMY_EVALUATION.md`
 - `.agents/skills/oracle-sql-academy-builder` (enlace simbólico relativo)
+- `assets/portal.css`
+- `assets/portal.js`
+- `content/module-catalog.js`
+- `index.html`
+- `docs/ARCHITECTURE.md`
 
 ## Pruebas
 
@@ -42,6 +49,10 @@
 - Correcto: el enlace de Skill resuelve a `SKILL.md`.
 - Correcto: `git diff --check` no detectó errores en archivos versionados.
 - Correcto: los documentos nuevos pasan `git diff --no-index --check` sin espacios finales.
+- Correcto: sintaxis de `assets/portal.js` y `content/module-catalog.js` validada con Node.
+- Correcto: 16 enlaces internos del portal resuelven a un ID presente.
+- Correcto: 16 controles existentes del módulo JOIN permanecen presentes; jerarquía de página, tabs, responsive y movimiento reducido superan 8 comprobaciones estáticas.
+- No se generaron capturas: no hay navegador Chromium/Chrome headless disponible y no se instalaron dependencias adicionales.
 - No se ejecutaron scripts de Anatomy ni se hicieron llamadas a una base de datos Oracle.
 
 ## Integración Obsidian
@@ -50,6 +61,6 @@
 
 ## Siguiente actividad
 
-1. Revisar los archivos sin seguimiento y crear un commit de foundation solo con aprobación explícita.
-2. Con aprobación para Sprint 1, priorizar shell RunBook y extracción incremental del contrato de contenido antes del motor HASH JOIN.
+1. Realizar una revisión visual manual en navegador de escritorio/móvil antes de solicitar commit o publicación.
+2. Mantener el portal sin backend; no añadir motor HASH JOIN hasta el Sprint 2.
 3. Antes de instalar Anatomy, fijar versión y revisar los scripts concretos que se pretendan ejecutar.

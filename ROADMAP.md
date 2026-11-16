@@ -19,6 +19,8 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 ## Sprint 1 — Shell educativo y arquitectura modular
 
+**Estado:** implementación local en `feature/interactive-learning-portal`, pendiente de revisión y publicación autorizada.
+
 **Objetivo:** convertir la demo conservada en una experiencia RunBook navegable y preparar el primer módulo modular sin ampliar el alcance del motor.
 
 **Criterios de aceptación**
@@ -28,6 +30,8 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 - Un contrato de contenido separa narrativa, datasets, SQL y casos del renderizado.
 - El primer módulo cumple las cinco preguntas educativas y documenta los límites técnicos.
 - Validación manual en escritorio, móvil, teclado y movimiento reducido.
+
+**Entrega implementada:** catálogo de módulos con estados disponible/futuro, progreso persistente local, breadcrumbs, índice lateral, navegación anterior/siguiente y Simulation Workspace con resúmenes Developer, Execution Plan e Internals. El catálogo y la capa visual se separan en archivos nuevos; el contenido y los simuladores JOIN existentes se conservan.
 
 ## Sprint 2 — Motor determinista y HASH JOIN
 
