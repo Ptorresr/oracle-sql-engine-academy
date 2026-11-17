@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprint 3 — SQL Execution Comparison Lab cerrado y publicado en `origin/feature/sql-execution-comparison`; pendiente únicamente de revisión/merge autorizado hacia `main`.
+**Estado:** Sprint 4 — AI SQL Intelligence Lab completado y publicado en `origin/feature/ai-sql-intelligence-lab`; pendiente de revisión mediante Pull Request hacia `main`.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 
@@ -13,6 +13,8 @@ La implementación actual conserva la demo de JOINs, el recorrido conceptual del
 Sprint 2 añade un motor puro para un HASH JOIN didáctico. Sus escenarios, eventos, renderizado SVG y controles se mantienen en capas distintas y siguen funcionando sin backend en GitHub Pages.
 
 Sprint 3 compara HASH JOIN, NESTED LOOPS y SORT MERGE JOIN sobre datasets equivalentes. Cada método conserva su timeline determinista, mientras una comprobación canónica confirma que los tres entregan el mismo resultado lógico del INNER JOIN educativo.
+
+Sprint 4 incorpora un laboratorio local que recibe texto no confiable de planes Oracle, lo normaliza y lo presenta como datos importados. El análisis de cardinalidad, hallazgos, SQL Analyzer, What If? y tutor son reglas y cálculos locales; no son telemetría ni IA generativa.
 
 ## Entrega Sprint 1
 
@@ -33,6 +35,7 @@ Sprint 3 compara HASH JOIN, NESTED LOOPS y SORT MERGE JOIN sobre datasets equiva
 | Vistas | Developer, Execution Plan e Internals consumen el mismo estado de simulación. |
 | Métricas | Las derivadas de la simulación se rotulan como ilustrativas; no son AWR, SQL Monitor ni estadísticas observadas. |
 | IA v1 | Reglas y datasets locales etiquetados como simulación; una IA real exige backend seguro y aprobación posterior. |
+| Planes importados | Texto no confiable, limitado a 200.000 caracteres, escapado antes de renderizar y nunca enviado, ejecutado ni almacenado automáticamente. |
 | Dependencias | Preferir navegador nativo. Toda dependencia externa requiere revisión técnica, licencia y versión fijada. |
 
 ## Implementación Sprint 2
@@ -51,6 +54,16 @@ Sprint 3 compara HASH JOIN, NESTED LOOPS y SORT MERGE JOIN sobre datasets equiva
 - `renderer/join-comparison-renderer.js` ofrece vistas Developer, Execution Plan e Internals por método, además de un SVG isométrico educativo sin dependencias externas.
 - `ui/join-comparison-lab.js` permite comparar dos algoritmos en modo sincronizado o independiente, inspeccionar eventos y usar AI What If? basado en hipótesis locales.
 - La igualdad de resultados se evalúa sobre pares canónicos de filas; no presupone orden físico de salida ni predice el plan de Oracle.
+
+## Implementación Sprint 4
+
+- `content/sql-intelligence-examples.js` entrega tres casos de Retail, Finanzas y Data Warehouse con SQL, planes ilustrativos, preguntas y relación con laboratorios previos.
+- `simulation/oracle-plan-parser.js` es un parser sin DOM para tablas `DBMS_XPLAN.DISPLAY` y variantes con estadísticas de `DISPLAY_CURSOR`/`ALLSTATS LAST`; conserva columnas variables, jerarquía, predicados, notas y advertencias.
+- `simulation/oracle-plan-analyzer.js` distingue E-Rows, A-Rows y Starts. Solo muestra A-Rows/Starts como cálculo derivado si Starts es mayor que uno, evita divisiones entre cero y separa evidencia, hipótesis y límites.
+- `simulation/oracle-sql-analyzer.js` detecta patrones SQL frecuentes sin ejecutar ni declarar inválida una consulta compleja. `simulation/sql-what-if-engine.js` crea hipótesis deterministas sin modificar el plan importado ni calcular costos reales.
+- `renderer/execution-plan-renderer.js` y `renderer/sql-intelligence-renderer.js` escapan texto importado antes de renderizar tabla, árbol, SVG e insights. `ui/sql-intelligence-lab.js` usa un estado de plan para sincronizar visualizador, inspector, SQL relacionado, insights, What If y tutor.
+- El laboratorio se carga desde recursos locales relativos versionados, sin dependencias externas, backend, persistencia automática ni secretos.
+- La auditoría técnica verificó formatos de tabla variables, valores abreviados, estadísticas ausentes, HTML hostil y planes incompletos. La tabla expone todas las columnas importadas, incluido `A-Time`, sin derivar tiempos o métricas faltantes.
 
 ## Arquitectura de referencia para módulos futuros
 
@@ -87,6 +100,14 @@ Cada módulo responderá: ¿qué es?, ¿cómo funciona?, ¿para qué sirve?, ¿c
 ### IA futura
 
 La arquitectura reserva componentes para AI Tutor contextual, SQL Analyzer, Execution Plan Explainer, AI What If?, AI Vector Search, Select AI, Hybrid Vector Search y RAG con Oracle Database. Mientras se ejecuten en el navegador, sus respuestas son reglas, corpus o cálculos locales y deben declararse así. No hay credenciales ni llamadas directas a bases de datos desde el cliente.
+
+### Límites de SQL Intelligence Lab
+
+- No ejecuta SQL Oracle ni se conecta a Oracle Database.
+- No reproduce el optimizador, no calcula costos reales y no predice planes reales.
+- Los planes sintéticos se declaran ilustrativos y no se presentan como ejecuciones observadas.
+- No sustituye `DBMS_XPLAN`, SQL Monitor, AWR, ASH ni el diagnóstico de producción autorizado.
+- El parser cubre tablas con `Id` y `Operation`; formatos gráficos, secciones propietarias y asociaciones ambiguas se conservan como advertencias o texto no interpretado.
 
 ## Experiencia visual
 

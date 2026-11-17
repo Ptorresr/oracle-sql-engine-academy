@@ -19,11 +19,11 @@ window.oracleAcademyModules = Object.freeze([
   },
   {
     id: "ai-database",
-    title: "Oracle AI Database",
-    track: "Laboratorios locales · Disponible",
-    description: "Tutor, reglas SQL, planes, escenarios, vector search, Select AI y RAG didácticos.",
-    action: "Abrir laboratorios",
-    target: "ai",
+    title: "AI SQL Intelligence",
+    track: "Planes DBMS_XPLAN · Laboratorio local",
+    description: "Importación segura de planes, cardinalidad, insights, What If y tutor basado en reglas.",
+    action: "Abrir Intelligence Lab",
+    target: "intelligence",
     status: "lab"
   }
 ]);
