@@ -1,30 +1,35 @@
 (() => {
   "use strict";
 
-  const chapters = [
-    { id: "que", label: "¿Qué es?" },
-    { id: "como", label: "¿Cómo funciona?" },
-    { id: "simulador", label: "Simulador" },
-    { id: "hashjoin", label: "HASH JOIN Engine" },
-    { id: "comparison", label: "Comparar operadores" },
-    { id: "casos", label: "Casos reales" },
-    { id: "dba", label: "Para DBAs" },
-    { id: "internals", label: "Motor interno" },
-    { id: "ai", label: "AI Learning Lab" },
-    { id: "reto", label: "Comprueba" }
-  ];
+  function loadScript(source) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = source;
+      script.async = false;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.append(script);
+    });
+  }
+
+  function startPortal(runbook) {
+    const chapters = runbook.chapters;
   const progressKey = "oracle-sql-academy.joins.progress.v1";
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const byId = (id) => document.getElementById(id);
   const progress = readProgress();
   let activeChapter = 0;
+  let pendingChapterId = null;
+  let chapterObserver = null;
 
   function readProgress() {
     try {
       const saved = JSON.parse(window.localStorage.getItem(progressKey) || "{}");
-      return { visited: Array.isArray(saved.visited) ? saved.visited.filter((id) => chapters.some((chapter) => chapter.id === id)) : [] };
+      const validIds = (ids) => Array.isArray(ids) ? ids.filter((id) => runbook.getChapter(id)) : [];
+      const activities = saved.activities && typeof saved.activities === "object" ? Object.fromEntries(Object.entries(saved.activities).map(([id, values]) => [id, Array.isArray(values) ? [...new Set(values.filter(Boolean))] : []]).filter(([id]) => runbook.getChapter(id))) : {};
+      return { visited: validIds(saved.visited), completed: validIds(saved.completed), activities };
     } catch {
-      return { visited: [] };
+      return { visited: [], completed: [], activities: {} };
     }
   }
 
@@ -37,13 +42,15 @@
   }
 
   function updateProgress() {
-    const completed = progress.visited.length;
-    const percent = Math.round((completed / chapters.length) * 100);
+    const explored = progress.visited.length;
+    const completed = progress.completed.length;
+    const percent = Math.round((explored / chapters.length) * 100);
     byId("progressPercent").textContent = `${percent}%`;
-    byId("progressSummary").textContent = `${completed} de ${chapters.length} capítulos explorados en este navegador.`;
+    byId("progressSummary").textContent = `${explored} de ${chapters.length} capítulos explorados · ${completed} completado(s) en este navegador.`;
     const progressBar = byId("progressBar");
     progressBar.setAttribute("aria-valuenow", String(percent));
     progressBar.firstElementChild.style.width = `${percent}%`;
+    document.querySelectorAll(".side a[data-chapter]").forEach((link) => link.toggleAttribute("data-completed", progress.completed.includes(link.dataset.chapter)));
   }
 
   function markVisited(chapterId) {
@@ -52,6 +59,36 @@
       saveProgress();
       updateProgress();
     }
+  }
+
+  function recordActivity(chapterId, activity) {
+    const chapter = runbook.getChapter(chapterId);
+    if (!chapter || !activity) return;
+    markVisited(chapterId);
+    const activities = progress.activities[chapterId] || [];
+    if (!activities.includes(activity)) {
+      activities.push(activity);
+      progress.activities[chapterId] = activities;
+    }
+    const requirements = chapter.completionActivities || [];
+    if (requirements.length && requirements.every((required) => activities.includes(required)) && !progress.completed.includes(chapterId)) {
+      progress.completed.push(chapterId);
+      byId("portalFeedback").textContent = `${chapter.title} se registró como completado en este navegador.`;
+    }
+    saveProgress();
+    updateProgress();
+  }
+
+  function renderRunbookNavigation() {
+    const side = document.querySelector(".side");
+    side.querySelectorAll("a[data-chapter]").forEach((link) => link.remove());
+    chapters.forEach((chapter) => {
+      const link = document.createElement("a");
+      link.href = chapter.route;
+      link.dataset.chapter = chapter.id;
+      link.textContent = `${String(chapter.order).padStart(2, "0")} · ${chapter.label}`;
+      side.append(link);
+    });
   }
 
   function renderCatalog() {
@@ -74,13 +111,19 @@
     });
   }
 
-  function scrollTo(targetId) {
+  function scrollTo(targetId, historyMode = "push") {
     const target = byId(targetId);
-    if (!target) return;
+    if (!target) {
+      if (runbook.getChapter(targetId)) pendingChapterId = targetId;
+      return;
+    }
+    pendingChapterId = null;
+    const chapter = runbook.getChapter(targetId);
+    if (chapter && historyMode === "push" && window.location.hash !== chapter.route) window.history.pushState({ chapterId: targetId }, "", chapter.route);
     target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-    if (chapters.some((chapter) => chapter.id === targetId)) {
+    if (chapter) {
       markVisited(targetId);
-      setActiveChapter(chapters.findIndex((chapter) => chapter.id === targetId));
+      setActiveChapter(runbook.getIndex(targetId));
     }
   }
 
@@ -88,19 +131,23 @@
     activeChapter = Math.max(0, Math.min(index, chapters.length - 1));
     const chapter = chapters[activeChapter];
     document.querySelectorAll(".side a[data-chapter]").forEach((link) => {
-      if (link.dataset.chapter === chapter.id) link.setAttribute("aria-current", "location");
+      const active = link.dataset.chapter === chapter.id;
+      link.classList.toggle("is-active", active);
+      if (active) link.setAttribute("aria-current", "location");
       else link.removeAttribute("aria-current");
     });
-    byId("breadcrumbChapter").textContent = chapter.label;
-    byId("chapterPosition").textContent = `Capítulo ${activeChapter + 1} de ${chapters.length}`;
+    document.documentElement.dataset.activeChapter = chapter.id;
+    byId("breadcrumbChapter").textContent = chapter.title;
+    byId("chapterPosition").textContent = `Capítulo ${chapter.order} de ${chapters.length}`;
     const previous = byId("previousChapter");
     const next = byId("nextChapter");
     const previousChapter = chapters[activeChapter - 1];
     const nextChapter = chapters[activeChapter + 1];
     previous.href = previousChapter ? `#${previousChapter.id}` : "#dashboard";
     previous.textContent = previousChapter ? `← ${previousChapter.label}` : "← Volver al catálogo";
-    next.href = nextChapter ? `#${nextChapter.id}` : "#reto";
+    next.href = nextChapter ? `#${nextChapter.id}` : `#${chapters.at(-1).id}`;
     next.textContent = nextChapter ? `${nextChapter.label} →` : "Finalizar recorrido ✓";
+    document.title = `${chapter.title} · Oracle SQL Academy`;
   }
 
   function bindChapterNavigation() {
@@ -112,7 +159,7 @@
         scrollTo(targetId);
       });
     });
-    const observer = new IntersectionObserver((entries) => {
+    chapterObserver = new IntersectionObserver((entries) => {
       const visible = entries.filter((entry) => entry.isIntersecting).sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
       if (!visible) return;
       const index = chapters.findIndex((chapter) => chapter.id === visible.target.id);
@@ -121,7 +168,21 @@
         setActiveChapter(index);
       }
     }, { threshold: .36, rootMargin: "-15% 0px -55% 0px" });
-    chapters.forEach((chapter) => observer.observe(byId(chapter.id)));
+    chapters.forEach((chapter) => {
+      const section = byId(chapter.id);
+      if (section) chapterObserver.observe(section);
+    });
+    const routeFromHash = () => {
+      const chapterId = window.location.hash.replace(/^#/, "");
+      if (runbook.getChapter(chapterId)) scrollTo(chapterId, "none");
+    };
+    window.addEventListener("hashchange", routeFromHash);
+    window.addEventListener("popstate", routeFromHash);
+    window.addEventListener("academy:intelligence-ready", () => {
+      const section = byId("intelligence");
+      if (section) chapterObserver.observe(section);
+      if (pendingChapterId === "intelligence" || window.location.hash === "#intelligence") scrollTo("intelligence", "none");
+    });
   }
 
   function updateWorkspace() {
@@ -169,6 +230,8 @@
   function bindProgressReset() {
     byId("resetProgress").addEventListener("click", () => {
       progress.visited.splice(0, progress.visited.length);
+      progress.completed.splice(0, progress.completed.length);
+      progress.activities = {};
       saveProgress();
       updateProgress();
       byId("portalFeedback").textContent = "Se reinició el progreso local de JOINs en este navegador.";
@@ -176,12 +239,16 @@
   }
 
   renderCatalog();
+  renderRunbookNavigation();
   updateProgress();
   setActiveChapter(activeChapter);
   bindChapterNavigation();
   bindWorkspace();
   bindProgressReset();
   updateWorkspace();
+  const initialChapterId = window.location.hash.replace(/^#/, "");
+  if (runbook.getChapter(initialChapterId)) scrollTo(initialChapterId, "none");
+  window.addEventListener("academy:intelligence-activity", (event) => recordActivity("intelligence", event.detail?.activity));
 
   function loadSqlIntelligenceLab() {
     const stylesheet = document.createElement("link");
@@ -200,17 +267,20 @@
       "ui/sql-intelligence-bootstrap.js",
       "ui/sql-intelligence-lab.js"
     ];
-    files.reduce((chain, source) => chain.then(() => new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = source;
-      script.async = false;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.append(script);
-    })), Promise.resolve()).catch(() => {
+    files.reduce((chain, source) => chain.then(() => loadScript(source)), Promise.resolve()).then(() => {
+      window.dispatchEvent(new CustomEvent("academy:intelligence-ready"));
+    }).catch(() => {
       byId("portalFeedback").textContent = "No se pudo cargar AI SQL Intelligence Lab localmente.";
     });
   }
 
   loadSqlIntelligenceLab();
+  globalThis.OracleRunbookNavigation = Object.freeze({ chapters, navigate: (chapterId) => scrollTo(chapterId), getActiveChapter: () => chapters[activeChapter]?.id, getProgress: () => JSON.parse(JSON.stringify(progress)), recordActivity });
+  }
+
+  if (globalThis.oracleAcademyRunbook) startPortal(globalThis.oracleAcademyRunbook);
+  else loadScript("content/runbook-chapters.js").then(() => startPortal(globalThis.oracleAcademyRunbook)).catch(() => {
+    const feedback = document.getElementById("portalFeedback");
+    if (feedback) feedback.textContent = "No se pudo cargar la navegación RunBook localmente.";
+  });
 })();

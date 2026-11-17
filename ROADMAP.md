@@ -65,7 +65,7 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 ## Sprint 4 — Planes y laboratorios AI locales
 
-**Estado:** completado, auditado y publicado en `origin/feature/ai-sql-intelligence-lab`; pendiente de revisión mediante Pull Request hacia `main`.
+**Estado:** completado, auditado e integrado en `main`.
 
 **Objetivo:** ampliar el aprendizaje con explicador de planes, SQL Analyzer y AI What If? locales.
 
@@ -77,6 +77,22 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 - Los flujos Vector Search, Select AI y RAG son reproducibles y etiquetados como demo.
 
 **Entrega implementada:** importador seguro de texto `DBMS_XPLAN`, parser puro con columnas variables y advertencias, tabla/árbol/SVG de operadores, Event Inspector contextual, análisis prudente de E-Rows/A-Rows/Starts, hallazgos deterministas basados en evidencia, SQL Analyzer local, What If? aislado, tutor de reglas y tres ejemplos educativos. La auditoría final confirmó el renderizado de todas las columnas presentes —incluido `A-Time`—, el escape de entradas hostiles y la ausencia de solicitudes externas. Los laboratorios anteriores continúan como módulos independientes.
+
+## Sprint 4.1 — RunBook Navigation & UX Integration
+
+**Estado:** completado, validado y publicado en `origin/feature/sprint4-runbook-navigation`; pendiente de revisión mediante Pull Request hacia `main`.
+
+**Objetivo:** integrar AI SQL Intelligence como capítulo oficial del RunBook sin duplicar fuentes de navegación ni alterar los simuladores existentes.
+
+**Criterios de aceptación**
+
+- Un contrato declarativo define los capítulos 01–11, sus rutas estables y secuencia anterior/siguiente.
+- `#intelligence` activa exclusivamente el capítulo 09 y sincroniza menú, breadcrumb, título e historial.
+- AI Learning Lab pasa a capítulo 10 y Comprueba a capítulo 11.
+- El progreso local distingue exploración de finalización educativa; Intelligence exige importar un plan y seleccionar un operador.
+- Navegación responsive, teclado, movimiento reducido y módulos existentes superan pruebas de regresión.
+
+**Entrega implementada:** contrato único de once capítulos, capítulo 09 para AI SQL Intelligence, menú RunBook generado y sincronizado, rutas hash con Back/Forward, navegación 08 → 09 → 10, estado activo único y progreso local basado en actividades educativas. La validación final cubrió pruebas unitarias, Chrome headless, 375 px, 768 px, movimiento reducido y laboratorios existentes.
 
 ## Sprint 5 — Integración visual avanzada y contenido AI Database
 

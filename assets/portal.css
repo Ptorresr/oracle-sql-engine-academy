@@ -62,7 +62,8 @@ button.module-card { cursor: pointer; font: inherit; }
 .workspace-panels strong { display: block; margin: 4px 0; color: var(--portal-ink); }
 .workspace-panels p { margin: 0; font-size: .9rem; }
 .workspace-label { color: var(--cyan); font-size: .76rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
-.side a[aria-current="location"] { color: #fff; background: #1b4054; box-shadow: inset 3px 0 0 var(--cyan); }
+.side a.is-active, .side a[aria-current="location"] { color: #fff; background: #1b4054; box-shadow: inset 3px 0 0 var(--cyan); }
+.side a[data-completed]::after { content: "✓"; float: right; color: var(--green); font-weight: 900; }
 .chapter-nav { display: flex; justify-content: space-between; gap: 14px; align-items: center; margin-top: 34px; padding-top: 20px; border-top: 1px solid var(--line); }
 .chapter-nav span { color: var(--muted); font-size: .88rem; text-align: center; }
 .case-grid > div { min-width: 0; }

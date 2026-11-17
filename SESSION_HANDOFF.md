@@ -3,9 +3,9 @@
 ## Estado actual
 
 - **Fecha:** 2026-11-16
-- **Rama:** `feature/ai-sql-intelligence-lab` creada desde `origin/main` en `df97197` (merge de Sprints 0–3 y corrección `9c4d703`).
-- **Sprint:** 4 — AI SQL Intelligence Lab.
-- **Estado de entrega:** Sprint 4 cerrado y publicado en `origin/feature/ai-sql-intelligence-lab`; el siguiente paso es revisión mediante Pull Request. No se hace merge automático y `main` no fue modificado.
+- **Rama:** `feature/sprint4-runbook-navigation` creada desde `origin/main` en `07e8daf` tras la integración de Sprint 4.
+- **Sprint:** 4.1 — RunBook Navigation & UX Integration.
+- **Estado de entrega:** Sprint 4.1 cerrado y publicado en `origin/feature/sprint4-runbook-navigation`; el siguiente paso es revisión mediante Pull Request. No se hace merge automático y `main` no fue modificado.
 
 ## Trabajo realizado
 
@@ -23,6 +23,7 @@
 | Sprint 3 comparison | Se añadieron tres motores deterministas equivalentes, comparación sincronizada/independiente, inspector y What If? local, sin modificar el laboratorio HASH JOIN original. |
 | Sprint 4 intelligence | Se añadieron tres ejemplos de planes ilustrativos, importación local de texto `DBMS_XPLAN`, parser puro, visualizador tabular/jerárquico/SVG, inspector de operadores, cardinalidad prudente, hallazgos basados en evidencia, SQL Analyzer, What If? y tutor por reglas. |
 | Auditoría Sprint 4 | Se corrigió la tabla del visualizador para mostrar todas las columnas presentes, incluido `A-Time`; se amplió la cobertura de parser para predicados `filter`, Notes, marcadores `*`, métricas abreviadas, workarea, entrada incompleta y estadísticas ausentes. |
+| Sprint 4.1 RunBook | Se centralizó la definición de 11 capítulos, se integró Intelligence como capítulo 09, se sincronizaron hash/breadcrumbs/estado activo/historial y se añadieron actividades educativas persistentes sin sobrescribir progreso previo. |
 
 ## Decisiones vigentes
 
@@ -74,6 +75,8 @@
 - `tests/oracle-plan-parser.test.js`
 - `tests/oracle-plan-analyzer.test.js`
 - `tests/sql-intelligence-renderer.test.js`
+- `content/runbook-chapters.js`
+- `tests/runbook-chapters.test.js`
 
 ## Pruebas
 
@@ -110,6 +113,8 @@
 - Correcto: Chrome headless verificó recursos locales, importación de Retail, selección y contracción de árbol, inspector, SQL relacionado, SQL Analyzer, What If, tutor, navegación por teclado, 375 px, 768 px, `prefers-reduced-motion` y ausencia de errores de consola.
 - Correcto: auditoría final de navegador importó un plan con `A-Time` y HTML hostil; confirmó columna y valor originales, ausencia de nodos HTML ejecutables, texto escapado, enlaces RunBook, catálogo, Event Inspector, SQL relacionado, insights, What If, tutor y regresiones de JOIN/HASH/Comparison/AI Labs.
 - Correcto: la preferencia `prefers-reduced-motion` se aplicó antes de la carga y desactivó los autoplay existentes; todas las solicitudes de recursos permanecieron en el mismo origen local de GitHub Pages.
+- Correcto: Chrome headless abrió `#intelligence`, confirmó capítulos 01–11, un único `aria-current`, transición 08 → 09 → 10, Back/Forward, foco de teclado, 375 px, 768 px y ausencia de errores de consola.
+- Correcto: el progreso local deja Intelligence incompleto al importar un plan y lo completa solo tras seleccionar un operador; la estructura `visited`, `activities` y `completed` persiste en la clave existente de `localStorage`.
 - Evidencia visual local: `/private/tmp/oracle-sprint4-intelligence.png` muestra el catálogo con la tarjeta AI SQL Intelligence; el artefacto no se versionó.
 
 ## Limitaciones pendientes
@@ -128,6 +133,6 @@
 
 ## Siguiente actividad
 
-1. Revisar el Pull Request de Sprint 4 hacia `main`; no hacer merge sin aprobación explícita.
-2. Considerar Sprint 5 para ampliar formatos de plan, navegación RunBook dinámica e integración visual avanzada, sin afirmar diagnóstico productivo.
+1. Revisar el Pull Request de Sprint 4.1 hacia `main`; no hacer merge sin aprobación explícita.
+2. Considerar Sprint 5 para ampliar formatos de plan e integración visual avanzada, sin afirmar diagnóstico productivo.
 3. Mantener el portal sin backend; antes de instalar Anatomy, fijar versión y revisar los scripts concretos que se pretendan ejecutar.
