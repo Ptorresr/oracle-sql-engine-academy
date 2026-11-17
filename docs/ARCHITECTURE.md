@@ -68,6 +68,33 @@ renderer + ui/join-comparison-*.js
 
 Cada timeline conserva eventos inmutables y métricas ilustrativas. La comparación usa pares canónicos `leftId:rightId` para comprobar equivalencia lógica sin afirmar orden físico de salida. Los métodos exponen costos y accesos como hipótesis educativas: el selector de algoritmos no es un optimizador ni sustituye estadísticas, plan real o ejecución observada.
 
+## AI SQL Intelligence Lab — Sprint 4
+
+```text
+contenido SQL + texto DBMS_XPLAN no confiable
+    │
+simulation/oracle-plan-parser.js
+    ├── nodos, jerarquía, métricas presentes, predicados, notas, advertencias
+    │
+simulation/oracle-plan-analyzer.js ── SQL Analyzer ── What If? local
+    │
+renderer/execution-plan-renderer.js ── renderer/sql-intelligence-renderer.js
+    │
+ui/sql-intelligence-lab.js
+    ├── SQL Editor · Plan Importer · Plan Visualizer
+    └── Performance Insights · What If? · AI Tutor
+```
+
+El parser no depende del DOM ni ejecuta SQL. Tiene un límite de 200.000 caracteres, requiere una tabla con `Id` y `Operation`, detecta delimitadores y columnas variables, usa la indentación de `Operation` para padres/hijos, asocia únicamente predicados con identificador reportado y mantiene notas y hash del plan cuando están disponibles. Si no puede asociar una sección con seguridad, añade una advertencia en lugar de inventar datos.
+
+Se cubren tablas de `DBMS_XPLAN.DISPLAY` y tablas habituales de `DISPLAY_CURSOR`/`ALLSTATS LAST` con columnas como `Starts`, `E-Rows`, `A-Rows`, `Buffers`, `Reads`, `OMem`, `1Mem`, `Used-Mem` y `TempSpc`. Formatos gráficos, secciones no tabulares y encabezados que no incluyan `Id` y `Operation` quedan fuera de soporte.
+
+Cada métrica conserva su texto original y solo obtiene valor numérico cuando la conversión no es ambigua. Una métrica ausente permanece ausente. El análisis de cardinalidad no compara ciegamente E-Rows y A-Rows: explica su alcance y, con `Starts > 1`, muestra `A-Rows / Starts` como cálculo derivado. Nunca divide entre cero ni declara que una diferencia aislada pruebe un problema de optimización.
+
+El renderer escapa texto importado antes de insertarlo en DOM. La interfaz no usa `eval`, no acepta HTML importado, no persiste automáticamente consultas o planes y no hace solicitudes externas. El tutor se declara basado en reglas locales y What If? mantiene las estadísticas importadas separadas de sus hipótesis.
+
+La tabla del visualizador no usa una lista fija de métricas: toma los encabezados presentes en el plan importado y muestra sus valores originales cuando existen. Así, `A-Time`, `Buffers`, `Reads`, `TempSpc` y columnas de workarea pueden permanecer visibles sin sustituir los valores ausentes por estimaciones.
+
 ## Anatomy
 Referencia: https://github.com/wheresryan22/anatomy
 Acción pendiente: revisar código, licencia, dependencias y guía SKILL.md de upstream antes de incorporar assets o lógica. No copiar código de un repositorio no inspeccionado.

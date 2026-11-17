@@ -65,6 +65,8 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 ## Sprint 4 — Planes y laboratorios AI locales
 
+**Estado:** completado, auditado y publicado en `origin/feature/ai-sql-intelligence-lab`; pendiente de revisión mediante Pull Request hacia `main`.
+
 **Objetivo:** ampliar el aprendizaje con explicador de planes, SQL Analyzer y AI What If? locales.
 
 **Criterios de aceptación**
@@ -73,6 +75,8 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 - Las explicaciones distinguen reglas locales de IA generativa real.
 - What If? usa hipótesis explícitas y no afirma predicción de plan.
 - Los flujos Vector Search, Select AI y RAG son reproducibles y etiquetados como demo.
+
+**Entrega implementada:** importador seguro de texto `DBMS_XPLAN`, parser puro con columnas variables y advertencias, tabla/árbol/SVG de operadores, Event Inspector contextual, análisis prudente de E-Rows/A-Rows/Starts, hallazgos deterministas basados en evidencia, SQL Analyzer local, What If? aislado, tutor de reglas y tres ejemplos educativos. La auditoría final confirmó el renderizado de todas las columnas presentes —incluido `A-Time`—, el escape de entradas hostiles y la ausencia de solicitudes externas. Los laboratorios anteriores continúan como módulos independientes.
 
 ## Sprint 5 — Integración visual avanzada y contenido AI Database
 

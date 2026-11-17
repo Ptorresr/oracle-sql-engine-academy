@@ -3,12 +3,9 @@
 ## Estado actual
 
 - **Fecha:** 2026-11-16
-- **Rama:** `feature/sql-execution-comparison` (creada desde `feature/database-engine-visualizer` en `c65071f`)
-- **Sprint:** 3 — SQL Execution Comparison Lab
-- **Referencia base:** `f7dc9e6` (`feat: add interactive learning portal`).
-- **Cierre:** `9411fc8` (`chore: close sprint 1 validation`).
-- **Cierre Sprint 2:** `c65071f` (`feat: add deterministic hash join visualizer`).
-- **Estado de entrega:** Sprint 1, Sprint 2 y Sprint 3 permanecen publicados en sus ramas. No hay PR ni merge a `main`.
+- **Rama:** `feature/ai-sql-intelligence-lab` creada desde `origin/main` en `df97197` (merge de Sprints 0–3 y corrección `9c4d703`).
+- **Sprint:** 4 — AI SQL Intelligence Lab.
+- **Estado de entrega:** Sprint 4 cerrado y publicado en `origin/feature/ai-sql-intelligence-lab`; el siguiente paso es revisión mediante Pull Request. No se hace merge automático y `main` no fue modificado.
 
 ## Trabajo realizado
 
@@ -24,6 +21,8 @@
 | Sprint 2 engine | Se añadieron escenarios declarativos, motor determinista, renderer SVG/UI sincronizada y pruebas del visualizador HASH JOIN sin sustituir los laboratorios existentes. |
 | Auditoría Sprint 2 | Se incorporó Event Inspector: selección de eventos, filas, bloques, operadores y componentes; SQL relacionado con límites explícitos, resaltado sincronizado y prueba de regresión en navegador. |
 | Sprint 3 comparison | Se añadieron tres motores deterministas equivalentes, comparación sincronizada/independiente, inspector y What If? local, sin modificar el laboratorio HASH JOIN original. |
+| Sprint 4 intelligence | Se añadieron tres ejemplos de planes ilustrativos, importación local de texto `DBMS_XPLAN`, parser puro, visualizador tabular/jerárquico/SVG, inspector de operadores, cardinalidad prudente, hallazgos basados en evidencia, SQL Analyzer, What If? y tutor por reglas. |
+| Auditoría Sprint 4 | Se corrigió la tabla del visualizador para mostrar todas las columnas presentes, incluido `A-Time`; se amplió la cobertura de parser para predicados `filter`, Notes, marcadores `*`, métricas abreviadas, workarea, entrada incompleta y estadísticas ausentes. |
 
 ## Decisiones vigentes
 
@@ -61,6 +60,20 @@
 - `assets/join-comparison.css`
 - `tests/join-comparison-engine.test.js`
 - `tests/join-comparison-renderer.test.js`
+- `assets/sql-intelligence.css`
+- `content/oracle-plan-operator-catalog.js`
+- `content/sql-intelligence-examples.js`
+- `simulation/oracle-plan-parser.js`
+- `simulation/oracle-plan-analyzer.js`
+- `simulation/oracle-sql-analyzer.js`
+- `simulation/sql-what-if-engine.js`
+- `renderer/execution-plan-renderer.js`
+- `renderer/sql-intelligence-renderer.js`
+- `ui/sql-intelligence-bootstrap.js`
+- `ui/sql-intelligence-lab.js`
+- `tests/oracle-plan-parser.test.js`
+- `tests/oracle-plan-analyzer.test.js`
+- `tests/sql-intelligence-renderer.test.js`
 
 ## Pruebas
 
@@ -91,6 +104,13 @@
 - Correcto: cierre aprobado volvió a validar alcance exclusivo de Sprint 3, equivalencia HASH/NESTED/MERGE, simulaciones originales, responsive, movimiento reducido, secretos, dependencias y recursos locales.
 - Correcto: preparación del PR corrigió el enlace RunBook activo para exponer `aria-current="location"`; navegación por teclado y las pestañas del workspace pasan nuevamente en navegador.
 - No se ejecutaron scripts de Anatomy ni se hicieron llamadas a una base de datos Oracle.
+- Correcto: parser unitario cubre planes DISPLAY/DISPLAY_CURSOR con columnas variables, predicados, notas, jerarquía, operaciones desconocidas, valores ausentes, entrada malformada, límite de tamaño y texto con intento de inyección HTML.
+- Correcto: análisis unitario cubre normalización de A-Rows/Starts, división entre cero, hallazgos prudentes, SQL con JOIN/funciones y determinismo/aislamiento de What If.
+- Correcto: todos los tests existentes y nuevos de Node pasan; `node --check`, `test -s index.html`, búsqueda de marcadores de merge y `git diff --check` pasan.
+- Correcto: Chrome headless verificó recursos locales, importación de Retail, selección y contracción de árbol, inspector, SQL relacionado, SQL Analyzer, What If, tutor, navegación por teclado, 375 px, 768 px, `prefers-reduced-motion` y ausencia de errores de consola.
+- Correcto: auditoría final de navegador importó un plan con `A-Time` y HTML hostil; confirmó columna y valor originales, ausencia de nodos HTML ejecutables, texto escapado, enlaces RunBook, catálogo, Event Inspector, SQL relacionado, insights, What If, tutor y regresiones de JOIN/HASH/Comparison/AI Labs.
+- Correcto: la preferencia `prefers-reduced-motion` se aplicó antes de la carga y desactivó los autoplay existentes; todas las solicitudes de recursos permanecieron en el mismo origen local de GitHub Pages.
+- Evidencia visual local: `/private/tmp/oracle-sprint4-intelligence.png` muestra el catálogo con la tarjeta AI SQL Intelligence; el artefacto no se versionó.
 
 ## Limitaciones pendientes
 
@@ -99,6 +119,8 @@
 - El motor reutilizable y HASH JOIN ya se entregan en Sprint 2; los demás operadores permanecen pendientes para los sprints posteriores.
 - El HASH JOIN está limitado a INNER JOIN por igualdad, datasets sintéticos y una selección determinista de Build/Probe; no modela paralelismo, particionado real, adaptive plans, estadísticas ni gestión real de memoria.
 - La comparación cubre INNER JOIN por igualdad; no pretende reproducir orden físico, adaptive joins, paralelismo, costos ni la selección real del optimizador.
+- AI SQL Intelligence Lab no ejecuta SQL, no se conecta a Oracle, no reproduce el optimizador, no calcula costos ni predice planes reales. Los ejemplos son planes sintéticos explícitamente ilustrativos.
+- El parser requiere tablas con `Id` y `Operation`; no interpreta formatos gráficos, secciones propietarias no tabulares ni asociaciones ambiguas. No reemplaza `DBMS_XPLAN`, SQL Monitor, AWR o investigación de producción.
 
 ## Integración Obsidian
 
@@ -106,6 +128,6 @@
 
 ## Siguiente actividad
 
-1. Abrir o revisar un Pull Request hacia `main` solo cuando se solicite; no hacer merge sin aprobación.
-2. Iniciar Sprint 4 con explicaciones locales de planes y What If?, conservando los límites entre hipótesis y observación.
+1. Revisar el Pull Request de Sprint 4 hacia `main`; no hacer merge sin aprobación explícita.
+2. Considerar Sprint 5 para ampliar formatos de plan, navegación RunBook dinámica e integración visual avanzada, sin afirmar diagnóstico productivo.
 3. Mantener el portal sin backend; antes de instalar Anatomy, fijar versión y revisar los scripts concretos que se pretendan ejecutar.

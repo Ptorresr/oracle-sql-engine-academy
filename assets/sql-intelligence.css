@@ -1,0 +1,62 @@
+.sql-intelligence-lab { min-width: 0; border-color: #43677e; background: linear-gradient(145deg, #0d1c2d, #0b1422); }
+.intelligence-topline { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin-bottom: 14px; }
+.data-pill { display: inline-flex; padding: 4px 8px; border-radius: 99px; font-size: .75rem; font-weight: 800; border: 1px solid #416a83; color: #cceafb; background: #112c3d; }
+.data-pill.imported { border-color: #4e9bb2; color: #c9f4ff; }
+.data-pill.derived { border-color: #a28051; color: #ffe1ae; background: #322719; }
+.data-pill.hypothetical { border-color: #7d6cb3; color: #e4ddff; background: #211d3a; }
+.intelligence-tabs { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.intelligence-tabs [role=tab] { flex: 0 0 auto; min-height: 40px; padding: 8px 12px; border: 1px solid #36516b; border-radius: 8px; color: #c8e1f5; background: #15263a; font-weight: 800; }
+.intelligence-tabs [role=tab][aria-selected=true] { color: #071a24; background: var(--cyan); border-color: var(--cyan); }
+.intelligence-panel { padding: 17px 0 0; }
+.intelligence-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr); gap: 15px; }
+.intelligence-panel textarea { display: block; width: 100%; min-height: 210px; resize: vertical; padding: 12px; border: 1px solid #3d5d76; border-radius: 9px; background: #07121e; color: #d9efff; font: .83rem/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.intelligence-grid > div > label { display: block; margin-top: 10px; color: #c5e0f3; }
+.intelligence-grid > div > label:first-child { margin-top: 0; }
+.intelligence-panel textarea:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+.intelligence-sidebar, .intelligence-explain, .intelligence-inspector, .intelligence-callout { min-width: 0; padding: 14px; border: 1px solid #304e68; border-radius: 11px; background: #0a1827; }
+.intelligence-sidebar h3, .intelligence-explain h3, .intelligence-inspector h3 { margin: 0 0 8px; }
+.intelligence-sidebar p, .intelligence-explain p, .intelligence-inspector p { font-size: .88rem; }
+.intelligence-status { min-height: 52px; padding: 10px; border-left: 3px solid var(--cyan); background: #102839; color: #cde9f8; }
+.intelligence-meta { color: #a9c9dd; font-size: .8rem; }
+.plan-visual-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(300px, .95fr); gap: 15px; }
+.intelligence-plan-table { min-width: 760px; }
+.intelligence-plan-table tr[role=button], .plan-svg-node, .plan-tree-label { cursor: pointer; }
+.intelligence-plan-table tr.is-selected td { background: #164a54; color: #fff; }
+.plan-tree { display: grid; gap: 6px; padding: 0; margin: 0; list-style: none; }
+.plan-tree-node { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 7px; margin-left: calc(var(--plan-depth) * 14px); }
+.plan-tree-toggle, .plan-tree-spacer { width: 28px; min-height: 33px; border-radius: 7px; }
+.plan-tree-toggle { border: 1px solid #43627d; color: #d5edff; background: #17314a; }
+.plan-tree-label { display: grid; gap: 2px; text-align: left; padding: 8px; border: 1px solid #36526c; border-radius: 8px; color: #d5e9f8; background: #101f30; }
+.plan-tree-label span { color: #9fbed3; font-size: .78rem; }
+.plan-tree-node.is-selected .plan-tree-label { border-color: var(--orange); background: #392c1d; }
+.plan-graph { display: block; width: 100%; min-width: 570px; background: radial-gradient(circle at 45% 15%, #153d53, #07121e 68%); border: 1px solid #31546a; border-radius: 10px; }
+.plan-graph text { fill: #dff4ff; font: 700 12px Inter, system-ui, sans-serif; pointer-events: none; }
+.plan-svg-links path { stroke: #5bc6d1; fill: none; stroke-width: 2; }
+.plan-svg-node rect { fill: #17314a; stroke: #5387a2; stroke-width: 1.5; }
+.plan-svg-node.is-selected rect { fill: #4a3720; stroke: var(--orange); stroke-width: 3; }
+.plan-notes { padding: 10px; color: #b8d2e6; background: #112435; border-radius: 8px; font-size: .85rem; }
+.intelligence-inspector-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.intelligence-inspector-grid > div { min-width: 0; padding: 10px; border-radius: 8px; background: #0a1725; }
+.intelligence-inspector-grid h4 { margin: 0; color: #bee8f5; font-size: .86rem; }
+.intelligence-inspector-grid p { overflow-wrap: anywhere; }
+.cardinality-list, .insight-list, .sql-analysis-list { display: grid; gap: 10px; }
+.cardinality-list article, .insight, .sql-analysis-list article, .whatif-result { padding: 13px; border: 1px solid #34546c; border-radius: 10px; background: #0c1b2b; }
+.cardinality-list h4, .insight h4, .sql-analysis-list h4 { margin: 0 0 7px; color: #d8efff; }
+.cardinality-list dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin: 8px 0; }
+.cardinality-list dl div { padding: 7px; border-radius: 6px; background: #10273a; }
+.cardinality-list dt { color: #95b7cc; font-size: .75rem; }
+.cardinality-list dd { margin: 2px 0 0; color: #ecf8ff; font-weight: 800; }
+.cardinality-list span { font-size: .8rem; color: #a8d4e7; }
+.insight-info { border-left: 3px solid var(--orange); }
+.insight p { margin: 6px 0; font-size: .86rem; }
+.limit-list { padding-left: 20px; color: #b5cde0; }
+.whatif-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.whatif-controls label { display: grid; gap: 5px; color: #c5e0f3; font-size: .83rem; font-weight: 800; }
+.whatif-result { margin-top: 12px; border-color: #7663a5; }
+.whatif-result p { margin: 8px 0; }
+.intelligence-tutor { display: grid; grid-template-columns: minmax(0, .7fr) minmax(300px, 1.3fr); gap: 14px; }
+.privacy-notice { margin-top: 13px; padding: 11px; border-left: 3px solid var(--orange); background: #342817; color: #ffe1aa; font-size: .87rem; }
+
+@media (max-width: 950px) { .intelligence-grid, .plan-visual-grid, .intelligence-tutor, .intelligence-inspector-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 650px) { .intelligence-tabs { margin-inline: -2px; } .intelligence-tabs [role=tab] { min-height: 44px; } .cardinality-list dl, .whatif-controls { grid-template-columns: minmax(0, 1fr); } .plan-graph { min-width: 570px; } }
+@media (prefers-reduced-motion: reduce) { .plan-svg-node rect, .plan-tree-label, .intelligence-tabs [role=tab] { transition: none; } }

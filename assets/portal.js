@@ -182,4 +182,35 @@
   bindWorkspace();
   bindProgressReset();
   updateWorkspace();
+
+  function loadSqlIntelligenceLab() {
+    const stylesheet = document.createElement("link");
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = "assets/sql-intelligence.css";
+    document.head.append(stylesheet);
+    const files = [
+      "content/oracle-plan-operator-catalog.js",
+      "content/sql-intelligence-examples.js",
+      "simulation/oracle-plan-parser.js",
+      "simulation/oracle-plan-analyzer.js",
+      "simulation/oracle-sql-analyzer.js",
+      "simulation/sql-what-if-engine.js",
+      "renderer/execution-plan-renderer.js",
+      "renderer/sql-intelligence-renderer.js",
+      "ui/sql-intelligence-bootstrap.js",
+      "ui/sql-intelligence-lab.js"
+    ];
+    files.reduce((chain, source) => chain.then(() => new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = source;
+      script.async = false;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.append(script);
+    })), Promise.resolve()).catch(() => {
+      byId("portalFeedback").textContent = "No se pudo cargar AI SQL Intelligence Lab localmente.";
+    });
+  }
+
+  loadSqlIntelligenceLab();
 })();
