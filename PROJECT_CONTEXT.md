@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprint 4 — AI SQL Intelligence Lab completado y publicado en `origin/feature/ai-sql-intelligence-lab`; pendiente de revisión mediante Pull Request hacia `main`.
+**Estado:** Sprint 4 integrado en `main`; Sprint 4.1 — RunBook Navigation & UX Integration completado y publicado en `origin/feature/sprint4-runbook-navigation`, pendiente de revisión mediante Pull Request hacia `main`.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 
@@ -15,6 +15,8 @@ Sprint 2 añade un motor puro para un HASH JOIN didáctico. Sus escenarios, even
 Sprint 3 compara HASH JOIN, NESTED LOOPS y SORT MERGE JOIN sobre datasets equivalentes. Cada método conserva su timeline determinista, mientras una comprobación canónica confirma que los tres entregan el mismo resultado lógico del INNER JOIN educativo.
 
 Sprint 4 incorpora un laboratorio local que recibe texto no confiable de planes Oracle, lo normaliza y lo presenta como datos importados. El análisis de cardinalidad, hallazgos, SQL Analyzer, What If? y tutor son reglas y cálculos locales; no son telemetría ni IA generativa.
+
+Sprint 4.1 convierte AI SQL Intelligence en el capítulo 09 oficial del RunBook. La secuencia, rutas, breadcrumbs, estado activo y anterior/siguiente se derivan de un contrato único; el progreso distingue exploración de finalización educativa local.
 
 ## Entrega Sprint 1
 
@@ -64,6 +66,12 @@ Sprint 4 incorpora un laboratorio local que recibe texto no confiable de planes 
 - `renderer/execution-plan-renderer.js` y `renderer/sql-intelligence-renderer.js` escapan texto importado antes de renderizar tabla, árbol, SVG e insights. `ui/sql-intelligence-lab.js` usa un estado de plan para sincronizar visualizador, inspector, SQL relacionado, insights, What If y tutor.
 - El laboratorio se carga desde recursos locales relativos versionados, sin dependencias externas, backend, persistencia automática ni secretos.
 - La auditoría técnica verificó formatos de tabla variables, valores abreviados, estadísticas ausentes, HTML hostil y planes incompletos. La tabla expone todas las columnas importadas, incluido `A-Time`, sin derivar tiempos o métricas faltantes.
+
+## Implementación Sprint 4.1
+
+- `content/runbook-chapters.js` es la fuente de verdad de los once capítulos: identificador estable, orden, título, ruta, relación anterior/siguiente y criterios de finalización cuando corresponden.
+- `assets/portal.js` genera la navegación activa desde ese contrato, resuelve `#intelligence` incluso si el laboratorio termina de cargar de forma local, sincroniza `aria-current`, breadcrumbs, título, historial Back/Forward y navegación secuencial.
+- AI SQL Intelligence se completa localmente solo después de importar un plan y seleccionar un operador; abrir el capítulo únicamente lo registra como explorado. El formato existente de `localStorage` se amplía sin borrar el progreso anterior.
 
 ## Arquitectura de referencia para módulos futuros
 

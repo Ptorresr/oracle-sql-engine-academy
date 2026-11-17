@@ -28,10 +28,4 @@
       <div class="privacy-notice"><strong>Límites del laboratorio:</strong> no ejecuta SQL Oracle, no se conecta a Oracle Database, no reproduce el optimizador, no calcula costos reales, no predice planes reales y no sustituye herramientas de diagnóstico de producción.</div>
     </div>`;
   aiSection.before(section);
-  const link = document.createElement("a");
-  link.href = "#intelligence";
-  link.textContent = "◈ AI SQL Intelligence";
-  const sideLink = document.querySelector('.side a[href="#ai"]');
-  if (sideLink) sideLink.before(link);
-  link.addEventListener("click", () => { const breadcrumb = document.getElementById("breadcrumbChapter"); if (breadcrumb) breadcrumb.textContent = "AI SQL Intelligence Lab"; });
 })();

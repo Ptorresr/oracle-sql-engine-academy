@@ -95,6 +95,14 @@ El renderer escapa texto importado antes de insertarlo en DOM. La interfaz no us
 
 La tabla del visualizador no usa una lista fija de métricas: toma los encabezados presentes en el plan importado y muestra sus valores originales cuando existen. Así, `A-Time`, `Buffers`, `Reads`, `TempSpc` y columnas de workarea pueden permanecer visibles sin sustituir los valores ausentes por estimaciones.
 
+## RunBook Navigation & UX Integration — Sprint 4.1
+
+`content/runbook-chapters.js` define la única fuente de verdad de la navegación educativa. Cada capítulo contiene `id`, `order`, `label`, `title` y `route`; AI SQL Intelligence usa el identificador estable `intelligence`, orden 09 y ruta `#intelligence`. `assets/portal.js` genera los enlaces del RunBook desde ese contrato y deriva anterior/siguiente, `aria-current`, breadcrumbs, el título y el estado activo.
+
+El controlador resuelve hashes iniciales y eventos `hashchange`/`popstate`. Si `#intelligence` se abre antes de terminar la carga local del laboratorio, conserva la ruta pendiente y la activa cuando la sección está disponible. Solo un enlace recibe `aria-current="location"` y la clase visual activa a la vez.
+
+El progreso mantiene la clave local existente y añade `completed` y `activities` sin borrar `visited`. Entrar en un capítulo solo registra exploración. Para completar `intelligence`, la UI emite las actividades locales `plan-imported` y `operator-inspected`; no hay persistencia remota ni datos de estudiantes fuera del navegador.
+
 ## Anatomy
 Referencia: https://github.com/wheresryan22/anatomy
 Acción pendiente: revisar código, licencia, dependencias y guía SKILL.md de upstream antes de incorporar assets o lógica. No copiar código de un repositorio no inspeccionado.

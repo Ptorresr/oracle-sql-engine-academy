@@ -68,7 +68,11 @@
     byId("insightsView").innerHTML = renderer.renderFindings(analysis.findings);
   }
 
-  function importPlan() {
+  function recordLearningActivity(activity) {
+    window.dispatchEvent(new CustomEvent("academy:intelligence-activity", { detail: { activity } }));
+  }
+
+  function importPlan(recordProgress = false) {
     plan = parser.parse(byId("planInput").value);
     analysis = analyzer.analyze(plan);
     selectedId = plan.nodes[0]?.id || null;
@@ -76,6 +80,7 @@
     writeStatus();
     renderPlan();
     renderInsights();
+    if (recordProgress) recordLearningActivity("plan-imported");
   }
 
   function showRelatedSql() {
@@ -131,10 +136,10 @@
     byId("planInput").value = example.plan;
     byId("intelligenceSqlInput").value = example.sql;
     byId("exampleContext").textContent = `${example.objective} ${example.relation} Preguntas: ${example.questions.join(" ")} ${example.notice}`;
-    importPlan();
+    importPlan(event.isTrusted);
     renderSqlAnalysis();
   });
-  byId("planImport").addEventListener("click", importPlan);
+  byId("planImport").addEventListener("click", () => importPlan(true));
   byId("planClear").addEventListener("click", () => { byId("planInput").value = ""; importPlan(); });
   byId("showRelatedSql").addEventListener("click", showRelatedSql);
   byId("analyzeSqlIntelligence").addEventListener("click", renderSqlAnalysis);
@@ -151,6 +156,7 @@
     } else if (node) {
       selectedId = node.dataset.planNode;
       renderPlan();
+      if (event.isTrusted) recordLearningActivity("operator-inspected");
     }
   });
   root.addEventListener("keydown", (event) => {
@@ -158,6 +164,7 @@
       event.preventDefault();
       selectedId = event.target.dataset.planNode;
       renderPlan();
+      if (event.isTrusted) recordLearningActivity("operator-inspected");
     }
   });
   [...root.querySelectorAll("[role=tab]")].forEach((tab, index, tabs) => tab.addEventListener("keydown", (event) => {
