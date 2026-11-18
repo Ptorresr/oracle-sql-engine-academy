@@ -34,5 +34,14 @@ window.oracleAcademyModules = Object.freeze([
     action: "Abrir AI Internals Lab",
     target: "ai-internals",
     status: "lab"
+  },
+  {
+    id: "architecture-explorer",
+    title: "AI Architecture Explorer",
+    track: "OCI Architecture · Disponible",
+    description: "Tres arquitecturas educativas, canvas SVG, Builder, flujos, controles y guía de despliegue conceptual.",
+    action: "Explorar arquitectura",
+    target: "architecture-explorer",
+    status: "lab"
   }
 ]);

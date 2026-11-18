@@ -113,13 +113,18 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 **Acceso publicado:** el capítulo 12, **Oracle AI Database Internals**, conserva los capítulos 01–11 y expone AI Vector Search, Hybrid Search, Select AI, RAG y Agentic Workflows mediante rutas directas, estado activo y progreso local.
 
-## Sprint 6 — Calidad, publicación y evolución
+## Sprint 6 — Oracle AI Database Architecture Explorer
 
-**Objetivo:** automatizar controles de calidad y preparar la evolución segura del sitio.
+**Estado:** completado y validado en `feature/oracle-ai-architecture-explorer`; pendiente únicamente de commit, publicación y Pull Request autorizados.
+
+**Objetivo:** enseñar responsabilidades, flujos de datos, controles y alternativas de arquitecturas Oracle AI Database mediante un Explorer y Builder deterministas, sin backend.
 
 **Criterios de aceptación**
 
-- CI valida entrada, marcadores de merge, enlaces, estructura y comprobaciones adecuadas al código incorporado.
-- Pruebas visuales y de interacción cubren rutas críticas y movimiento reducido.
-- Guía de contribución, versionado de contenido y checklist de publicación están completos.
-- GitHub Pages publica una versión estática sin secretos ni dependencias de backend para el recorrido base.
+- El capítulo 13 y la tarjeta de catálogo conservan los capítulos 01–12, rutas existentes y progreso local.
+- Tres arquitecturas de referencia declaran nodos, conexiones, zonas, preguntas, laboratorios relacionados y límites educativos.
+- El canvas SVG permite inspeccionar componentes y conexiones; el Builder añade, conecta, elimina, mueve por teclado y valida una variante solo local.
+- Data Flow Explorer, Security Inspector, What If y Deployment Guide consumen el mismo modelo, separan sus hallazgos y nunca se presentan como OCI real.
+- Las pruebas cubren determinismo, grafo, seguridad, What If, guía, navegación, responsive, teclado, reduced motion, recursos locales y regresiones.
+
+**Entrega implementada:** catálogo de componentes, tres escenarios (Retail, Finanzas y Operaciones), motores puros de grafo/flujo/seguridad/alternativas/guía, canvas SVG accesible inspirado en Anatomy, inspector contextual, controles de timeline, capítulo 13 con criterios educativos de finalización y documentación de fuentes Oracle.

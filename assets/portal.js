@@ -159,6 +159,7 @@
   }
 
   function bindChapterNavigation() {
+    const architectureRoutes = new Set(["architecture-explorer", "architecture-retail", "architecture-finance", "architecture-operations"]);
     document.querySelectorAll(".side a[data-chapter], .chapter-nav a").forEach((link) => {
       link.addEventListener("click", (event) => {
         const targetId = link.getAttribute("href").slice(1);
@@ -170,6 +171,8 @@
     chapterObserver = new IntersectionObserver((entries) => {
       const visible = entries.filter((entry) => entry.isIntersecting).sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
       if (!visible) return;
+      const routeId = window.location.hash.replace(/^#/, "");
+      if (architectureRoutes?.has(routeId) && visible.target.id !== "architecture-explorer") return;
       const index = chapters.findIndex((chapter) => chapter.id === visible.target.id);
       if (index >= 0) {
         markVisited(visible.target.id);
@@ -194,13 +197,14 @@
     const aiInternalsLabIds = new Set(["ai-vector-search", "hybrid-vector-search", "select-ai-flow", "rag-architecture", "agentic-workflows"]);
     const activateAiChapter = (event) => {
       const routeId = window.location.hash.replace(/^#/, "");
+      if (architectureRoutes.has(routeId) || pendingChapterId === "architecture-explorer") return;
       const activateInternals = event?.type === "academy:oracle-ai-active" || aiInternalsLabIds.has(routeId) || pendingChapterId === "ai-internals";
       const chapterId = activateInternals ? "ai-internals" : "ai";
       window.setTimeout(() => {
         const section = document.getElementById(chapterId);
         if (section) {
           chapterObserver.observe(section);
-          if (pendingChapterId === chapterId || window.location.hash === `#${chapterId}`) scrollTo(chapterId, "none");
+          if (pendingChapterId === chapterId || window.location.hash === `#${chapterId}` || aiInternalsLabIds.has(routeId)) scrollTo(chapterId, "none");
           markVisited(chapterId);
           setActiveChapter(runbook.getIndex(chapterId));
         }
@@ -208,6 +212,23 @@
     };
     window.addEventListener("academy:oracle-ai-ready", activateAiChapter);
     window.addEventListener("academy:oracle-ai-active", activateAiChapter);
+    window.addEventListener("hashchange", () => {
+      if (aiInternalsLabIds.has(window.location.hash.replace(/^#/, ""))) activateAiChapter({ type: "academy:oracle-ai-active" });
+    });
+    const activateArchitectureChapter = () => {
+      const routeId = window.location.hash.replace(/^#/, "");
+      if (routeId !== "architecture-explorer" && !architectureRoutes.has(routeId) && pendingChapterId !== "architecture-explorer") return;
+      window.setTimeout(() => {
+        const section = byId("architecture-explorer");
+        if (!section) return;
+        chapterObserver.observe(section);
+        if (pendingChapterId === "architecture-explorer" || architectureRoutes.has(routeId)) scrollTo("architecture-explorer", "none");
+        markVisited("architecture-explorer");
+        setActiveChapter(runbook.getIndex("architecture-explorer"));
+      }, 0);
+    };
+    window.addEventListener("academy:architecture-ready", activateArchitectureChapter);
+    window.addEventListener("academy:architecture-active", activateArchitectureChapter);
   }
 
   function updateWorkspace() {
@@ -274,6 +295,7 @@
   const initialChapterId = window.location.hash.replace(/^#/, "");
   if (runbook.getChapter(initialChapterId)) scrollTo(initialChapterId, "none");
   window.addEventListener("academy:intelligence-activity", (event) => recordActivity("intelligence", event.detail?.activity));
+  window.addEventListener("academy:architecture-activity", (event) => recordActivity("architecture-explorer", event.detail?.activity));
 
   function loadSqlIntelligenceLab() {
     const stylesheet = document.createElement("link");
@@ -334,6 +356,30 @@
     });
   }
   loadOracleAiInternalsLab();
+  function loadArchitectureExplorer() {
+    const stylesheet = document.createElement("link");
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = "assets/architecture-explorer.css";
+    document.head.append(stylesheet);
+    const files = [
+      "content/oci-architecture-components.js",
+      "content/oci-reference-architectures.js",
+      "content/architecture-learning-content.js",
+      "simulation/architecture-graph-engine.js",
+      "simulation/architecture-flow-engine.js",
+      "simulation/architecture-security-engine.js",
+      "simulation/architecture-what-if-engine.js",
+      "simulation/architecture-deployment-guide.js",
+      "renderer/architecture-canvas-renderer.js",
+      "renderer/architecture-flow-renderer.js",
+      "renderer/architecture-inspector-renderer.js",
+      "ui/architecture-explorer.js"
+    ];
+    files.reduce((chain, source) => chain.then(() => loadScript(source)), Promise.resolve()).catch(() => {
+      byId("portalFeedback").textContent = "No se pudo cargar Oracle AI Database Architecture Explorer localmente.";
+    });
+  }
+  loadArchitectureExplorer();
   globalThis.OracleRunbookNavigation = Object.freeze({ chapters, navigate: (chapterId) => scrollTo(chapterId), getActiveChapter: () => chapters[activeChapter]?.id, getProgress: () => JSON.parse(JSON.stringify(progress)), recordActivity });
   }
 

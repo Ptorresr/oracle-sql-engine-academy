@@ -1,0 +1,7 @@
+(() => {
+  "use strict";
+  const escape = globalThis.OracleArchitectureCanvasRenderer?.escape || ((value) => String(value ?? ""));
+  const render = (flow, currentStep) => `<div class="architecture-flow-svg" role="img" aria-label="Flujo conceptual de datos; paso ${currentStep} de ${flow.events.length}">${flow.events.map((event, index) => `<div class="architecture-flow-step${index < currentStep ? " is-complete" : ""}${index + 1 === currentStep ? " is-current" : ""}"><span>${event.step}</span><strong>${escape(event.type.replaceAll("_", " "))}</strong><small>${escape(event.executionLocation.replaceAll("_", " "))}</small></div>`).join("")}</div>`;
+  const inspector = (event) => event ? `<section class="architecture-inspector-copy"><p class="eyebrow">Event Inspector · métricas ilustrativas</p><h4>${escape(event.label)}</h4><dl><div><dt>Qué ocurre</dt><dd>${escape(event.explanation.what)}</dd></div><div><dt>Dónde</dt><dd>${escape(event.executionLocation)} · contexto ${escape(event.explanation.where)}</dd></div><div><dt>Cómo y para qué</dt><dd>${escape(event.explanation.why)}</dd></div><div><dt>Perspectiva DBA</dt><dd>${escape(event.explanation.dba)}</dd></div></dl><p class="illustrative-note">Sin paquetes, costos, telemetría ni rutas observadas. Las métricas son ilustrativas.</p></section>` : "";
+  globalThis.OracleArchitectureFlowRenderer = Object.freeze({ render, inspector });
+})();

@@ -1,0 +1,24 @@
+const assert = require("assert");
+const fs = require("fs");
+const vm = require("vm");
+
+const context = { globalThis: {} };
+vm.runInNewContext(fs.readFileSync("simulation/architecture-flow-engine.js", "utf8"), context);
+const engine = context.globalThis.OracleArchitectureFlowEngine;
+const architecture = { id: "deterministic", edges: [{ id: "one", source: "api", target: "db", relationship: "DATABASE_QUERY", dataType: "SQL", securityContext: "AUTHENTICATED" }, { id: "two", source: "db", target: "vector", relationship: "DATABASE_CAPABILITY", dataType: "VECTOR", securityContext: "AUTHENTICATED" }] };
+const first = engine.run(architecture);
+const second = engine.run(architecture);
+assert.deepStrictEqual(first, second);
+assert.strictEqual(first.events[0].executionLocation, "DATABASE_SIMULATED");
+assert.strictEqual(first.events[0].illustrativeMetrics.illustrative, true);
+assert.deepStrictEqual(engine.stateAt(first, 1).completedEvents, [first.events[0]]);
+assert.strictEqual(engine.stateAt(first, 99).currentStep, 2);
+assert.strictEqual(engine.stateAt(first, -2).currentStep, 0);
+const incomplete = { id: "incomplete", nodes: [{ id: "api" }, { id: "db" }], edges: [{ id: "valid", source: "api", target: "db", relationship: "DATABASE_QUERY", dataType: "SQL", securityContext: "AUTHENTICATED" }, { id: "missing", source: "api", target: "gone", relationship: "DATABASE_QUERY" }, { id: "unknown", source: "api", target: "db", relationship: "UNKNOWN" }] };
+const filtered = engine.run(incomplete);
+assert.strictEqual(filtered.events.length, 1);
+assert.strictEqual(filtered.warnings.length, 2);
+const denied = engine.run({ id: "agent", nodes: [{ id: "agent" }, { id: "tool" }], edges: [{ id: "blocked", source: "agent", target: "tool", relationship: "TOOL_CALL", dataType: "WRITE", securityContext: "DENIED" }] });
+assert.strictEqual(denied.events[0].blocked, true);
+assert.ok(denied.events[0].explanation.what.includes("bloquea"));
+console.log("architecture-flow-engine: ok");

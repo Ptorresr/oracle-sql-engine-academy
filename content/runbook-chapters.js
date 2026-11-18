@@ -13,7 +13,8 @@
     { id: "intelligence", order: 9, label: "AI SQL Intelligence", title: "AI SQL Intelligence", route: "#intelligence", completionActivities: Object.freeze(["plan-imported", "operator-inspected"]) },
     { id: "ai", order: 10, label: "AI Learning Lab", title: "AI Learning Lab", route: "#ai" },
     { id: "reto", order: 11, label: "Comprueba", title: "Comprueba tu comprensión", route: "#reto" },
-    { id: "ai-internals", order: 12, label: "Oracle AI Database Internals", title: "Oracle AI Database Internals", route: "#ai-internals" }
+    { id: "ai-internals", order: 12, label: "Oracle AI Database Internals", title: "Oracle AI Database Internals", route: "#ai-internals" },
+    { id: "architecture-explorer", order: 13, label: "AI Architecture Explorer", title: "Oracle AI Database Architecture Explorer", route: "#architecture-explorer", completionActivities: Object.freeze(["architecture-explored", "component-selected", "flow-ran", "security-reviewed", "alternative-compared"]) }
   ].map((chapter) => Object.freeze(chapter)));
 
   const getChapter = (id) => chapters.find((chapter) => chapter.id === id) || null;

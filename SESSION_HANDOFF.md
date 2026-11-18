@@ -3,9 +3,60 @@
 ## Estado actual
 
 - **Fecha:** 2026-11-18
-- **Rama:** `fix/ai-internals-runbook-access` creada desde `origin/main` en `262161f`, que integra Pull Request #4 de Sprint 5.
-- **Sprint:** 5 — corrección de acceso RunBook.
-- **Estado de entrega:** corrección validada y aprobada para cierre; se publicará mediante commit y Pull Request sin merge automático. `main` no fue modificado directamente.
+- **Rama:** `feature/oracle-ai-architecture-explorer`, creada desde `origin/main` tras los Sprints 0–5 integrados.
+- **Sprint:** 6 — Oracle AI Database Architecture Explorer.
+- **Estado de entrega:** implementación, auditoría y publicación completas. Commit de implementación `e1e950b` y Pull Request #6 abiertos; no se hará merge ni se modificará directamente `main`.
+
+## Sprint 6 — Handoff de implementación
+
+| Área | Resultado |
+| --- | --- |
+| Explorer | Capítulo 13, tarjeta de catálogo y rutas `#architecture-explorer`, `#architecture-retail`, `#architecture-finance` y `#architecture-operations`. Los capítulos 01–12 y sus rutas no se renumeraron. |
+| Referencias | Tres modelos declarativos: Retail/recomendaciones, Finanzas/RAG y Operaciones/agente con acción denegada. Cada uno incluye objetivo, caso de uso, preguntas, conexiones y laboratorio relacionado. |
+| Modelo | Catálogo separado de componentes y capacidades; motores puros de grafo, flujo, seguridad, What If y guía de despliegue. `AI Vector Search` se declara como capacidad de base de datos, no como servicio desplegable independiente. |
+| UI | Canvas SVG oscuro y accesible, selección de nodos y conexiones con teclado, Component Inspector, Builder local, Data Flow Explorer, Security Inspector, AI What If, guía y perspectivas Developer/DBA sincronizadas. |
+| Navegación | Se corrigió una condición de carrera: la carga tardía de AI Internals ya no puede reemplazar el capítulo 13 activo en rutas del Explorer. |
+| Fuentes | `docs/OCI_ARCHITECTURE_EXPLORER.md` enlaza documentación oficial de Select AI, AI Profiles, Generative AI Agents/Tools y seguridad de red OCI. |
+| Archivos | Se añadieron capas `content/oci-architecture-*`, `simulation/architecture-*`, `renderer/architecture-*`, `ui/architecture-explorer.js`, CSS, cinco pruebas de motor y documentación; se actualizaron RunBook, catálogo, portal, contexto, roadmap y arquitectura. |
+
+## Auditoría funcional Sprint 6
+
+- Correcto: Builder añade un componente, cambia el modelo y el canvas; las posiciones se actualizan mediante controles de teclado.
+- Correcto: Builder crea y elimina conexiones; eliminar un nodo elimina sus conexiones; las relaciones incompatibles o los endpoints inexistentes son rechazados por el contrato.
+- Correcto: Reset restaura nodos, conexiones y eventos del escenario activo; `oracleReferenceArchitectures` permanece sin mutaciones.
+- Correcto: Data Flow utiliza la arquitectura actual, filtra conexiones inválidas, muestra advertencias cuando no hay flujo válido, resalta nodos/conexiones y mantiene el inspector en el evento seleccionado.
+- Correcto: Play/Pause/Previous/Next/Reset y el timeline se ejercitaron desde Chrome; las suites verifican determinismo y bloqueo educativo de acciones `DENIED`.
+- Correcto: Security Inspector cubre baseline representado, autorización ausente, restauración, RAG sin `AUTHORIZED_CONTEXT` y herramienta Agentic denegada. Ningún mensaje de ausencia de hallazgos afirma seguridad completa.
+- Correcto: What If conserva hechos del baseline, hipótesis y métrica de complejidad ilustrativa; repite resultados con los mismos parámetros y no muta datos originales.
+- Correcto: Deployment Guide se recalcula tras añadir/eliminar componentes, deduplica requisitos y clasifica capacidades no desplegables.
+- Correcto: Chrome confirma capítulo 13 activo único, catálogo, rutas, historial Back/Forward, progreso local, foco de conexiones, 375/768/1440 y reduced motion.
+
+## Pruebas Sprint 6
+
+- Correcto: sintaxis Node de todos los scripts nuevos e integración de `assets/portal.js`.
+- Correcto: 20 suites Node pasan, incluidas las seis nuevas de grafo, flujo, renderer, seguridad, What If y guía; las suites históricas de JOINs, planes y AI Labs siguen pasando.
+- Correcto: `git diff --check` no detecta errores de espacios.
+- Correcto: escaneo de firmas de secretos no encontró claves privadas, tokens GitHub, claves AWS, claves Google ni secretos con formato conocido en el runtime añadido.
+- Correcto: los archivos runtime nuevos no contienen URLs HTTP(S); Chrome headless también confirmó que todos los recursos cargados permanecen en el mismo origen local.
+- Correcto: Chrome headless validó ruta directa, capítulo activo 13, selección de componente, selección de conexión con `Enter`, Event Inspector del flujo, cambio a Finanzas, hash interno, What If, progreso local y ausencia de ancho extra en escritorio.
+- Correcto: emulación CDP confirmó `375 px` y `768 px` con `documentElement.scrollWidth` igual al viewport, Builder visible y scroll horizontal limitado al canvas; movimiento reducido desactiva Play. La carga final a 768 px confirmó las perspectivas Developer/DBA.
+- Evidencia local no versionada: `/private/tmp/oracle-sprint6-desktop.png`, `/private/tmp/oracle-sprint6-mobile.png`, `/private/tmp/oracle-sprint6-explorer-desktop.png` y `/private/tmp/oracle-sprint6-explorer-mobile.png`.
+
+## Limitaciones Sprint 6
+
+- El Explorer no crea ni valida recursos OCI, VCN, IAM, políticas, endpoints, Vault, cuotas, costos, observabilidad, residencia de datos o configuraciones reales.
+- No existe Oracle AI Database, SQL, embeddings, LLM, agente, MCP, herramienta ni llamada OCI real en el navegador.
+- Security Inspector y What If aplican reglas y consideraciones locales; una salida sin hallazgos no es una certificación de seguridad ni una recomendación de despliegue.
+- Las rutas y conexiones son explicaciones educativas. No son tráfico, telemetría, SQL Monitor, Audit, Logging ni métricas observadas.
+
+## Publicación Sprint 6
+
+- **Rama:** `feature/oracle-ai-architecture-explorer`, sincronizada con `origin`.
+- **Commit de implementación:** `e1e950b` — `feat: add Oracle AI Database Architecture Explorer`.
+- **Pull Request:** https://github.com/Ptorresr/oracle-sql-engine-academy/pull/6
+- **Checks:** los dos checks de GitHub finalizaron correctamente.
+- **Conflictos:** no reportados; el PR permanece abierto para revisión y sin merge.
+- **Main:** la rama local `main` no fue modificada por este trabajo.
 
 ## Trabajo realizado
 
@@ -172,5 +223,5 @@
 
 ## Siguiente actividad
 
-1. Revisar el Pull Request de `fix/ai-internals-runbook-access`; no hacer merge sin aprobación explícita.
-2. Considerar Sprint 6 para una integración opcional y segura con entornos autorizados, sin exponer secretos en GitHub Pages.
+1. Revisar el Pull Request #6 y esperar aprobación explícita antes de hacer merge.
+2. No iniciar Sprint 7 hasta cerrar formalmente el PR y acordar el siguiente alcance.
