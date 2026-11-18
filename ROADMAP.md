@@ -128,3 +128,19 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 - Las pruebas cubren determinismo, grafo, seguridad, What If, guía, navegación, responsive, teclado, reduced motion, recursos locales y regresiones.
 
 **Entrega implementada:** catálogo de componentes, tres escenarios (Retail, Finanzas y Operaciones), motores puros de grafo/flujo/seguridad/alternativas/guía, canvas SVG accesible inspirado en Anatomy, inspector contextual, controles de timeline, capítulo 13 con criterios educativos de finalización y documentación de fuentes Oracle.
+
+## Visual Design System 2.0 — Redwood + Futuristic 3D
+
+**Estado:** completado y validado en `feature/oci-runbook-visual-system`; listo para commit, publicación y Pull Request hacia `main`.
+
+**Objetivo:** unificar claro, oscuro y Sistema con tokens derivados del OCI PoC RunBook, sin reescribir motores ni reemplazar visualizaciones interactivas.
+
+**Criterios de aceptación**
+
+- El selector `Claro | Oscuro | Sistema` es accesible, no recarga la página, persiste la selección y migra preferencias `theme.v1` a `theme.v2` sin borrar la clave anterior.
+- `Sistema` sigue y reacciona a `prefers-color-scheme`; `prefers-reduced-motion` desactiva scroll suave, transiciones y animaciones no esenciales.
+- Dashboard, RunBook, Workspace, formularios, SQL, planes, Event Inspector, HASH JOIN, Comparison, AI Labs y Architecture Explorer consumen tokens centralizados; los colores semánticos de gráficos permanecen diferenciados.
+- Ilustraciones 3D locales, específicas por módulo, optimizadas a 1280×720, con `loading="lazy"`, dimensiones, alt text y licencia/procedencia documentadas.
+- Responsive 375/768/1440 px, foco visible, teclado, `aria-current`, SVG accesible, GitHub Pages sin backend ni recursos externos.
+
+**Entrega implementada:** sistema de tokens OCI, overrides de laboratorios dinámicos, selector de tema de tres estados, migración de preferencias, cinco ilustraciones 3D, documentación visual y prueba de contrato para temas. Las pruebas de motores permanecen sin cambios.

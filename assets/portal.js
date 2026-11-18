@@ -1,6 +1,22 @@
 (() => {
   "use strict";
 
+  if (!document.querySelector('link[data-tech-illustrations]')) {
+    const techStylesheet = document.createElement("link");
+    techStylesheet.rel = "stylesheet";
+    techStylesheet.href = "assets/tech-illustrations.css";
+    techStylesheet.dataset.techIllustrations = "true";
+    document.head.append(techStylesheet);
+  }
+
+  if (!document.querySelector('link[data-oci-runbook-design-system]')) {
+    const designSystemStylesheet = document.createElement("link");
+    designSystemStylesheet.rel = "stylesheet";
+    designSystemStylesheet.href = "assets/oci-runbook-design-system.css";
+    designSystemStylesheet.dataset.ociRunbookDesignSystem = "true";
+    document.head.append(designSystemStylesheet);
+  }
+
   if (!document.querySelector('link[rel="icon"]')) {
     const favicon = document.createElement("link");
     favicon.rel = "icon";
@@ -8,6 +24,66 @@
     favicon.type = "image/svg+xml";
     document.head.append(favicon);
   }
+
+  function setupThemeToggle() {
+    const themeKey = "oracle-sql-academy.theme.v2";
+    const legacyThemeKey = "oracle-sql-academy.theme.v1";
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+    const validModes = new Set(["light", "dark", "system"]);
+    let mode = "system";
+    let theme = systemTheme.matches ? "dark" : "light";
+
+    try {
+      const saved = window.localStorage.getItem(themeKey);
+      const legacy = window.localStorage.getItem(legacyThemeKey);
+      if (validModes.has(saved)) mode = saved;
+      else if (legacy === "light" || legacy === "dark") {
+        mode = legacy;
+        window.localStorage.setItem(themeKey, legacy);
+      }
+    } catch {
+      // The portal remains usable when localStorage is unavailable.
+    }
+
+    const applyTheme = (nextMode, persist = false) => {
+      mode = validModes.has(nextMode) ? nextMode : "system";
+      theme = mode === "system" ? (systemTheme.matches ? "dark" : "light") : mode;
+      document.body.dataset.theme = theme;
+      document.body.dataset.themeMode = mode;
+      document.documentElement.style.colorScheme = theme;
+      const selector = document.getElementById("themeSelect");
+      if (selector) {
+        selector.value = mode;
+        selector.setAttribute("aria-label", `Tema visual: ${selector.selectedOptions[0]?.textContent || mode}`);
+      }
+      if (persist) {
+        try {
+          window.localStorage.setItem(themeKey, mode);
+        } catch {
+          // Theme selection is intentionally best effort.
+        }
+      }
+    };
+
+    applyTheme(mode);
+    const handleSystemThemeChange = () => {
+      if (mode === "system") applyTheme("system");
+    };
+    if (typeof systemTheme.addEventListener === "function") systemTheme.addEventListener("change", handleSystemThemeChange);
+    else systemTheme.addListener(handleSystemThemeChange);
+    const top = document.querySelector(".top");
+    if (!top || document.getElementById("themeSelect")) return;
+    const picker = document.createElement("label");
+    picker.className = "theme-picker";
+    picker.htmlFor = "themeSelect";
+    picker.innerHTML = '<span>Tema</span><select id="themeSelect"><option value="light">Claro</option><option value="dark">Oscuro</option><option value="system">Sistema</option></select>';
+    const selector = picker.querySelector("select");
+    selector.addEventListener("change", () => applyTheme(selector.value, true));
+    top.insertBefore(picker, document.getElementById("resetProgress"));
+    applyTheme(mode);
+  }
+
+  setupThemeToggle();
 
   function loadScript(source) {
     return new Promise((resolve, reject) => {
@@ -199,7 +275,9 @@
       const routeId = window.location.hash.replace(/^#/, "");
       if (architectureRoutes.has(routeId) || pendingChapterId === "architecture-explorer") return;
       const activateInternals = event?.type === "academy:oracle-ai-active" || aiInternalsLabIds.has(routeId) || pendingChapterId === "ai-internals";
-      const chapterId = activateInternals ? "ai-internals" : "ai";
+      const activateLearning = routeId === "ai" || routeId === "intelligence" || pendingChapterId === "ai" || pendingChapterId === "intelligence";
+      if (!activateInternals && !activateLearning) return;
+      const chapterId = activateInternals ? "ai-internals" : (routeId === "intelligence" || pendingChapterId === "intelligence" ? "intelligence" : "ai");
       window.setTimeout(() => {
         const section = document.getElementById(chapterId);
         if (section) {

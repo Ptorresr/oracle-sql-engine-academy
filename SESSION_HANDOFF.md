@@ -3,9 +3,9 @@
 ## Estado actual
 
 - **Fecha:** 2026-11-18
-- **Rama:** `feature/oracle-ai-architecture-explorer`, creada desde `origin/main` tras los Sprints 0–5 integrados.
-- **Sprint:** 6 — Oracle AI Database Architecture Explorer.
-- **Estado de entrega:** implementación, auditoría y publicación completas. Commit de implementación `e1e950b` y Pull Request #6 abiertos; no se hará merge ni se modificará directamente `main`.
+- **Rama:** `feature/oci-runbook-visual-system`, creada preservando los cambios locales del rediseño.
+- **Sprint:** Auditoría final del sistema visual OCI PoC RunBook.
+- **Estado de entrega:** auditoría visual y funcional aprobada; el cierre, commit, publicación y Pull Request se ejecutan en esta sesión. No se hará merge.
 
 ## Sprint 6 — Handoff de implementación
 
@@ -204,6 +204,24 @@
 - Corregido: las rutas directas de los cinco laboratorios activan exclusivamente el capítulo 12 tras finalizar el ciclo de renderizado del RunBook; `#ai` conserva el capítulo 10 y sus enlaces previos.
 - Correcto: la corrección de acceso valida `#ai-internals`, catálogo, Back, las cinco rutas de laboratorio, un único `aria-current`, teclado, progreso, 375 px, 768 px, 1440 px, movimiento reducido y regresiones sin errores de consola ni solicitudes externas.
 - Corregido: se eliminó el overflow de escritorio del SVG nuevo mediante un override responsive local; se añadió favicon local para evitar la solicitud 404 observada durante la auditoría inicial.
+- Corregido: se integraron ilustraciones 3D tecnológicas en `assets/illustrations/` para Comparison Lab, HASH JOIN, AI SQL Intelligence, Oracle AI Database Internals y Architecture Explorer. Los SVG interactivos permanecen debajo de las imágenes cuando son necesarios para selección, eventos e inspector.
+- Corregido: `assets/tech-illustrations.css` centraliza tokens azul/cian, foco visible, ajuste responsive y `prefers-reduced-motion`; se carga localmente desde `assets/portal.js`.
+- Correcto: Chrome local headless cargó las cinco ilustraciones y recursos asociados con respuestas HTTP 200 en las rutas `#comparison`, `#hashjoin`, `#intelligence`, `#ai-internals` y `#architecture-explorer`; se revisaron capturas a 375 px y 768 px.
+- Correcto: las 20 suites Node, la sintaxis JavaScript y `git diff --check` pasan después de la corrección visual. El servicio de navegador integrado de Codex continúa indisponible, por lo que la evidencia usa la instalación local existente de Chrome sin instalar dependencias.
+- Cambio visual aprobado localmente: se sustituyeron las ilustraciones cálidas por cinco escenas 3D tecnológicas en `assets/illustrations/*-tech.png`, con azul eléctrico, cian, profundidad isométrica y flujos específicos para cada laboratorio. Los archivos se redimensionaron a 1280×720 y los recursos anteriores quedaron retirados por estar sin uso.
+- Cambio visual aprobado localmente: `assets/tech-illustrations.css` reemplaza los overrides cálidos por tokens azul/cian y mantiene los SVG interactivos, foco visible, responsive y `prefers-reduced-motion`. La generación no añade texto incrustado, logos, dependencias ni solicitudes externas.
+- Documentación de licencias: las imágenes son recursos originales generados para este proyecto; no se reutilizan assets ni código de Anatomy, OCI PoC RunBook o OCI Pipeline Dashboard. No se ejecutaron scripts de terceros.
+- Rediseño OCI RunBook: se inspeccionó el `workbook.css` público de la referencia y se documentaron sus tokens reales en `docs/OCI_RUNBOOK_DESIGN_SYSTEM.md`; la academia ahora carga `assets/oci-runbook-design-system.css` y ofrece tema claro/oscuro persistente sin alterar los motores.
+- Corregido en la auditoría visual: las tarjetas y paneles cargados por AI SQL Intelligence, AI Internals y Architecture Explorer usan ahora superficies y texto de los tokens OCI también en modo claro; se eliminó el contraste heredado azul/oscuro.
+- Corregido en la auditoría de navegación: la inicialización tardía de los laboratorios AI ya no reemplaza el capítulo activo cuando la ruta es `#dashboard`, `#comparison` u otro capítulo no AI; `#intelligence`, `#ai`, `#ai-internals` y `#architecture-explorer` conservan su capítulo correcto.
+- Correcto: Chrome local validó las rutas de los 13 capítulos con exactamente un `aria-current`, sin errores DOM y sin solicitudes fuera del origen local. También verificó el cambio de tema sin recarga, persistencia explícita, fallback claro/oscuro de `prefers-color-scheme` y `prefers-reduced-motion`.
+- Evidencia visual OCI RunBook: `/tmp/oracle-oci-audit-light/dashboard-panel.png`, `/tmp/oracle-oci-audit-light/comparison-panel.png`, `/tmp/oracle-oci-audit-light/intelligence-panel.png`, `/tmp/oracle-oci-audit-light/ai-internals-panel.png`, `/tmp/oracle-oci-audit-light/architecture-explorer-panel.png` y equivalentes bajo `/tmp/oracle-oci-audit-dark/`; capturas responsive en `home-375x1000.png`, `home-768x1000.png` y `home-1440x1100.png` para ambos temas.
+- Correcto: tras estos ajustes pasan nuevamente las 21 suites Node, la sintaxis JavaScript, `test -s index.html`, `git diff --check` y la comprobación de contraste de los tokens principales. No se modificaron motores de simulación ni se añadieron dependencias.
+- Limitación de auditoría: el servicio de navegador integrado de Codex no estuvo disponible; la evidencia se obtuvo con Chrome local headless existente. No se instaló un escáner automatizado como axe; el contraste se calculó para los tokens y se revisó visualmente foco, navegación, formularios, código y SVG.
+- Visual Design System 2.0: el selector `Claro | Oscuro | Sistema` persiste en `theme.v2`, migra `theme.v1` sin borrarlo, sigue cambios de `prefers-color-scheme` y no recarga ni reinicia el progreso. Chrome confirmó los tres estados y la conservación de una simulación/progreso local.
+- Corregido en responsive: a 375 px el mapa de aprendizaje se apiló y el grid RunBook usa `minmax(0, 1fr)`; el panel dejó de recortar texto y los controles siguen visibles. Captura final: `/tmp/oracle-oci-theme-v2/mobile-fixed-final.png`.
+- Correcto: la prueba de contrato `tests/theme-selection.test.js` y las 21 suites Node pasan junto con sintaxis, HTML y `git diff --check`. Capturas 2.0: `/tmp/oracle-oci-theme-v2/light-375.png`, `light-768.png`, `light-1440.png`, `dark-375.png`, `dark-768.png` y `dark-1440.png`.
+- Estado Git del rediseño: se creó `feature/oci-runbook-visual-system` preservando los cambios locales; `main` local está 19 commits detrás de `origin/main` y no se actualizó para respetar la restricción de no modificar `main`.
 
 ## Limitaciones pendientes
 
@@ -223,5 +241,6 @@
 
 ## Siguiente actividad
 
-1. Revisar el Pull Request #6 y esperar aprobación explícita antes de hacer merge.
-2. No iniciar Sprint 7 hasta cerrar formalmente el PR y acordar el siguiente alcance.
+1. Revisar el Pull Request del rediseño visual; no hacer merge automáticamente.
+2. Mantener `main` local sin actualizar; su atraso frente a `origin/main` está documentado.
+3. No iniciar Sprint 7 hasta cerrar formalmente el Pull Request.

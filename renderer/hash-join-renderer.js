@@ -45,7 +45,7 @@
     const tempVisible = state.metrics.tempPartitions > 0;
     const componentSelected = (component) => selected(selection, "component", component) ? " engine-node-selected" : "";
     const blockLabel = selection?.kind === "block" ? selection.id : (state.current?.blockIds?.join(", ") || "bloques");
-    return `<svg class="hash-engine-svg" viewBox="0 0 920 300" role="img" aria-labelledby="hashSvgTitle hashSvgDesc">
+    return `<figure class="generated-illustration hash-illustration"><img src="assets/illustrations/hash-join-tech.png" width="1280" height="720" loading="lazy" alt="Ilustración tridimensional del procesamiento de un HASH JOIN entre bloques, memoria y resultado"><figcaption>Ilustración conceptual 3D del flujo HASH JOIN. El SVG inferior conserva la selección de componentes y el inspector sincronizado.</figcaption></figure><svg class="hash-engine-svg" viewBox="0 0 920 300" role="img" aria-labelledby="hashSvgTitle hashSvgDesc">
       <title id="hashSvgTitle">Flujo conceptual de un HASH JOIN</title><desc id="hashSvgDesc">Almacenamiento, Buffer Cache, operadores SQL, workarea PGA y TEMP se resaltan según el evento educativo seleccionado.</desc>
       <defs><marker id="hashEngineArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#4cd9df"/></marker></defs>
       <path d="M165 145H248M410 145H495M665 145H748" fill="none" stroke="#4cd9df" stroke-width="4" marker-end="url(#hashEngineArrow)"/>
