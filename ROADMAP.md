@@ -94,15 +94,22 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 **Entrega implementada:** contrato único de once capítulos, capítulo 09 para AI SQL Intelligence, menú RunBook generado y sincronizado, rutas hash con Back/Forward, navegación 08 → 09 → 10, estado activo único y progreso local basado en actividades educativas. La validación final cubrió pruebas unitarias, Chrome headless, 375 px, 768 px, movimiento reducido y laboratorios existentes.
 
-## Sprint 5 — Integración visual avanzada y contenido AI Database
+## Sprint 5 — Oracle AI Database Internals Lab
 
-**Objetivo:** evaluar la adopción controlada de Anatomy y completar laboratorios de Oracle AI Database.
+**Estado:** completado y validado localmente en `feature/oracle-ai-database-internals`; pendiente de commit, publicación y Pull Request hacia `main`.
+
+**Objetivo:** explicar AI Vector Search, Hybrid Vector Search, Select AI, RAG y Agentic Workflows mediante cinco simulaciones deterministas, visuales y seguras, sin backend ni servicios externos.
 
 **Criterios de aceptación**
 
-- Cualquier uso de Anatomy está fijado a una revisión, conserva atribución MIT y supera su revisión de scripts y accesibilidad.
-- Las figuras degradan sin WebGL y respetan rendimiento móvil.
-- Los módulos Vector Search, Hybrid Vector Search, Select AI y RAG incluyen los tres casos de uso y los límites de la simulación.
+- Cinco laboratorios con tres escenarios sintéticos de Retail, Finanzas y Operaciones, contrato educativo, SQL/API de referencia, preguntas y advertencias DBA/seguridad.
+- Eventos reproducibles con ubicación explícita: `DATABASE_SIMULATED`, `APPLICATION_SIMULATED`, `EXTERNAL_AI_SIMULATED` o `EDUCATIONAL_ABSTRACTION`.
+- Vector Search calcula métricas validadas, Top-K, empates deterministas, exact/approximate conceptual y recall del dataset sin presentar HNSW/IVF como implementación local.
+- Hybrid Search declara y visualiza su fusión educativa; Select AI no genera SQL; RAG filtra permisos antes del contexto; Agentic rechaza operaciones no autorizadas.
+- Event Inspector, vistas Developer/Processing Flow/Internals, tutor local, What If, controles Play/Pause/Step/Reset/velocidad, SVG accesible, rutas directas y progreso local permanecen sincronizados.
+- Las 14 suites de motores/renderers y regresiones pasan; Chrome headless valida escritorio, 375 px, 768 px, teclado, rutas, reduced motion, recursos locales y ausencia de errores de consola.
+
+**Entrega implementada:** capas `content/`, `simulation/`, `renderer/`, `ui/`, `assets/`, `tests/` y `sql/` incrementales. No se modifican motores previos, no se añaden dependencias y no se habilitan llamadas de red.
 
 ## Sprint 6 — Calidad, publicación y evolución
 

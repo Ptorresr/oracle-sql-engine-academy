@@ -107,6 +107,35 @@ El progreso mantiene la clave local existente y añade `completed` y `activities
 Referencia: https://github.com/wheresryan22/anatomy
 Acción pendiente: revisar código, licencia, dependencias y guía SKILL.md de upstream antes de incorporar assets o lógica. No copiar código de un repositorio no inspeccionado.
 
+## Oracle AI Database Internals Lab — Sprint 5
+
+```text
+content/*-scenarios.js
+  └─ casos sintéticos, SQL/API de referencia y restricciones de seguridad
+       │
+simulation/*-engine.js
+  └─ eventos inmutables, ranking o flujos deterministas
+       │
+renderer/ai-data-flow-renderer.js + renderers específicos
+  └─ SVG accesible, ranking, lanes y perspectivas sincronizadas
+       │
+ui/oracle-ai-internals-lab.js
+  └─ tabs, timeline, Event Inspector, tutor, What If y progreso local
+```
+
+El evento extendido conserva el contrato básico y añade explicación, ubicación y representación:
+
+```js
+{ step, type, source, target, rowIds, blockIds, label, illustrativeMetrics,
+  explanation, executionLocation, representation }
+```
+
+`executionLocation` solo puede describir `DATABASE_SIMULATED`, `APPLICATION_SIMULATED`, `EXTERNAL_AI_SIMULATED` o `EDUCATIONAL_ABSTRACTION`. No describe una ubicación observada ni internals físicos. El estado del motor nunca depende de temporizadores: la UI solo avanza un índice de eventos.
+
+Vector Search realiza cálculos locales de distancia sobre arrays sintéticos. Su modo approximate reduce candidatos según un escenario fijo y calcula recall contra el Top-K exacto del mismo dataset; es una abstracción pedagógica, no HNSW, IVF, `DBMS_VECTOR` ni una estimación de rendimiento. Hybrid Search muestra una fusión normalizada definida por el laboratorio y no atribuye su fórmula a `DBMS_HYBRID_VECTOR`.
+
+Select AI, RAG y Agentic separan las fronteras de procesamiento: el SQL está predefinido, las respuestas son educativas predefinidas, RAG excluye documentos no permitidos antes de segmentar y un workflow sin permiso termina rechazado. No hay LLM, perfil, credencial, ACL, MCP, herramienta, SQL ni conexión Oracle real en el runtime.
+
 ## Skills de apoyo (archivos entregados)
 - `sql-query-reviewer`: revisión de semántica y cardinalidad.
 - `sql-plsql-formatting`: estilo SQL.

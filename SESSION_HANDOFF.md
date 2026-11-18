@@ -2,10 +2,10 @@
 
 ## Estado actual
 
-- **Fecha:** 2026-11-16
-- **Rama:** `feature/sprint4-runbook-navigation` creada desde `origin/main` en `07e8daf` tras la integración de Sprint 4.
-- **Sprint:** 4.1 — RunBook Navigation & UX Integration.
-- **Estado de entrega:** Sprint 4.1 cerrado y publicado en `origin/feature/sprint4-runbook-navigation`; el siguiente paso es revisión mediante Pull Request. No se hace merge automático y `main` no fue modificado.
+- **Fecha:** 2026-11-18
+- **Rama:** `feature/oracle-ai-database-internals` creada desde `origin/main` en `c26cdaf`, que integra Pull Request #3 de Sprint 4.1.
+- **Sprint:** 5 — Oracle AI Database Internals Lab.
+- **Estado de entrega:** Sprint 5 completado y validado; cierre autorizado para commit, publicación y Pull Request. `main` no fue modificado y no se realiza merge automático.
 
 ## Trabajo realizado
 
@@ -24,6 +24,8 @@
 | Sprint 4 intelligence | Se añadieron tres ejemplos de planes ilustrativos, importación local de texto `DBMS_XPLAN`, parser puro, visualizador tabular/jerárquico/SVG, inspector de operadores, cardinalidad prudente, hallazgos basados en evidencia, SQL Analyzer, What If? y tutor por reglas. |
 | Auditoría Sprint 4 | Se corrigió la tabla del visualizador para mostrar todas las columnas presentes, incluido `A-Time`; se amplió la cobertura de parser para predicados `filter`, Notes, marcadores `*`, métricas abreviadas, workarea, entrada incompleta y estadísticas ausentes. |
 | Sprint 4.1 RunBook | Se centralizó la definición de 11 capítulos, se integró Intelligence como capítulo 09, se sincronizaron hash/breadcrumbs/estado activo/historial y se añadieron actividades educativas persistentes sin sobrescribir progreso previo. |
+| Sprint 5 AI Internals | Se agregaron cinco simulaciones locales: Vector Search, Hybrid Search, Select AI, RAG y Agentic Workflows. Comparten eventos deterministas con ubicación declarada, SVG de flujo, Event Inspector, perspectivas, tutor de reglas, What If y progreso local. |
+| Auditoría Sprint 5 | Chrome headless validó los cinco laboratorios, rutas directas e historial, Play/Pause/Step/Reset, Event Inspector, teclado, reduced motion, 375 px, 768 px, 1440 px, ausencia de errores de consola y recursos de la aplicación fuera de la red. |
 
 ## Decisiones vigentes
 
@@ -77,6 +79,33 @@
 - `tests/sql-intelligence-renderer.test.js`
 - `content/runbook-chapters.js`
 - `tests/runbook-chapters.test.js`
+- `content/ai-vector-scenarios.js`
+- `content/hybrid-search-scenarios.js`
+- `content/select-ai-scenarios.js`
+- `content/rag-scenarios.js`
+- `content/agentic-scenarios.js`
+- `simulation/vector-distance-engine.js`
+- `simulation/vector-search-engine.js`
+- `simulation/hybrid-search-engine.js`
+- `simulation/select-ai-flow-engine.js`
+- `simulation/rag-pipeline-engine.js`
+- `simulation/agentic-workflow-engine.js`
+- `renderer/ai-data-flow-renderer.js`
+- `renderer/vector-search-renderer.js`
+- `renderer/hybrid-search-renderer.js`
+- `renderer/rag-renderer.js`
+- `renderer/agentic-renderer.js`
+- `ui/oracle-ai-internals-lab.js`
+- `assets/oracle-ai-internals.css`
+- `assets/favicon.svg`
+- `sql/oracle-ai-internals-examples.sql`
+- `docs/ORACLE_AI_INTERNALS_LAB.md`
+- `tests/vector-distance-engine.test.js`
+- `tests/vector-search-engine.test.js`
+- `tests/hybrid-search-engine.test.js`
+- `tests/select-ai-flow-engine.test.js`
+- `tests/rag-pipeline-engine.test.js`
+- `tests/agentic-workflow-engine.test.js`
 
 ## Pruebas
 
@@ -116,6 +145,12 @@
 - Correcto: Chrome headless abrió `#intelligence`, confirmó capítulos 01–11, un único `aria-current`, transición 08 → 09 → 10, Back/Forward, foco de teclado, 375 px, 768 px y ausencia de errores de consola.
 - Correcto: el progreso local deja Intelligence incompleto al importar un plan y lo completa solo tras seleccionar un operador; la estructura `visited`, `activities` y `completed` persiste en la clave existente de `localStorage`.
 - Evidencia visual local: `/private/tmp/oracle-sprint4-intelligence.png` muestra el catálogo con la tarjeta AI SQL Intelligence; el artefacto no se versionó.
+- Correcto: las seis suites de Sprint 5 validan métricas vectoriales, dimensiones incompatibles, vector cero, Top-K, exact/approximate conceptual, recall, recuperación textual/vectorial, fusión, Select AI predefinido, chunking/overlap, permisos RAG y rechazo agéntico.
+- Correcto: la suite completa de 14 pruebas Node pasa junto con sintaxis de scripts nuevos, `git diff --check`, entrada HTML y detección de marcadores de merge.
+- Correcto: al no estar disponible el servicio de navegador de Codex, se utilizó la instalación local existente de Chrome en modo headless, sin instalar dependencias. Se validaron los cinco tabs, eventos, inspector, Top-K/approximate, fusión, SQL predefinido, permisos RAG, rechazo Agentic, Back, teclado, reduced motion y regresiones visibles.
+- Correcto: los viewports de 375 px, 768 px y 1440 px no presentan overflow de documento; Chrome no reportó excepciones ni solicitudes externas de la aplicación. Capturas locales revisadas: `/private/tmp/oracle-sprint5-desktop.png` y `/private/tmp/oracle-sprint5-mobile.png`.
+- Corregido: rutas directas AI ahora activan exclusivamente el capítulo 10 tras finalizar el ciclo de renderizado del RunBook; se verificó `#ai-vector-search` y `#rag-architecture`.
+- Corregido: se eliminó el overflow de escritorio del SVG nuevo mediante un override responsive local; se añadió favicon local para evitar la solicitud 404 observada durante la auditoría inicial.
 
 ## Limitaciones pendientes
 
@@ -126,6 +161,8 @@
 - La comparación cubre INNER JOIN por igualdad; no pretende reproducir orden físico, adaptive joins, paralelismo, costos ni la selección real del optimizador.
 - AI SQL Intelligence Lab no ejecuta SQL, no se conecta a Oracle, no reproduce el optimizador, no calcula costos ni predice planes reales. Los ejemplos son planes sintéticos explícitamente ilustrativos.
 - El parser requiere tablas con `Id` y `Operation`; no interpreta formatos gráficos, secciones propietarias no tabulares ni asociaciones ambiguas. No reemplaza `DBMS_XPLAN`, SQL Monitor, AWR o investigación de producción.
+- Sprint 5 no implementa HNSW/IVF, `DBMS_VECTOR`, `DBMS_HYBRID_VECTOR`, `DBMS_CLOUD_AI`, `DBMS_CLOUD_AI_AGENT`, modelos, perfiles, credenciales, ACLs ni conexiones reales. Sus recorridos son educativos y no mediciones ni planes de Oracle.
+- Las capturas y pruebas Chrome usan un servidor efímero y perfiles temporales no versionados. La academia continúa sin backend, credenciales, LLM, Oracle Database ni instrumentación de producción.
 
 ## Integración Obsidian
 
@@ -133,6 +170,5 @@
 
 ## Siguiente actividad
 
-1. Revisar el Pull Request de Sprint 4.1 hacia `main`; no hacer merge sin aprobación explícita.
-2. Considerar Sprint 5 para ampliar formatos de plan e integración visual avanzada, sin afirmar diagnóstico productivo.
-3. Mantener el portal sin backend; antes de instalar Anatomy, fijar versión y revisar los scripts concretos que se pretendan ejecutar.
+1. Publicar `feature/oracle-ai-database-internals` y crear Pull Request hacia `main`; no hacer merge sin aprobación explícita.
+2. Considerar Sprint 6 para una integración opcional y segura con entornos autorizados, sin exponer secretos en GitHub Pages.

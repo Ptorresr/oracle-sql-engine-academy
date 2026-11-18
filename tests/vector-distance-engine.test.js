@@ -1,0 +1,13 @@
+"use strict";
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const context = { Object, Array, Number, Math, String }; context.globalThis = context; vm.createContext(context);
+vm.runInContext(fs.readFileSync("simulation/vector-distance-engine.js", "utf8"), context);
+const engine = context.OracleVectorDistanceEngine;
+assert.equal(engine.euclidean([0, 0], [3, 4]), 5);
+assert.equal(engine.cosine([1, 0], [0, 1]), 1);
+assert.equal(engine.cosine([0, 0], [1, 0]), null);
+assert.equal(engine.euclidean([1], [1, 2]), null);
+assert.equal(engine.calculate("DOT", [1, 2], [3, 4]).similarity, 11);
+console.log("vector-distance-engine: passed");
