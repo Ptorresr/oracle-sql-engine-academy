@@ -1,6 +1,14 @@
 (() => {
   "use strict";
 
+  if (!document.querySelector('link[rel="icon"]')) {
+    const favicon = document.createElement("link");
+    favicon.rel = "icon";
+    favicon.href = "assets/favicon.svg";
+    favicon.type = "image/svg+xml";
+    document.head.append(favicon);
+  }
+
   function loadScript(source) {
     return new Promise((resolve, reject) => {
       const script = document.createElement("script");
@@ -183,6 +191,16 @@
       if (section) chapterObserver.observe(section);
       if (pendingChapterId === "intelligence" || window.location.hash === "#intelligence") scrollTo("intelligence", "none");
     });
+    const activateAiChapter = () => {
+      window.setTimeout(() => {
+        if (document.getElementById("ai")) {
+          markVisited("ai");
+          setActiveChapter(runbook.getIndex("ai"));
+        }
+      }, 0);
+    };
+    window.addEventListener("academy:oracle-ai-ready", activateAiChapter);
+    window.addEventListener("academy:oracle-ai-active", activateAiChapter);
   }
 
   function updateWorkspace() {
@@ -275,6 +293,40 @@
   }
 
   loadSqlIntelligenceLab();
+  function loadOracleAiInternalsLab() {
+    const stylesheet = document.createElement("link");
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = "assets/oracle-ai-internals.css";
+    document.head.append(stylesheet);
+    const aiResponsiveOverride = document.createElement("style");
+    aiResponsiveOverride.textContent = "@media (min-width: 769px) { .ai-data-flow { min-width: 0; } }";
+    document.head.append(aiResponsiveOverride);
+    const files = [
+      "content/ai-vector-scenarios.js",
+      "content/hybrid-search-scenarios.js",
+      "content/select-ai-scenarios.js",
+      "content/rag-scenarios.js",
+      "content/agentic-scenarios.js",
+      "simulation/vector-distance-engine.js",
+      "simulation/vector-search-engine.js",
+      "simulation/hybrid-search-engine.js",
+      "simulation/select-ai-flow-engine.js",
+      "simulation/rag-pipeline-engine.js",
+      "simulation/agentic-workflow-engine.js",
+      "renderer/ai-data-flow-renderer.js",
+      "renderer/vector-search-renderer.js",
+      "renderer/hybrid-search-renderer.js",
+      "renderer/rag-renderer.js",
+      "renderer/agentic-renderer.js",
+      "ui/oracle-ai-internals-lab.js"
+    ];
+    files.reduce((chain, source) => chain.then(() => loadScript(source)), Promise.resolve()).then(() => {
+      window.dispatchEvent(new CustomEvent("academy:oracle-ai-ready"));
+    }).catch(() => {
+      byId("portalFeedback").textContent = "No se pudo cargar Oracle AI Database Internals Lab localmente.";
+    });
+  }
+  loadOracleAiInternalsLab();
   globalThis.OracleRunbookNavigation = Object.freeze({ chapters, navigate: (chapterId) => scrollTo(chapterId), getActiveChapter: () => chapters[activeChapter]?.id, getProgress: () => JSON.parse(JSON.stringify(progress)), recordActivity });
   }
 

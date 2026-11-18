@@ -1,0 +1,1 @@
+(() => { "use strict"; const render = (run) => `<div class="agentic-map"><span>Usuario</span><span>Agente educativo</span><span>Política</span><span class="${run.permitted ? "is-authorized" : "is-rejected"}">${run.permitted ? "Herramienta autorizada" : "Herramienta rechazada"}</span><span>Resultado</span></div>`; globalThis.OracleAgenticRenderer = Object.freeze({ render }); })();

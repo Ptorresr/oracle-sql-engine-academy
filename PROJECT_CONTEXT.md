@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprint 4 integrado en `main`; Sprint 4.1 — RunBook Navigation & UX Integration completado y publicado en `origin/feature/sprint4-runbook-navigation`, pendiente de revisión mediante Pull Request hacia `main`.
+**Estado:** Sprints 0–4.1 integrados en `main`; Sprint 5 — Oracle AI Database Internals Lab completado y validado en `feature/oracle-ai-database-internals`, pendiente de publicación y Pull Request hacia `main`.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 
@@ -17,6 +17,8 @@ Sprint 3 compara HASH JOIN, NESTED LOOPS y SORT MERGE JOIN sobre datasets equiva
 Sprint 4 incorpora un laboratorio local que recibe texto no confiable de planes Oracle, lo normaliza y lo presenta como datos importados. El análisis de cardinalidad, hallazgos, SQL Analyzer, What If? y tutor son reglas y cálculos locales; no son telemetría ni IA generativa.
 
 Sprint 4.1 convierte AI SQL Intelligence en el capítulo 09 oficial del RunBook. La secuencia, rutas, breadcrumbs, estado activo y anterior/siguiente se derivan de un contrato único; el progreso distingue exploración de finalización educativa local.
+
+Sprint 5 integra cinco laboratorios locales y deterministas bajo el capítulo AI existente: AI Vector Search, Hybrid Vector Search, Select AI, RAG Architecture y Agentic Workflows. Sus motores separan datos, eventos y renderizado; cada evento declara si representa Database, aplicación, servicio externo o abstracción educativa. Ningún vector, SQL, LLM, agente o herramienta se ejecuta fuera del navegador.
 
 ## Entrega Sprint 1
 
@@ -72,6 +74,14 @@ Sprint 4.1 convierte AI SQL Intelligence en el capítulo 09 oficial del RunBook.
 - `content/runbook-chapters.js` es la fuente de verdad de los once capítulos: identificador estable, orden, título, ruta, relación anterior/siguiente y criterios de finalización cuando corresponden.
 - `assets/portal.js` genera la navegación activa desde ese contrato, resuelve `#intelligence` incluso si el laboratorio termina de cargar de forma local, sincroniza `aria-current`, breadcrumbs, título, historial Back/Forward y navegación secuencial.
 - AI SQL Intelligence se completa localmente solo después de importar un plan y seleccionar un operador; abrir el capítulo únicamente lo registra como explorado. El formato existente de `localStorage` se amplía sin borrar el progreso anterior.
+
+## Implementación Sprint 5
+
+- Los escenarios de Retail, Finanzas y Operaciones residen en `content/` y usan exclusivamente datos sintéticos. Cada laboratorio conserva objetivo, SQL/API de referencia, resultados esperados, seguridad y límites.
+- `simulation/vector-distance-engine.js` calcula coseno, euclidiana y producto punto con validación de dimensiones y vectores cero. `vector-search-engine.js` compara búsqueda exacta con una reducción de candidatos marcada como abstracción educativa; no implementa HNSW ni IVF.
+- Hybrid Search normaliza y fusiona dos señales con pesos visibles solo para el laboratorio. Select AI usa SQL predefinido; RAG filtra por rol antes de crear chunks/contexto; Agentic Workflows rechaza acciones sin permiso/confirmación.
+- `renderer/ai-data-flow-renderer.js` entrega SVG accesible y perspectivas Developer, Processing Flow e Internals. `ui/oracle-ai-internals-lab.js` sincroniza controles, timeline, Event Inspector, tutor de reglas, What If local, navegación por teclado y progreso local.
+- Los ejemplos de `sql/oracle-ai-internals-examples.sql` son material de lectura para Oracle AI Database 26ai. No se ejecutan desde GitHub Pages y documentan configuración, privilegios, perfiles, credenciales y red como requisitos externos.
 
 ## Arquitectura de referencia para módulos futuros
 

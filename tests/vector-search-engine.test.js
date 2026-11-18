@@ -1,0 +1,12 @@
+"use strict";
+const assert = require("node:assert/strict"); const fs = require("node:fs"); const vm = require("node:vm");
+const context = { Object, Array, Number, Math, String, Set, Map, console }; context.globalThis = context; vm.createContext(context);
+["content/ai-vector-scenarios.js", "simulation/vector-distance-engine.js", "simulation/vector-search-engine.js"].forEach((file) => vm.runInContext(fs.readFileSync(file, "utf8"), context));
+const scenario = context.oracleAiVectorScenarios[0]; const engine = context.OracleVectorSearchEngine;
+const exact = engine.run(scenario, { metric: "COSINE", topK: 2, mode: "exact" }); const replay = engine.run(scenario, { metric: "COSINE", topK: 2, mode: "exact" });
+assert.deepEqual(JSON.parse(JSON.stringify(exact)), JSON.parse(JSON.stringify(replay)));
+assert.equal(exact.results.length, 2); assert.equal(exact.ranking[0].id, "retail-1"); assert.equal(exact.recall, 1);
+const approximate = engine.run(scenario, { metric: "COSINE", topK: 2, mode: "approximate", candidateCount: 2 });
+assert.ok(approximate.events.some((event) => event.type === "VECTOR_INDEX_SEARCH")); assert.ok(approximate.recall >= 0 && approximate.recall <= 1);
+assert.ok(exact.events.every((event, index) => event.step === index + 1 && engine.EVENT_TYPES.includes(event.type)));
+console.log("vector-search-engine: passed");
