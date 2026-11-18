@@ -148,3 +148,28 @@ Select AI, RAG y Agentic separan las fronteras de procesamiento: el SQL está pr
 
 ## Seguridad
 No enviar SQL arbitrario a una BD desde un frontend público. Nunca exponer credenciales OCI, tokens ni claves de LLM. Cualquier servicio futuro debe usar autenticación, cuotas, límites y validación.
+
+## Oracle AI Database Architecture Explorer — Sprint 6
+
+```text
+content/oci-architecture-*.js
+  └─ catálogo de componentes, escenarios y preguntas
+       │
+simulation/architecture-*.js
+  ├─ grafo y validación estructural
+  ├─ timeline determinista del flujo
+  ├─ hallazgos de seguridad educativos
+  ├─ What If cualitativo y guía de despliegue
+       │
+renderer/architecture-*.js
+  └─ canvas SVG, flujo, inspector y leyendas accesibles
+       │
+ui/architecture-explorer.js
+  └─ galería, Builder local, controles, progreso y rutas
+```
+
+El Explorer conserva la separación entre modelo y presentación: el canvas no decide conexiones, los renderers no cambian el estado y la UI solo actualiza una variante local de los datos declarados. Todos los eventos incluyen la forma común `{ step, type, source, target, rowIds, blockIds, label, illustrativeMetrics }` y agregan `executionLocation` y una explicación educativa cuando corresponde.
+
+Los resultados de Graph Validation, Security Inspector y AI What If tienen alcances distintos. La validación estructural detecta referencias, relaciones y desconexiones representadas; Security Inspector aplica reglas didácticas de identidad, secretos, herramientas y contexto RAG; What If compara consideraciones cualitativas. Ninguno valida una tenancy OCI, políticas IAM, VCN, endpoints, Vault, observabilidad, costos o disponibilidad real.
+
+La navegación usa el capítulo 13 `architecture-explorer` y rutas internas `#architecture-retail`, `#architecture-finance` y `#architecture-operations`. Todas activan el capítulo 13 sin alterar los capítulos 01–12. Ver `docs/OCI_ARCHITECTURE_EXPLORER.md` para fuentes oficiales y límites de producto.

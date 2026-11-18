@@ -1,0 +1,23 @@
+const assert = require("assert");
+const fs = require("fs");
+const vm = require("vm");
+
+const context = { globalThis: {} };
+vm.runInNewContext(fs.readFileSync("simulation/architecture-security-engine.js", "utf8"), context);
+const engine = context.globalThis.OracleArchitectureSecurityEngine;
+const unsafe = { id: "unsafe", nodes: [{ id: "db", componentId: "ai-database" }, { id: "agent", componentId: "agent" }, { id: "tool", componentId: "tool" }], edges: [{ id: "database", source: "agent", target: "db", relationship: "DATABASE_QUERY", securityContext: "NONE" }, { id: "tool-call", source: "agent", target: "tool", relationship: "TOOL_CALL", securityContext: "NONE" }, { id: "model", source: "agent", target: "tool", relationship: "MODEL_REQUEST", securityContext: "AUTHENTICATED" }] };
+const findings = engine.analyze(unsafe);
+assert.ok(findings.some((finding) => finding.id === "SEC-001"));
+assert.ok(findings.some((finding) => finding.id === "SEC-002"));
+assert.ok(findings.some((finding) => finding.id === "SEC-003"));
+assert.ok(findings.every((finding) => finding.limitations.length));
+const safe = { id: "safe", nodes: [{ id: "db", componentId: "ai-database" }, { id: "vault", componentId: "vault" }], edges: [{ id: "database", source: "vault", target: "db", relationship: "DATABASE_QUERY", securityContext: "AUTHENTICATED" }] };
+assert.strictEqual(engine.analyze(safe).length, 0);
+const withoutAuthorization = { ...safe, edges: [{ ...safe.edges[0], securityContext: "NONE" }] };
+assert.ok(engine.analyze(withoutAuthorization).some((finding) => finding.id === "SEC-001"));
+assert.strictEqual(engine.analyze(safe).some((finding) => finding.id === "SEC-001"), false);
+const ragWithoutFilter = { id: "finance-rag", nodes: [{ id: "rag", componentId: "rag-orchestrator" }], edges: [] };
+assert.ok(engine.analyze(ragWithoutFilter).some((finding) => finding.id === "SEC-004"));
+const deniedTool = { id: "agent", nodes: [{ id: "agent", componentId: "agent" }, { id: "tool", componentId: "tool" }], edges: [{ id: "tool", source: "agent", target: "tool", relationship: "TOOL_CALL", securityContext: "DENIED" }] };
+assert.strictEqual(engine.analyze(deniedTool).some((finding) => finding.id === "SEC-003"), false);
+console.log("architecture-security-engine: ok");

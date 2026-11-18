@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprints 0–5 integrados en `main`; el acceso de Sprint 5 se corrige en `fix/ai-internals-runbook-access` para exponer el capítulo 12 sin alterar los capítulos existentes.
+**Estado:** Sprints 0–5 están integrados en `origin/main`; Sprint 6 está completado y validado en `feature/oracle-ai-architecture-explorer`, pendiente de publicación y Pull Request.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 
@@ -19,6 +19,8 @@ Sprint 4 incorpora un laboratorio local que recibe texto no confiable de planes 
 Sprint 4.1 convierte AI SQL Intelligence en el capítulo 09 oficial del RunBook. La secuencia, rutas, breadcrumbs, estado activo y anterior/siguiente se derivan de un contrato único; el progreso distingue exploración de finalización educativa local.
 
 Sprint 5 integra cinco laboratorios locales y deterministas bajo el capítulo AI existente: AI Vector Search, Hybrid Vector Search, Select AI, RAG Architecture y Agentic Workflows. Sus motores separan datos, eventos y renderizado; cada evento declara si representa Database, aplicación, servicio externo o abstracción educativa. Ningún vector, SQL, LLM, agente o herramienta se ejecuta fuera del navegador.
+
+Sprint 6 añade Oracle AI Database Architecture Explorer como capítulo 13. Presenta arquitecturas declarativas de Retail, Finanzas y Operaciones, un Builder local y motores deterministas para grafo, flujo, hallazgos de seguridad, alternativas y guía de despliegue. Es una herramienta didáctica: no configura OCI, no valida una arquitectura real, no consulta servicios externos y no reemplaza una revisión de seguridad.
 
 ## Entrega Sprint 1
 
@@ -82,6 +84,14 @@ Sprint 5 integra cinco laboratorios locales y deterministas bajo el capítulo AI
 - Hybrid Search normaliza y fusiona dos señales con pesos visibles solo para el laboratorio. Select AI usa SQL predefinido; RAG filtra por rol antes de crear chunks/contexto; Agentic Workflows rechaza acciones sin permiso/confirmación.
 - `renderer/ai-data-flow-renderer.js` entrega SVG accesible y perspectivas Developer, Processing Flow e Internals. `ui/oracle-ai-internals-lab.js` sincroniza controles, timeline, Event Inspector, tutor de reglas, What If local, navegación por teclado y progreso local.
 - Los ejemplos de `sql/oracle-ai-internals-examples.sql` son material de lectura para Oracle AI Database 26ai. No se ejecutan desde GitHub Pages y documentan configuración, privilegios, perfiles, credenciales y red como requisitos externos.
+
+## Implementación Sprint 6
+
+- `content/oci-architecture-components.js` y `content/oci-reference-architectures.js` separan componentes, capacidades y tres arquitecturas de referencia. AI Vector Search se identifica expresamente como capacidad de base de datos, no como recurso independiente.
+- `simulation/architecture-*.js` y `simulation/architecture-deployment-guide.js` son funciones locales deterministas. Separan integridad de grafo, eventos de flujo, hallazgos de seguridad, hipótesis What If y guía educativa.
+- `renderer/architecture-*.js`, `ui/architecture-explorer.js` y `assets/architecture-explorer.css` proveen SVG interactivo, selector de componente/conexión, Builder accesible, controles de timeline, Security Inspector y una vista responsive sin dependencias externas.
+- `content/runbook-chapters.js` define el capítulo 13 con cinco actividades locales de completitud. `assets/portal.js` resuelve sus rutas internas sin permitir que la carga tardía de otros laboratorios reemplace el capítulo activo.
+- `docs/OCI_ARCHITECTURE_EXPLORER.md` conserva fuentes oficiales y límites: Select AI, servicios Generative AI, IAM, red y seguridad dependen de producto, versión, región, proveedor, políticas y configuración.
 
 ## Arquitectura de referencia para módulos futuros
 

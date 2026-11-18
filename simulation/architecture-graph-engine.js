@@ -1,0 +1,11 @@
+(() => { "use strict";
+  const clone = (architecture) => JSON.parse(JSON.stringify(architecture));
+  const compatible = new Set(["HTTPS_REQUEST","API_CALL","AUTHENTICATION","DATABASE_QUERY","DATABASE_CAPABILITY","EMBEDDING_REQUEST","DOCUMENT_INGESTION","MODEL_REQUEST","AUDIT_EVENT","OBSERVABILITY_EVENT","AGENT_REQUEST","TOOL_CALL"]);
+  const unique = (items, id) => !items.some((item) => item.id === id);
+  const addNode = (architecture, node) => unique(architecture.nodes, node.id) ? { ...architecture, nodes: [...architecture.nodes, { ...node }] } : architecture;
+  const removeNode = (architecture, id) => ({ ...architecture, nodes: architecture.nodes.filter((node) => node.id !== id), edges: architecture.edges.filter((edge) => edge.source !== id && edge.target !== id) });
+  const addEdge = (architecture, edge) => unique(architecture.edges, edge.id) && architecture.nodes.some((node) => node.id === edge.source) && architecture.nodes.some((node) => node.id === edge.target) && compatible.has(edge.relationship) ? { ...architecture, edges: [...architecture.edges, { ...edge }] } : architecture;
+  const removeEdge = (architecture, id) => ({ ...architecture, edges: architecture.edges.filter((edge) => edge.id !== id) });
+  const validate = (architecture) => { const findings = []; const ids = new Set(architecture.nodes.map((node) => node.id)); architecture.edges.forEach((edge) => { if (!ids.has(edge.source) || !ids.has(edge.target)) findings.push({ severity: "error", category: "STRUCTURE", evidence: `La conexión ${edge.id} referencia un nodo inexistente.`, affectedEdges: [edge.id] }); if (!compatible.has(edge.relationship)) findings.push({ severity: "error", category: "RELATIONSHIP", evidence: `La relación ${edge.relationship} no pertenece al contrato.`, affectedEdges: [edge.id] }); }); architecture.nodes.forEach((node) => { if (!architecture.edges.some((edge) => edge.source === node.id || edge.target === node.id) && node.componentId !== "user") findings.push({ severity: "warning", category: "CONNECTIVITY", evidence: `${node.label} no tiene conexiones representadas.`, affectedNodes: [node.id] }); }); return Object.freeze(findings); };
+  globalThis.OracleArchitectureGraphEngine = Object.freeze({ compatible: Object.freeze([...compatible]), clone, addNode, removeNode, addEdge, removeEdge, validate });
+})();
