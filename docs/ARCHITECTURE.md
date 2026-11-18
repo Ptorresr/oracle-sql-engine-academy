@@ -103,6 +103,8 @@ El controlador resuelve hashes iniciales y eventos `hashchange`/`popstate`. Si `
 
 El progreso mantiene la clave local existente y añade `completed` y `activities` sin borrar `visited`. Entrar en un capítulo solo registra exploración. Para completar `intelligence`, la UI emite las actividades locales `plan-imported` y `operator-inspected`; no hay persistencia remota ni datos de estudiantes fuera del navegador.
 
+Sprint 5 extiende el contrato sin renumerar capítulos existentes: `ai-internals` es el capítulo 12 y apunta al panel dinámico Oracle AI Database Internals Lab. El catálogo lo enlaza como módulo disponible. Sus rutas `#ai-vector-search`, `#hybrid-vector-search`, `#select-ai-flow`, `#rag-architecture` y `#agentic-workflows` mantienen seleccionado el laboratorio correspondiente y activan exclusivamente el capítulo 12. Las rutas directas se resuelven después de la carga dinámica mediante el mismo estado de navegación; `#ai` conserva el capítulo 10 original.
+
 ## Anatomy
 Referencia: https://github.com/wheresryan22/anatomy
 Acción pendiente: revisar código, licencia, dependencias y guía SKILL.md de upstream antes de incorporar assets o lógica. No copiar código de un repositorio no inspeccionado.
