@@ -111,6 +111,8 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 **Entrega implementada:** capas `content/`, `simulation/`, `renderer/`, `ui/`, `assets/`, `tests/` y `sql/` incrementales. No se modifican motores previos, no se añaden dependencias y no se habilitan llamadas de red.
 
+**Acceso publicado:** el capítulo 12, **Oracle AI Database Internals**, conserva los capítulos 01–11 y expone AI Vector Search, Hybrid Search, Select AI, RAG y Agentic Workflows mediante rutas directas, estado activo y progreso local.
+
 ## Sprint 6 — Calidad, publicación y evolución
 
 **Objetivo:** automatizar controles de calidad y preparar la evolución segura del sitio.

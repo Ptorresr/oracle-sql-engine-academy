@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprints 0–4.1 integrados en `main`; Sprint 5 — Oracle AI Database Internals Lab completado y validado en `feature/oracle-ai-database-internals`, pendiente de publicación y Pull Request hacia `main`.
+**Estado:** Sprints 0–5 integrados en `main`; el acceso de Sprint 5 se corrige en `fix/ai-internals-runbook-access` para exponer el capítulo 12 sin alterar los capítulos existentes.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 
@@ -71,7 +71,7 @@ Sprint 5 integra cinco laboratorios locales y deterministas bajo el capítulo AI
 
 ## Implementación Sprint 4.1
 
-- `content/runbook-chapters.js` es la fuente de verdad de los once capítulos: identificador estable, orden, título, ruta, relación anterior/siguiente y criterios de finalización cuando corresponden.
+- `content/runbook-chapters.js` es la fuente de verdad de los doce capítulos: identificador estable, orden, título, ruta, relación anterior/siguiente y criterios de finalización cuando corresponden. El capítulo 12 ofrece el acceso principal a Oracle AI Database Internals Lab.
 - `assets/portal.js` genera la navegación activa desde ese contrato, resuelve `#intelligence` incluso si el laboratorio termina de cargar de forma local, sincroniza `aria-current`, breadcrumbs, título, historial Back/Forward y navegación secuencial.
 - AI SQL Intelligence se completa localmente solo después de importar un plan y seleccionar un operador; abrir el capítulo únicamente lo registra como explorado. El formato existente de `localStorage` se amplía sin borrar el progreso anterior.
 

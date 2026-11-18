@@ -3,9 +3,9 @@
 ## Estado actual
 
 - **Fecha:** 2026-11-18
-- **Rama:** `feature/oracle-ai-database-internals` creada desde `origin/main` en `c26cdaf`, que integra Pull Request #3 de Sprint 4.1.
-- **Sprint:** 5 — Oracle AI Database Internals Lab.
-- **Estado de entrega:** Sprint 5 completado y validado; cierre autorizado para commit, publicación y Pull Request. `main` no fue modificado y no se realiza merge automático.
+- **Rama:** `fix/ai-internals-runbook-access` creada desde `origin/main` en `262161f`, que integra Pull Request #4 de Sprint 5.
+- **Sprint:** 5 — corrección de acceso RunBook.
+- **Estado de entrega:** corrección validada y aprobada para cierre; se publicará mediante commit y Pull Request sin merge automático. `main` no fue modificado directamente.
 
 ## Trabajo realizado
 
@@ -26,6 +26,7 @@
 | Sprint 4.1 RunBook | Se centralizó la definición de 11 capítulos, se integró Intelligence como capítulo 09, se sincronizaron hash/breadcrumbs/estado activo/historial y se añadieron actividades educativas persistentes sin sobrescribir progreso previo. |
 | Sprint 5 AI Internals | Se agregaron cinco simulaciones locales: Vector Search, Hybrid Search, Select AI, RAG y Agentic Workflows. Comparten eventos deterministas con ubicación declarada, SVG de flujo, Event Inspector, perspectivas, tutor de reglas, What If y progreso local. |
 | Auditoría Sprint 5 | Chrome headless validó los cinco laboratorios, rutas directas e historial, Play/Pause/Step/Reset, Event Inspector, teclado, reduced motion, 375 px, 768 px, 1440 px, ausencia de errores de consola y recursos de la aplicación fuera de la red. |
+| Fix acceso Sprint 5 | Tras el merge se comprobó que Pages estaba desplegado, pero el lab solo estaba anidado en el capítulo 10. La rama `fix/ai-internals-runbook-access` agrega capítulo 12, tarjeta de catálogo y sincronización de rutas sin modificar motores. |
 
 ## Decisiones vigentes
 
@@ -149,7 +150,8 @@
 - Correcto: la suite completa de 14 pruebas Node pasa junto con sintaxis de scripts nuevos, `git diff --check`, entrada HTML y detección de marcadores de merge.
 - Correcto: al no estar disponible el servicio de navegador de Codex, se utilizó la instalación local existente de Chrome en modo headless, sin instalar dependencias. Se validaron los cinco tabs, eventos, inspector, Top-K/approximate, fusión, SQL predefinido, permisos RAG, rechazo Agentic, Back, teclado, reduced motion y regresiones visibles.
 - Correcto: los viewports de 375 px, 768 px y 1440 px no presentan overflow de documento; Chrome no reportó excepciones ni solicitudes externas de la aplicación. Capturas locales revisadas: `/private/tmp/oracle-sprint5-desktop.png` y `/private/tmp/oracle-sprint5-mobile.png`.
-- Corregido: rutas directas AI ahora activan exclusivamente el capítulo 10 tras finalizar el ciclo de renderizado del RunBook; se verificó `#ai-vector-search` y `#rag-architecture`.
+- Corregido: las rutas directas de los cinco laboratorios activan exclusivamente el capítulo 12 tras finalizar el ciclo de renderizado del RunBook; `#ai` conserva el capítulo 10 y sus enlaces previos.
+- Correcto: la corrección de acceso valida `#ai-internals`, catálogo, Back, las cinco rutas de laboratorio, un único `aria-current`, teclado, progreso, 375 px, 768 px, 1440 px, movimiento reducido y regresiones sin errores de consola ni solicitudes externas.
 - Corregido: se eliminó el overflow de escritorio del SVG nuevo mediante un override responsive local; se añadió favicon local para evitar la solicitud 404 observada durante la auditoría inicial.
 
 ## Limitaciones pendientes
@@ -170,5 +172,5 @@
 
 ## Siguiente actividad
 
-1. Publicar `feature/oracle-ai-database-internals` y crear Pull Request hacia `main`; no hacer merge sin aprobación explícita.
+1. Revisar el Pull Request de `fix/ai-internals-runbook-access`; no hacer merge sin aprobación explícita.
 2. Considerar Sprint 6 para una integración opcional y segura con entornos autorizados, sin exponer secretos en GitHub Pages.

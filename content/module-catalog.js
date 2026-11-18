@@ -25,5 +25,14 @@ window.oracleAcademyModules = Object.freeze([
     action: "Abrir Intelligence Lab",
     target: "intelligence",
     status: "lab"
+  },
+  {
+    id: "ai-internals",
+    title: "Oracle AI Database Internals",
+    track: "AI Vector Search · Disponible",
+    description: "Cinco laboratorios deterministas sobre vectores, Hybrid Search, Select AI, RAG y flujos agénticos.",
+    action: "Abrir AI Internals Lab",
+    target: "ai-internals",
+    status: "lab"
   }
 ]);

@@ -128,7 +128,7 @@
     pendingChapterId = null;
     const chapter = runbook.getChapter(targetId);
     if (chapter && historyMode === "push" && window.location.hash !== chapter.route) window.history.pushState({ chapterId: targetId }, "", chapter.route);
-    target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    target.scrollIntoView({ behavior: reduceMotion || historyMode === "none" ? "auto" : "smooth", block: "start" });
     if (chapter) {
       markVisited(targetId);
       setActiveChapter(runbook.getIndex(targetId));
@@ -191,11 +191,18 @@
       if (section) chapterObserver.observe(section);
       if (pendingChapterId === "intelligence" || window.location.hash === "#intelligence") scrollTo("intelligence", "none");
     });
-    const activateAiChapter = () => {
+    const aiInternalsLabIds = new Set(["ai-vector-search", "hybrid-vector-search", "select-ai-flow", "rag-architecture", "agentic-workflows"]);
+    const activateAiChapter = (event) => {
+      const routeId = window.location.hash.replace(/^#/, "");
+      const activateInternals = event?.type === "academy:oracle-ai-active" || aiInternalsLabIds.has(routeId) || pendingChapterId === "ai-internals";
+      const chapterId = activateInternals ? "ai-internals" : "ai";
       window.setTimeout(() => {
-        if (document.getElementById("ai")) {
-          markVisited("ai");
-          setActiveChapter(runbook.getIndex("ai"));
+        const section = document.getElementById(chapterId);
+        if (section) {
+          chapterObserver.observe(section);
+          if (pendingChapterId === chapterId || window.location.hash === `#${chapterId}`) scrollTo(chapterId, "none");
+          markVisited(chapterId);
+          setActiveChapter(runbook.getIndex(chapterId));
         }
       }, 0);
     };
