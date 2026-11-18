@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprints 0–5 están integrados en `origin/main`; Sprint 6 está completado y validado en `feature/oracle-ai-architecture-explorer`, pendiente de publicación y Pull Request.
+**Estado:** Sprints 0–5 están integrados en `origin/main`; Sprint 6 y el Visual Design System 2.0 están implementados, auditados y aprobados para publicación desde sus ramas de trabajo.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 
@@ -139,7 +139,15 @@ La arquitectura reserva componentes para AI Tutor contextual, SQL Analyzer, Exec
 
 ## Experiencia visual
 
-La información adopta navegación documental inspirada en OCI PoC RunBook: índice claro, recorrido secuencial, secciones y puntos de retorno. La presentación adopta tarjetas, indicadores, diagramas y microinteracciones de un dashboard OCI, con tema oscuro, contraste alto y diseño responsive. No se copian contenidos, activos ni código de las referencias.
+La información adopta navegación documental inspirada en OCI PoC RunBook: índice claro, recorrido secuencial, secciones y puntos de retorno. La presentación adopta tarjetas, indicadores, diagramas y microinteracciones de un dashboard OCI, con tema oscuro, contraste alto y diseño responsive. Las ilustraciones narrativas usan una identidad tecnológica azul eléctrico/cian, con profundidad 3D, perspectiva isométrica, circuitos y flujos de información específicos por módulo. No se copian contenidos, activos ni código de las referencias.
+
+### Visual Design System 2.0
+
+- `assets/oci-runbook-design-system.css` centraliza los tokens observados del OCI PoC RunBook para fondos, superficies, texto, bordes, estados y foco en claro y oscuro.
+- El selector `Claro | Oscuro | Sistema` vive en `assets/portal.js`. `Sistema` sigue `prefers-color-scheme`; la selección explícita se guarda en `oracle-sql-academy.theme.v2` y migra valores antiguos de `theme.v1` sin eliminarlos.
+- Los tokens SQL, planes, flujos y nodos seleccionados mantienen semántica independiente del acento Redwood. Las ilustraciones 3D azul/cian son presentación y no sustituyen SVG, Event Inspector ni simulaciones.
+- Las imágenes son locales, 1280×720, lazy-loaded, con dimensiones explícitas, alt text y procedencia documentada en `docs/VISUAL_ASSETS.md`.
+- La implementación no reinicia motores ni progreso al cambiar tema; sigue siendo estática y compatible con GitHub Pages.
 
 ## Seguridad y exactitud
 

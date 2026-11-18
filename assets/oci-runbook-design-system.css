@@ -1,0 +1,569 @@
+:root {
+  --oci-bg: #faf8f7;
+  --oci-surface: #ffffff;
+  --oci-surface-soft: #f7f4f2;
+  --oci-surface-elevated: #f5f5f4;
+  --oci-surface-strong: #f5f5f4;
+  --oci-text: #1f1b1a;
+  --oci-muted: #57534e;
+  --oci-subtle: #78716c;
+  --oci-border: #e7e5e4;
+  --oci-accent: #c74634;
+  --oci-accent-strong: #5f2b24;
+  --oci-accent-soft: #fef2f2;
+  --oci-success: #22775f;
+  --oci-warning: #b07113;
+  --oci-error: #991b1b;
+  --oci-info: #2f5f96;
+  --oci-focus: #2f5f96;
+  --oci-hover: #f7f4f2;
+  --oci-active: #fef2f2;
+  --oci-code-bg: #171412;
+  --oci-code-text: #f7f3ec;
+  --oci-sql-bg: #171412;
+  --oci-sql-text: #f7f3ec;
+  --oci-plan-node: #f5f5f4;
+  --oci-plan-edge: #2f5f96;
+  --oci-data-flow: #22775f;
+  --oci-selected-node: #c74634;
+  --oci-warning-surface: #fef3c7;
+  --oci-shadow: 0 18px 50px rgba(31, 27, 26, 0.08);
+  --oci-radius: 8px;
+  --oci-font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color-scheme: light;
+
+  --bg: var(--oci-bg);
+  --surface: var(--oci-surface);
+  --card: var(--oci-surface-elevated);
+  --line: var(--oci-border);
+  --text: var(--oci-text);
+  --muted: var(--oci-muted);
+  --cyan: var(--oci-accent);
+  --green: var(--oci-success);
+  --orange: var(--oci-warning);
+  --red: var(--oci-error);
+  --blue: var(--oci-info);
+  --portal-ink: var(--oci-text);
+  --portal-glow: rgba(199, 70, 52, 0.14);
+  --portal-panel: var(--oci-surface);
+}
+
+body[data-theme="dark"],
+html[data-theme="dark"] {
+  --oci-bg: #171412;
+  --oci-surface: #241f1d;
+  --oci-surface-soft: #1f1b1a;
+  --oci-surface-elevated: #2f2a27;
+  --oci-surface-strong: #2f2a27;
+  --oci-text: #faf8f7;
+  --oci-muted: #d6d3d1;
+  --oci-subtle: #a8a29e;
+  --oci-border: #44403c;
+  --oci-accent-soft: rgba(199, 70, 52, 0.18);
+  --oci-focus: #f4b8ad;
+  --oci-hover: #2f2a27;
+  --oci-active: rgba(199, 70, 52, 0.18);
+  --oci-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  --oci-sql-bg: #171412;
+  --oci-sql-text: #f7f3ec;
+  --oci-plan-node: #2f2a27;
+  --oci-plan-edge: #8fb4df;
+  --oci-data-flow: #63c29e;
+  --oci-selected-node: #c74634;
+  --oci-warning-surface: rgba(176, 113, 19, 0.18);
+  --bg: var(--oci-bg);
+  --surface: var(--oci-surface);
+  --card: var(--oci-surface-elevated);
+  --line: var(--oci-border);
+  --text: var(--oci-text);
+  --muted: var(--oci-muted);
+  --portal-ink: var(--oci-text);
+  --portal-panel: var(--oci-surface);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--oci-bg) !important;
+  color: var(--oci-text) !important;
+  font-family: var(--oci-font) !important;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+a {
+  color: var(--oci-accent-strong);
+  text-decoration-color: rgba(199, 70, 52, 0.38);
+  text-underline-offset: 3px;
+}
+
+body[data-theme="dark"] a {
+  color: #f4b8ad;
+}
+
+.top,
+.topbar,
+.breadcrumbs {
+  background: color-mix(in srgb, var(--oci-surface) 94%, transparent) !important;
+  border-color: var(--oci-border) !important;
+  box-shadow: var(--oci-shadow);
+  backdrop-filter: blur(14px);
+}
+
+.top,
+.workspace,
+.panel,
+.card,
+.case,
+.dashboard-guide,
+.dashboard-progress,
+.module-card,
+.hash-view,
+.hash-context,
+.comparison-card,
+.comparison-views > section,
+.comparison-inspector,
+.comparison-inspector-grid > div,
+.comparison-whatif,
+.hash-inspector,
+.hash-inspector-grid > div,
+.architecture-side-panel,
+.architecture-builder,
+.architecture-flow-panel,
+.architecture-validation,
+.architecture-security,
+.architecture-what-if,
+.architecture-learning {
+  border-color: var(--oci-border) !important;
+  background: var(--oci-surface) !important;
+  box-shadow: var(--oci-shadow);
+}
+
+.dashboard,
+.hero {
+  background: linear-gradient(135deg, var(--oci-accent-soft), transparent 44%), linear-gradient(180deg, var(--oci-surface) 0%, var(--oci-surface-soft) 100%) !important;
+  border-color: var(--oci-border) !important;
+}
+
+body[data-theme="dark"] .dashboard,
+body[data-theme="dark"] .hero {
+  background: linear-gradient(135deg, rgba(199, 70, 52, 0.18), transparent 44%), linear-gradient(180deg, var(--oci-surface) 0%, var(--oci-surface-soft) 100%) !important;
+}
+
+.eyebrow,
+.kicker,
+.workspace-label,
+.visual-caption,
+.dashboard-progress strong,
+.module-action,
+.hash-inspector > strong,
+.hash-inspector-grid dt {
+  color: var(--oci-accent-strong) !important;
+}
+
+body[data-theme="dark"] .eyebrow,
+body[data-theme="dark"] .kicker,
+body[data-theme="dark"] .workspace-label,
+body[data-theme="dark"] .visual-caption,
+body[data-theme="dark"] .dashboard-progress strong,
+body[data-theme="dark"] .module-action,
+body[data-theme="dark"] .hash-inspector > strong,
+body[data-theme="dark"] .hash-inspector-grid dt {
+  color: #f4b8ad !important;
+}
+
+.module-card,
+.top-link,
+.portal-action,
+.theme-toggle,
+.theme-picker select,
+.btn,
+select,
+textarea,
+input {
+  border-radius: var(--oci-radius) !important;
+  border-color: var(--oci-border) !important;
+  background: var(--oci-surface) !important;
+  color: var(--oci-text) !important;
+}
+
+.theme-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: var(--oci-muted);
+  font-size: .82rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.theme-picker select {
+  min-height: 2.25rem;
+  padding: .35rem .55rem;
+  cursor: pointer;
+}
+
+.theme-picker:focus-within {
+  color: var(--oci-text);
+}
+
+.module-card:hover,
+.top-link:hover,
+.portal-action:hover,
+.theme-toggle:hover,
+.theme-picker select:hover,
+.btn:hover,
+.side a:hover,
+.side a:focus-visible,
+.toc a:hover,
+.toc a:focus-visible {
+  background: var(--oci-hover) !important;
+  border-color: rgba(199, 70, 52, 0.45) !important;
+  color: var(--oci-text) !important;
+}
+
+.module-card[data-status="available"],
+.module-card[data-status="lab"] {
+  border-color: var(--oci-accent) !important;
+}
+
+.module-card .module-status,
+.comparison-step,
+.comparison-events button,
+.hash-block,
+.hash-event,
+.plan-operator,
+.comparison-operator,
+.workspace-tabs button[aria-selected="true"] {
+  background: var(--oci-accent-soft) !important;
+  border-color: rgba(199, 70, 52, 0.38) !important;
+  color: var(--oci-accent-strong) !important;
+}
+
+body[data-theme="dark"] .module-card .module-status,
+body[data-theme="dark"] .comparison-step,
+body[data-theme="dark"] .comparison-events button,
+body[data-theme="dark"] .hash-block,
+body[data-theme="dark"] .hash-event,
+body[data-theme="dark"] .plan-operator,
+body[data-theme="dark"] .comparison-operator,
+body[data-theme="dark"] .workspace-tabs button[aria-selected="true"] {
+  color: #f4b8ad !important;
+}
+
+.btn.primary,
+.architecture-player-controls button[data-architecture-action="play"],
+.architecture-builder button[data-architecture-action="add-node"] {
+  background: var(--oci-accent) !important;
+  border-color: var(--oci-accent) !important;
+  color: #ffffff !important;
+  font-weight: 750;
+}
+
+.side a.is-active,
+.side a[aria-current="location"] {
+  background: var(--oci-active) !important;
+  box-shadow: inset 3px 0 0 var(--oci-accent);
+  color: var(--oci-accent-strong) !important;
+}
+
+body[data-theme="dark"] .side a.is-active,
+body[data-theme="dark"] .side a[aria-current="location"] {
+  color: #f4b8ad !important;
+}
+
+.progress-track {
+  background: var(--oci-surface-strong) !important;
+}
+
+.progress-track span {
+  background: var(--oci-accent) !important;
+}
+
+pre {
+  background: var(--oci-sql-bg) !important;
+  border-color: var(--oci-border) !important;
+  color: var(--oci-sql-text) !important;
+}
+
+.hint,
+.stepbox,
+.comparison-question,
+.comparison-event,
+.hash-event-status {
+  background: var(--oci-accent-soft) !important;
+  border-left-color: var(--oci-accent) !important;
+  color: var(--oci-text) !important;
+}
+
+.generated-illustration,
+.architecture-hero-art {
+  border-color: var(--oci-border) !important;
+  background: var(--oci-surface-soft) !important;
+  box-shadow: var(--oci-shadow);
+}
+
+.generated-illustration figcaption,
+.architecture-hero-art figcaption {
+  background: var(--oci-surface) !important;
+  color: var(--oci-muted) !important;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex="0"]:focus-visible {
+  outline: 3px solid var(--oci-focus) !important;
+  outline-offset: 3px;
+}
+
+/* Keep dynamically loaded labs on the same OCI RunBook surface system. */
+.oracle-ai-internals,
+.sql-intelligence-lab,
+.architecture-explorer {
+  color: var(--oci-text) !important;
+}
+
+.ai-lab-tabs button,
+.ai-learning-grid > div,
+.ai-lab-canvas > section,
+.ai-perspectives > section,
+.ai-event-inspector,
+.ai-whatif,
+.ai-tutor,
+.ai-event,
+.hybrid-lanes section,
+.rag-pipeline div,
+.agentic-map span,
+.intelligence-sidebar,
+.intelligence-explain,
+.intelligence-inspector,
+.intelligence-callout,
+.cardinality-list article,
+.insight,
+.sql-analysis-list article,
+.whatif-result,
+.architecture-gallery button,
+.architecture-route-row a,
+.architecture-event-buttons button,
+.architecture-stage,
+.architecture-side-panel,
+.architecture-builder,
+.architecture-flow-panel,
+.architecture-validation,
+.architecture-security,
+.architecture-what-if,
+.architecture-guide,
+.architecture-learning,
+.architecture-perspectives article {
+  background: var(--oci-surface) !important;
+  border-color: var(--oci-border) !important;
+  color: var(--oci-text) !important;
+  box-shadow: none;
+}
+
+.ai-lab-tabs button[aria-selected="true"],
+.ai-event.is-selected,
+.architecture-gallery button.is-selected,
+.architecture-event-buttons button[aria-pressed="true"] {
+  background: var(--oci-accent) !important;
+  border-color: var(--oci-accent) !important;
+  color: #ffffff !important;
+}
+
+.ai-toolbar label,
+.ai-whatif-controls label,
+.intelligence-grid > div > label,
+.whatif-controls label,
+.builder-controls label,
+.architecture-player-controls label {
+  color: var(--oci-muted) !important;
+}
+
+.ai-toolbar select,
+.ai-toolbar input,
+.ai-whatif-controls input,
+.intelligence-panel textarea,
+.architecture-explorer select,
+.architecture-explorer button,
+.plan-tree-toggle,
+.plan-tree-label {
+  background: var(--oci-surface-soft) !important;
+  border-color: var(--oci-border) !important;
+  color: var(--oci-text) !important;
+}
+
+.ai-event span,
+.intelligence-inspector-grid > div,
+.cardinality-list dl div,
+.plan-notes,
+.intelligence-status {
+  background: var(--oci-surface-soft) !important;
+  border-color: var(--oci-border) !important;
+  color: var(--oci-text) !important;
+}
+
+.ai-flow-node rect,
+.plan-svg-node rect {
+  fill: var(--oci-plan-node) !important;
+  stroke: var(--oci-plan-edge) !important;
+}
+
+.ai-flow-node.is-selected rect,
+.plan-svg-node.is-selected rect {
+  fill: var(--oci-active) !important;
+  stroke: var(--oci-accent) !important;
+}
+
+.ai-flow-node text,
+.plan-graph text,
+.architecture-zone text,
+.architecture-node,
+.architecture-inspector-copy h4,
+.architecture-perspectives h3 {
+  fill: var(--oci-text) !important;
+  color: var(--oci-text) !important;
+}
+
+.ai-flow-node text:last-child,
+.ai-inspector-grid dt,
+.intelligence-meta,
+.architecture-badge,
+.illustrative-note,
+.architecture-zone text,
+.architecture-node small,
+.architecture-flow-step small,
+.architecture-guide li span {
+  color: var(--oci-muted) !important;
+}
+
+.ai-flow-link,
+.plan-svg-links path,
+.architecture-edge line {
+  stroke: var(--oci-plan-edge) !important;
+}
+
+.vector-space,
+.plan-graph,
+.architecture-canvas {
+  background: var(--oci-surface-soft) !important;
+  border-color: var(--oci-border) !important;
+}
+
+.vector-point,
+.architecture-flow-step {
+  background: var(--oci-surface-elevated) !important;
+  border-color: var(--oci-info) !important;
+  color: var(--oci-text) !important;
+}
+
+.vector-point.is-neighbor,
+.architecture-flow-step.is-complete,
+.security-ok {
+  border-color: var(--oci-success) !important;
+}
+
+.vector-query,
+.architecture-node.is-selected,
+.architecture-node.is-active,
+.architecture-flow-step.is-current {
+  background: var(--oci-accent) !important;
+  border-color: var(--oci-accent) !important;
+  color: #ffffff !important;
+}
+
+.architecture-node {
+  background: var(--oci-surface-elevated) !important;
+  border-color: var(--oci-info) !important;
+}
+
+.architecture-explorer :focus-visible {
+  outline: 3px solid var(--oci-focus) !important;
+  outline-offset: 3px;
+}
+
+body[data-theme="light"] .module-card,
+body[data-theme="light"] .comparison-card,
+body[data-theme="light"] .hash-view,
+body[data-theme="light"] .hash-context,
+body[data-theme="light"] .comparison-views > section,
+body[data-theme="light"] .comparison-inspector,
+body[data-theme="light"] .comparison-inspector-grid > div,
+body[data-theme="light"] .comparison-whatif,
+body[data-theme="light"] .hash-inspector,
+body[data-theme="light"] .hash-inspector-grid > div,
+body[data-theme="light"] .architecture-side-panel,
+body[data-theme="light"] .architecture-builder,
+body[data-theme="light"] .architecture-flow-panel,
+body[data-theme="light"] .architecture-validation,
+body[data-theme="light"] .architecture-security,
+body[data-theme="light"] .architecture-what-if,
+body[data-theme="light"] .architecture-learning {
+  background: var(--oci-surface) !important;
+  color: var(--oci-text) !important;
+}
+
+body[data-theme="light"] .module-card h2,
+body[data-theme="light"] .module-card p,
+body[data-theme="light"] .comparison-card h3,
+body[data-theme="light"] .comparison-row-list li,
+body[data-theme="light"] .comparison-internals,
+body[data-theme="light"] .comparison-whatif label,
+body[data-theme="light"] .hash-view,
+body[data-theme="light"] .hash-context {
+  color: var(--oci-text) !important;
+}
+
+@media (max-width: 650px) {
+  .theme-picker {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+  }
+
+  .dashboard-guide {
+    grid-template-columns: 1fr !important;
+    min-height: 0;
+    overflow: visible !important;
+  }
+
+  .dashboard-guide > div:first-child {
+    justify-self: center;
+  }
+}
+
+@media (max-width: 950px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .side,
+  .main {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
