@@ -5,7 +5,7 @@
 - **Fecha:** 2026-11-18
 - **Rama:** `feature/oracle-ai-architecture-explorer`, creada desde `origin/main` tras los Sprints 0–5 integrados.
 - **Sprint:** 6 — Oracle AI Database Architecture Explorer.
-- **Estado de entrega:** implementación y auditoría completas. Commit de cierre `c1110b2` creado; pendiente publicar la rama y abrir Pull Request. No se hará merge ni se modificará directamente `main`.
+- **Estado de entrega:** implementación, auditoría y publicación completas. Commit de implementación `e1e950b` y Pull Request #6 abiertos; no se hará merge ni se modificará directamente `main`.
 
 ## Sprint 6 — Handoff de implementación
 
@@ -48,6 +48,15 @@
 - No existe Oracle AI Database, SQL, embeddings, LLM, agente, MCP, herramienta ni llamada OCI real en el navegador.
 - Security Inspector y What If aplican reglas y consideraciones locales; una salida sin hallazgos no es una certificación de seguridad ni una recomendación de despliegue.
 - Las rutas y conexiones son explicaciones educativas. No son tráfico, telemetría, SQL Monitor, Audit, Logging ni métricas observadas.
+
+## Publicación Sprint 6
+
+- **Rama:** `feature/oracle-ai-architecture-explorer`, sincronizada con `origin`.
+- **Commit de implementación:** `e1e950b` — `feat: add Oracle AI Database Architecture Explorer`.
+- **Pull Request:** https://github.com/Ptorresr/oracle-sql-engine-academy/pull/6
+- **Checks:** los dos checks de GitHub finalizaron correctamente.
+- **Conflictos:** no reportados; el PR permanece abierto para revisión y sin merge.
+- **Main:** la rama local `main` no fue modificada por este trabajo.
 
 ## Trabajo realizado
 
@@ -214,5 +223,5 @@
 
 ## Siguiente actividad
 
-1. Publicar `feature/oracle-ai-architecture-explorer` y verificar que el commit `c1110b2` quede sincronizado con `origin`.
-2. Abrir el Pull Request hacia `main`, revisar checks y conflictos, y no hacer merge sin aprobación explícita.
+1. Revisar el Pull Request #6 y esperar aprobación explícita antes de hacer merge.
+2. No iniciar Sprint 7 hasta cerrar formalmente el PR y acordar el siguiente alcance.
