@@ -3,9 +3,9 @@
 ## Estado actual
 
 - **Fecha:** 2026-11-18
-- **Rama:** `feature/oci-runbook-visual-system`, creada preservando los cambios locales del rediseño.
-- **Sprint:** Auditoría final del sistema visual OCI PoC RunBook.
-- **Estado de entrega:** auditoría visual y funcional aprobada; el cierre, commit, publicación y Pull Request se ejecutan en esta sesión. No se hará merge.
+- **Rama:** `feature/animated-3d-data-flow`.
+- **Sprint:** Cierre y publicación de Animated 3D Data Flow.
+- **Estado de entrega:** auditoría visual y funcional aprobada; commit y Pull Request preparados en esta sesión. No se hará merge.
 
 ## Sprint 6 — Handoff de implementación
 
@@ -222,6 +222,32 @@
 - Corregido en responsive: a 375 px el mapa de aprendizaje se apiló y el grid RunBook usa `minmax(0, 1fr)`; el panel dejó de recortar texto y los controles siguen visibles. Captura final: `/tmp/oracle-oci-theme-v2/mobile-fixed-final.png`.
 - Correcto: la prueba de contrato `tests/theme-selection.test.js` y las 21 suites Node pasan junto con sintaxis, HTML y `git diff --check`. Capturas 2.0: `/tmp/oracle-oci-theme-v2/light-375.png`, `light-768.png`, `light-1440.png`, `dark-375.png`, `dark-768.png` y `dark-1440.png`.
 - Estado Git del rediseño: se creó `feature/oci-runbook-visual-system` preservando los cambios locales; `main` local está 19 commits detrás de `origin/main` y no se actualizó para respetar la restricción de no modificar `main`.
+
+## Visual Design System 2.1 — Animated Data Flow
+
+- **Rama:** `feature/animated-3d-data-flow`, creada desde `origin/main` después de integrar Visual Design System 2.0.
+- **Arquitectura:** `renderer/animated-data-flow-renderer.js` recibe eventos existentes, resuelve mapas de anclaje por laboratorio y monta SVG relativo sobre las cinco ilustraciones PNG; `assets/animated-data-flow.css` concentra rutas, partículas, marcadores, botones y reduced motion.
+- **Integraciones:** HASH JOIN, Comparison Lab, AI SQL Intelligence, Oracle AI Database Internals y Architecture Explorer conservan sus motores, timelines, controles e inspectors; el overlay usa un único índice activo por vista.
+- **SQL Intelligence:** el plan importado genera eventos únicamente desde operadores reconocidos por el parser; sin plan se muestra una secuencia contextual explícitamente ilustrativa, sin estadísticas inventadas.
+- **Accesibilidad:** cada ilustración conserva alt/caption, el SVG expone nombre y descripción, los componentes tienen botones de teclado, el estado se anuncia en `aria-live` y reduced motion elimina partículas/pulsos sin ocultar el estado.
+- **Pruebas:** `tests/animated-data-flow.test.js`, sintaxis de módulos integrados y `git diff --check` pasan. Chrome local montó overlays en las cinco rutas y produjo capturas 375/768/1440 en ambos temas; capturas enfocadas en `/tmp/animated-3d-audit/`.
+- **Limitaciones:** las rutas son conceptuales, los anclajes no describen coordenadas físicas de Oracle, no se usa Three.js/WebGL, no existe autoplay y no se ejecuta Oracle Database, LLM ni tráfico externo. El servicio de navegador integrado no se utilizó; la evidencia usa Chrome local.
+
+## Auditoría funcional final — Animated 3D Data Flow
+
+- **Reproducción:** Chrome confirmó estado inicial sin autoplay, Next/Previous/Reset, Play/Pause, 1×/2×/4×, marcador `data-animated-flow-step` y estabilidad del índice después de Pause en HASH JOIN, Comparison, AI Internals y Architecture Explorer.
+- **Sincronización:** el paso seleccionado actualiza la ruta, partícula, marcador, explicación textual y Event Inspector. Los botones de componentes usan el mismo callback del timeline y exponen `aria-pressed`/estado activo.
+- **Defecto corregido:** Architecture Explorer heredaba una altura fija distinta del stage 16:9; el overlay podía separarse de la imagen con `object-fit: cover`. `assets/animated-data-flow.css` ahora iguala stage, imagen y SVG a `clamp(170px, 25vw, 300px)`.
+- **Alineación medida:** Chrome obtuvo `0 px` de diferencia entre imagen, stage y SVG en HASH JOIN, Comparison, Intelligence, AI Internals y Architecture Explorer a 375/768/1440 px; Architecture Explorer fue repetido después de la corrección.
+- **Reduced motion:** `prefers-reduced-motion` desactiva Play, dash y `animateMotion`, pero permite Next/Previous/Reset y mantiene la explicación estática. AI Play ahora expone `aria-pressed="false|true"` durante el ciclo.
+- **Evidencia:** `/tmp/animated-3d-geometry-fixed.json`, `/tmp/animated-3d-audit/fixed-light-architecture-375.png`, `/tmp/animated-3d-audit/fixed-dark-architecture-1440.png` y las capturas enfocadas anteriores.
+- **Resultado:** auditoría funcional superada después de una corrección visual confirmada; no se modificaron motores de simulación ni se crearon timelines adicionales.
+
+## Siguiente actividad
+
+1. Revisar el Pull Request de Animated 3D Data Flow; no hacer merge automáticamente.
+2. Mantener `main` local sin modificar.
+3. No iniciar nuevas funcionalidades hasta cerrar el Pull Request.
 
 ## Limitaciones pendientes
 

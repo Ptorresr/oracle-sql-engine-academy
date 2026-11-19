@@ -21,8 +21,15 @@ These assets support the educational portal presentation layer. They are context
 - Do not add readable claims, SQL text, credentials, product logos or production measurements inside generated artwork.
 - Keep the `alt` text and HTML caption in the consuming UI. Do not rely on generated imagery alone for meaning.
 - Use `loading="lazy"` for illustrations outside the initial viewport; keep explicit dimensions or aspect-ratio to avoid layout shift when adding new assets.
+- The 2.1 animation layer uses a transparent SVG overlay with normalized `0..100` anchors. It must remain a sibling presentation layer over the image; do not bake routes, particles, labels or educational claims into the PNGs.
+- Keep the static image, SVG overlay and textual component selector synchronized from the same event index. Do not add independent GIF/video timelines.
+- When a consumer uses `object-fit: cover`, the overlay stage must explicitly match the consumer image dimensions. Architecture Explorer uses a responsive fixed-height stage rather than the default 16:9 rule; this was verified at 375, 768 and 1440 px.
 - If a repository-wide license is added later, review these assets and this manifest before publication.
 
 ## Publication status
 
 The five assets are approved for publication with the visual redesign. They remain optional presentation assets: technical meaning continues to come from the accessible SVG diagrams, controls, timelines and inspectors.
+
+## Animated Data Flow 2.1
+
+`renderer/animated-data-flow-renderer.js` defines semantic anchor maps for the five illustrations. The anchors are normalized percentages rather than source-image pixels, and unresolved event endpoints are intentionally omitted. The overlay is generated at runtime and is not part of the image license/provenance; it is project-native SVG/CSS/JavaScript.

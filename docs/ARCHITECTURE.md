@@ -174,6 +174,28 @@ Los resultados de Graph Validation, Security Inspector y AI What If tienen alcan
 
 La navegación usa el capítulo 13 `architecture-explorer` y rutas internas `#architecture-retail`, `#architecture-finance` y `#architecture-operations`. Todas activan el capítulo 13 sin alterar los capítulos 01–12. Ver `docs/OCI_ARCHITECTURE_EXPLORER.md` para fuentes oficiales y límites de producto.
 
+## Animated Data Flow Layer — Visual Design System 2.1
+
+```text
+simulation engine
+  └─ immutable event timeline
+       └─ UI active index
+            └─ renderer/animated-data-flow-renderer.js
+                 ├─ normalized 0..100 anchors
+                 ├─ SVG route, anchors, particle and step marker
+                 ├─ accessible component selector
+                 └─ existing Event Inspector / timeline callback
+                      └─ 3D PNG presentation layer
+```
+
+The layer is a presentation adapter, not a simulation engine. `mount(figure, { kind, events, index, onSelect })` consumes the existing event contract and never mutates the source timeline. `hash`, `comparison`, `intelligence`, `ai-internals` and `architecture` define separate semantic anchor maps; unresolved endpoints deliberately render no route instead of inventing a location.
+
+The overlay uses a `0 0 100 100` SVG viewBox, `preserveAspectRatio="xMidYMid slice"` and a relative stage with the same aspect ratio as the PNG. This keeps the route aligned across responsive widths while acknowledging that the artwork is conceptual. Component buttons are the keyboard and reduced-motion alternative to moving particles. Animation is single-event feedback, not autoplay; reduced motion keeps the static route, marker and explanation while disabling dash and particle animation.
+
+Architecture Explorer is an exception to the default 16:9 stage because its existing hero image uses a responsive fixed height with `object-fit: cover`. The CSS override makes the animated stage, image and overlay share that same `clamp(170px, 25vw, 300px)` height. Chrome geometry checks measured zero-pixel differences at 375, 768 and 1440 px.
+
+AI SQL Intelligence uses `planTimeline(plan)`: imported plans produce one event per parser-identified operator and preserve absent statistics; an empty plan produces three explicitly illustrative context events. No operation, metric or physical relationship is inferred from artwork alone.
+
 ## Capa visual tecnológica 3D
 
 Las ilustraciones narrativas se almacenan en `assets/illustrations/` como PNG locales generados específicamente para este proyecto. Usan una identidad oscura, azul eléctrico y cian, con componentes de base de datos en perspectiva 3D, circuitos luminosos y flujos de información diferenciados. Se utilizan como contexto visual en HASH JOIN, comparación de algoritmos, AI SQL Intelligence, Oracle AI Database Internals y Architecture Explorer. No sustituyen los SVG accesibles ni el modelo determinista: los diagramas SVG permanecen como la superficie interactiva para eventos, selección e inspector.

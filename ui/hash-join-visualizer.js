@@ -110,6 +110,7 @@
     byId("hashDeveloperView").innerHTML = renderer.renderDeveloper(scenario, state, selection);
     byId("hashPlanView").innerHTML = renderer.renderPlan(scenario, state, selection);
     byId("hashInternalsView").innerHTML = renderer.renderInternals(scenario, state, selection);
+    globalThis.OracleAnimatedDataFlow?.mount(byId("hashInternalsView").querySelector(".hash-illustration"), { kind: "hash", events: timeline.events, index, label: "HASH JOIN · flujo conceptual sobre ilustración 3D", onSelect: (next) => { stop(); move(next); } });
     byId("hashEventLabel").textContent = event ? `${event.step}/${timeline.events.length} · ${event.type} · ${event.label}` : "Sin evento";
     byId("hashEventExplain").textContent = event?.explanation || "Elige un evento para revisar su explicación técnica.";
     byId("hashMetrics").textContent = `Lecturas lógicas*: ${state.metrics.logicalReads} · lecturas físicas*: ${state.metrics.physicalReads} · filas leídas*: ${state.metrics.rowsRead} · salida: ${state.metrics.outputRows} · TEMP*: ${state.metrics.tempPartitions}`;

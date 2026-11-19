@@ -1,0 +1,116 @@
+.animated-flow-stage {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  isolation: isolate;
+}
+
+.animated-flow-stage img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.architecture-hero-art .animated-flow-stage {
+  aspect-ratio: auto;
+  height: clamp(170px, 25vw, 300px);
+}
+
+.architecture-hero-art .animated-flow-stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.animated-flow-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.animated-flow-route {
+  fill: none;
+  stroke: var(--oci-data-flow, #4cd9df);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-dasharray: 0.04 0.035;
+  filter: drop-shadow(0 0 0.9px var(--oci-data-flow, #4cd9df));
+  opacity: 0.95;
+  animation: animated-flow-dash 1.3s linear infinite;
+}
+
+.animated-flow-anchor {
+  fill: var(--oci-selected-node, #8df3ff);
+  stroke: var(--oci-surface, #fff);
+  stroke-width: 0.6;
+  filter: drop-shadow(0 0 1.8px var(--oci-data-flow, #4cd9df));
+}
+
+.animated-flow-particle {
+  fill: var(--oci-data-flow, #4cd9df);
+  stroke: var(--oci-surface, #fff);
+  stroke-width: 0.45;
+  filter: drop-shadow(0 0 2px var(--oci-data-flow, #4cd9df));
+}
+
+.animated-flow-step-marker circle {
+  fill: var(--oci-accent, #c74634);
+  stroke: var(--oci-surface, #fff);
+  stroke-width: 0.75;
+}
+
+.animated-flow-step-marker text {
+  fill: #fff;
+  font: 700 5px system-ui, sans-serif;
+}
+
+.animated-flow-components {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.65rem 0.8rem 0;
+}
+
+.animated-flow-component {
+  border: 1px solid var(--oci-border, #e7e5e4);
+  border-radius: 999px;
+  padding: 0.35rem 0.6rem;
+  background: var(--oci-surface-soft, #f7f4f2);
+  color: var(--oci-text, #1f1b1a);
+  font: inherit;
+  cursor: pointer;
+}
+
+.animated-flow-component:hover,
+.animated-flow-component:focus-visible,
+.animated-flow-component.is-active {
+  border-color: var(--oci-accent, #c74634);
+  color: var(--oci-accent-strong, #5f2b24);
+  background: var(--oci-accent-soft, #fef2f2);
+}
+
+.animated-flow-status {
+  margin: 0;
+  padding: 0.45rem 0.8rem 0;
+  color: var(--oci-muted, #57534e);
+  font-size: 0.82rem;
+}
+
+@keyframes animated-flow-dash {
+  to { stroke-dashoffset: -0.15; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-flow-route { animation: none; }
+  .animated-flow-particle animateMotion { display: none; }
+}
+
+@media (max-width: 650px) {
+  .animated-flow-components { gap: 0.3rem; padding-inline: 0.5rem; }
+  .animated-flow-component { font-size: 0.78rem; }
+}

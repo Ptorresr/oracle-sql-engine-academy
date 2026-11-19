@@ -80,6 +80,7 @@
     byId("comparisonQuestion").textContent = `${scenario.question} ${scenario.performance}`;
     byId("comparisonSql").textContent = scenario.sql;
     byId("comparisonIsometric").innerHTML = renderer.renderIsometricOverview();
+    globalThis.OracleAnimatedDataFlow?.mount(byId("comparisonIsometric").querySelector(".comparison-illustration"), { kind: "comparison", events: tracks[activeTrack].timeline.events, index: tracks[activeTrack].index, label: "Comparación SQL · flujo conceptual del método seleccionado", onSelect: (next) => { stop(); tracks[activeTrack].index = next; if (byId("comparisonSync").checked) tracks[activeTrack === "left" ? "right" : "left"].index = Math.min(next, tracks[activeTrack === "left" ? "right" : "left"].timeline.events.length - 1); selection = { kind: "event", track: activeTrack }; render(); } });
     byId("comparisonLeftView").innerHTML = renderer.renderAlgorithmCard(scenario, "left", tracks.left.timeline, leftState, selection);
     byId("comparisonRightView").innerHTML = renderer.renderAlgorithmCard(scenario, "right", tracks.right.timeline, rightState, selection);
     const equivalent = engine.compareLogicalResults(tracks.left.timeline, tracks.right.timeline);
