@@ -163,7 +163,7 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 ## Sprint 7 — Interactive Learning & Presentation Experience
 
-**Estado:** auditado y listo para aprobación definitiva en `feature/interactive-learning-presentation`; sin commit, push ni Pull Request.
+**Estado:** auditado, validado y publicado en `feature/interactive-learning-presentation`, commit `79e40c2`, PR #9 abierto hacia `main`; pendiente de integración.
 
 **Criterios de aceptación:**
 
@@ -179,4 +179,4 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 **Limitaciones auditadas:** las puntuaciones son educativas y deterministas; no son una auditoría de seguridad real. `axe` no está instalado; las capturas visuales se obtuvieron localmente y no equivalen a una validación de GitHub Pages.
 
-**Siguiente actividad:** aprobación explícita y, en una tarea posterior, commit y Pull Request.
+**Siguiente actividad:** revisar PR #9; no realizar merge automáticamente.

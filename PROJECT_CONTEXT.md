@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprints 0–6, Visual Design System 2.0 y Animated 3D Data Flow están integrados en `origin/main`; Sprint 7 está implementado en `feature/interactive-learning-presentation` para revisión, sin commit ni publicación.
+**Estado:** Sprints 0–6, Visual Design System 2.0 y Animated 3D Data Flow están integrados en `origin/main`; Sprint 7 está implementado y publicado en `feature/interactive-learning-presentation`, commit `79e40c2`, PR #9 abierto hacia `main` y pendiente únicamente de integración.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 

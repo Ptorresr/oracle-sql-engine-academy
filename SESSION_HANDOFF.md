@@ -4,7 +4,7 @@
 
 - **Fecha:** 2026-11-18
 - **Rama:** `feature/interactive-learning-presentation`, creada desde `origin/main` con PR #8 integrado.
-- **Estado:** implementación en revisión; no se ha creado commit, push, Pull Request ni merge.
+- **Estado:** implementado y validado; commit `79e40c2` publicado, PR #9 abierto hacia `main`, sin merge.
 - **Alcance:** Presentation Mode para cinco laboratorios y capítulo 14 Architecture Challenges.
 
 ### Trabajo realizado
@@ -38,7 +38,7 @@
 
 ### Siguiente actividad
 
-La implementación está lista para aprobación definitiva del Sprint 7. No crear commit, push, Pull Request ni merge hasta aprobación explícita. `axe` no está disponible en el entorno; la revisión de accesibilidad fue manual y mediante pruebas locales de teclado, foco, Escape, reduced motion y responsive.
+La implementación está publicada para revisión en PR #9. No realizar merge automáticamente. `axe` no está disponible en el entorno; la revisión de accesibilidad fue manual y mediante pruebas locales de teclado, foco, Escape, reduced motion y responsive.
 
 ## Estado actual
 
