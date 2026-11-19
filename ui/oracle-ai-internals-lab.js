@@ -75,6 +75,7 @@
     byId("aiPlay").textContent = reducedMotion ? "▶ Movimiento reducido" : "▶ Play";
     markProgress(lab.id);
     bindDynamic(timeline);
+    globalThis.OraclePresentationMode?.refresh("ai-internals");
   };
   const whatIfMessage = (timeline) => {
     const lab = activeLab();
@@ -138,6 +139,7 @@
   window.addEventListener("hashchange", () => { const id = location.hash.slice(1); if (labs.some((lab) => lab.id === id) && id !== activeLabId) selectLab(id, false); });
   const directLab = location.hash.slice(1); if (labs.some((lab) => lab.id === directLab)) activeLabId = directLab, selectedScenarioId = activeLab().scenarios[0].id;
   render();
+  globalThis.OraclePresentationMode?.register({ id: "ai-internals", root: shell, kind: "ai-internals", title: "Oracle AI Database Internals", image: "assets/illustrations/ai-internals-tech.png", getState: () => { const timeline = run(); const event = timeline.events[selectedStep]; return { events: timeline.events, index: selectedStep, event, speed, playing: Boolean(timer), component: event?.target || activeLab().label, subtitle: `${activeLab().label} · ${activeScenario().title}` }; }, actions: { play: () => byId("aiPlay").click(), pause: () => byId("aiPause").click(), previous: () => byId("aiPrevious").click(), next: () => byId("aiNext").click(), reset: () => byId("aiReset").click(), setSpeed: (value) => { byId("aiSpeed").value = String(value); byId("aiSpeed").dispatchEvent(new Event("change")); }, select: (next) => { stop(); selectedStep = Math.max(0, Math.min(next, run().events.length - 1)); render(); } } });
   if (labs.some((lab) => lab.id === directLab)) requestAnimationFrame(() => byId(directLab)?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" }));
   window.dispatchEvent(new CustomEvent("academy:oracle-ai-ready", { detail: { labId: activeLabId } }));
 })();

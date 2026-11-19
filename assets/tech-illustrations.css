@@ -70,6 +70,25 @@ body {
   grid-template-columns: minmax(76px, 100px) minmax(0, 1fr) !important;
 }
 
+@media (max-width: 650px) {
+  .dashboard-guide {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .dashboard-guide > div {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 650px) {
+  .dashboard-guide > div:last-child,
+  .dashboard-progress,
+  .dashboard-copy > p {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
 .generated-illustration {
   margin: 1rem 0 1.25rem;
   overflow: hidden;
@@ -326,6 +345,19 @@ textarea:focus-visible,
 
   .architecture-hero-art img {
     height: 190px;
+  }
+}
+
+@media (max-width: 650px) {
+  .dashboard-guide {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .dashboard-guide > div:last-child,
+  .dashboard-progress,
+  .dashboard-copy > p {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
 

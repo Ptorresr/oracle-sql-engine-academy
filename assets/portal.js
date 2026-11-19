@@ -4,7 +4,7 @@
   if (!document.querySelector('link[data-tech-illustrations]')) {
     const techStylesheet = document.createElement("link");
     techStylesheet.rel = "stylesheet";
-    techStylesheet.href = "assets/tech-illustrations.css";
+    techStylesheet.href = "assets/tech-illustrations.css?v=7";
     techStylesheet.dataset.techIllustrations = "true";
     document.head.append(techStylesheet);
   }
@@ -50,6 +50,8 @@
       theme = mode === "system" ? (systemTheme.matches ? "dark" : "light") : mode;
       document.body.dataset.theme = theme;
       document.body.dataset.themeMode = mode;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.themeMode = mode;
       document.documentElement.style.colorScheme = theme;
       const selector = document.getElementById("themeSelect");
       if (selector) {
@@ -204,7 +206,9 @@
     pendingChapterId = null;
     const chapter = runbook.getChapter(targetId);
     if (chapter && historyMode === "push" && window.location.hash !== chapter.route) window.history.pushState({ chapterId: targetId }, "", chapter.route);
-    target.scrollIntoView({ behavior: reduceMotion || historyMode === "none" ? "auto" : "smooth", block: "start" });
+    const headerHeight = document.querySelector(".top")?.getBoundingClientRect().height || 0;
+    const targetTop = target.getBoundingClientRect().top + window.scrollY - headerHeight - 8;
+    window.scrollTo({ top: Math.max(0, targetTop), behavior: reduceMotion || historyMode === "none" ? "auto" : "smooth" });
     if (chapter) {
       markVisited(targetId);
       setActiveChapter(runbook.getIndex(targetId));
@@ -307,6 +311,12 @@
     };
     window.addEventListener("academy:architecture-ready", activateArchitectureChapter);
     window.addEventListener("academy:architecture-active", activateArchitectureChapter);
+    window.addEventListener("academy:architecture-challenges-ready", () => {
+      const section = byId("architecture-challenges");
+      if (!section) return;
+      chapterObserver.observe(section);
+      if (window.location.hash === "#architecture-challenges" || pendingChapterId === "architecture-challenges") window.setTimeout(() => scrollTo("architecture-challenges", "none"), 250);
+    });
   }
 
   function updateWorkspace() {
@@ -371,9 +381,10 @@
   bindProgressReset();
   updateWorkspace();
   const initialChapterId = window.location.hash.replace(/^#/, "");
-  if (runbook.getChapter(initialChapterId)) scrollTo(initialChapterId, "none");
+  if (runbook.getChapter(initialChapterId)) window.setTimeout(() => scrollTo(initialChapterId, "none"), 250);
   window.addEventListener("academy:intelligence-activity", (event) => recordActivity("intelligence", event.detail?.activity));
   window.addEventListener("academy:architecture-activity", (event) => recordActivity("architecture-explorer", event.detail?.activity));
+  window.addEventListener("academy:architecture-challenge-activity", (event) => recordActivity("architecture-challenges", event.detail?.activity));
 
   function loadSqlIntelligenceLab() {
     const stylesheet = document.createElement("link");
@@ -451,7 +462,11 @@
       "renderer/architecture-canvas-renderer.js",
       "renderer/architecture-flow-renderer.js",
       "renderer/architecture-inspector-renderer.js",
-      "ui/architecture-explorer.js"
+      "ui/architecture-explorer.js",
+      "content/architecture-challenges.js",
+      "simulation/architecture-challenge-evaluator.js",
+      "renderer/challenge-feedback-renderer.js",
+      "ui/architecture-challenges.js"
     ];
     files.reduce((chain, source) => chain.then(() => loadScript(source)), Promise.resolve()).catch(() => {
       byId("portalFeedback").textContent = "No se pudo cargar Oracle AI Database Architecture Explorer localmente.";

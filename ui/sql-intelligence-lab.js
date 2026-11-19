@@ -17,6 +17,23 @@
   let analysis = analyzer.analyze(plan);
   let selectedId = null;
   let expanded = new Set();
+  let intelligenceTimer = null;
+  let intelligenceSpeed = 1;
+
+  function stopIntelligencePlayback() {
+    if (intelligenceTimer) window.clearInterval(intelligenceTimer);
+    intelligenceTimer = null;
+  }
+
+  function playIntelligencePlayback() {
+    if (intelligenceTimer || !plan.nodes.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    intelligenceTimer = window.setInterval(() => {
+      const current = plan.nodes.findIndex((node) => node.id === selectedId);
+      if (current >= plan.nodes.length - 1) return stopIntelligencePlayback();
+      selectedId = plan.nodes[current + 1]?.id || plan.nodes[0].id;
+      renderPlan();
+    }, Math.round(1100 / intelligenceSpeed));
+  }
 
   function selectedNode() {
     return plan.nodes.find((node) => node.id === selectedId) || plan.nodes[0] || null;
@@ -64,6 +81,7 @@
     const animatedTimeline = globalThis.OracleAnimatedDataFlow?.planTimeline(plan);
     const selectedPlanIndex = plan.nodes.length ? plan.nodes.findIndex((node) => node.id === selectedId) : 0;
     globalThis.OracleAnimatedDataFlow?.mount(root.querySelector(".intelligence-illustration"), { kind: "intelligence", events: animatedTimeline?.events || [], index: selectedPlanIndex, label: "AI SQL Intelligence · flujo conceptual del plan", onSelect: (next) => { if (plan.nodes[next]) { selectedId = plan.nodes[next].id; renderPlan(); } } });
+    globalThis.OraclePresentationMode?.refresh("intelligence");
   }
 
   function renderInsights() {
@@ -76,6 +94,7 @@
   }
 
   function importPlan(recordProgress = false) {
+    stopIntelligencePlayback();
     plan = parser.parse(byId("planInput").value);
     analysis = analyzer.analyze(plan);
     selectedId = plan.nodes[0]?.id || null;
@@ -181,4 +200,5 @@
   [...root.querySelectorAll("[role=tab]")].forEach((tab) => tab.addEventListener("click", () => activateTab(tab)));
   byId("planExample").dispatchEvent(new Event("change"));
   renderWhatIf();
+  globalThis.OraclePresentationMode?.register({ id: "intelligence", root, kind: "intelligence", title: "AI SQL Intelligence Lab", image: "assets/illustrations/sql-intelligence-tech.png", getState: () => { const timeline = globalThis.OracleAnimatedDataFlow?.planTimeline(plan)?.events || []; const index = Math.max(0, plan.nodes.findIndex((node) => node.id === selectedId)); return { events: timeline, index, event: timeline[index], speed: intelligenceSpeed, playing: Boolean(intelligenceTimer), component: selectedNode()?.operation || "Plan importado", subtitle: plan.nodes.length ? `${plan.nodes.length} operador(es) importado(s)` : "Sin plan importado" }; }, actions: { play: playIntelligencePlayback, pause: () => { stopIntelligencePlayback(); globalThis.OraclePresentationMode?.refresh("intelligence"); }, previous: () => { stopIntelligencePlayback(); const index = Math.max(0, plan.nodes.findIndex((node) => node.id === selectedId) - 1); selectedId = plan.nodes[index]?.id || selectedId; renderPlan(); }, next: () => { stopIntelligencePlayback(); const index = Math.min(plan.nodes.length - 1, Math.max(0, plan.nodes.findIndex((node) => node.id === selectedId) + 1)); selectedId = plan.nodes[index]?.id || selectedId; renderPlan(); }, reset: () => { stopIntelligencePlayback(); selectedId = plan.nodes[0]?.id || null; renderPlan(); }, setSpeed: (value) => { intelligenceSpeed = Number(value) || 1; if (intelligenceTimer) { stopIntelligencePlayback(); playIntelligencePlayback(); } }, select: (next) => { stopIntelligencePlayback(); selectedId = plan.nodes[next]?.id || selectedId; renderPlan(); } } });
 })();

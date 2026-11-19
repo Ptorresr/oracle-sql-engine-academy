@@ -160,3 +160,23 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 - SVG relativo, temas Redwood, responsive 375/768/1440, teclado, foco y reduced motion se validan sin dependencias externas.
 
 **Entrega implementada:** `renderer/animated-data-flow-renderer.js`, `assets/animated-data-flow.css`, integraciones incrementales en cinco laboratorios, `planTimeline` para planes importados o secuencia ilustrativa sin plan, pruebas de contrato y evidencia Chrome local.
+
+## Sprint 7 — Interactive Learning & Presentation Experience
+
+**Estado:** auditado y listo para aprobación definitiva en `feature/interactive-learning-presentation`; sin commit, push ni Pull Request.
+
+**Criterios de aceptación:**
+
+- Presentation Mode funciona en HASH JOIN, Comparison, AI SQL Intelligence, AI Internals y Architecture Explorer.
+- Play/Pause/Previous/Next/Reset, velocidad, Escape y reduced motion delegan en el estado existente.
+- Existen tres desafíos de Retail, Finanzas y Operaciones, con Builder SVG y evaluación 0–100 explicable.
+- Se detectan componentes faltantes, conexiones inválidas, RAG sin contexto autorizado y Agentic sin denegación.
+- La evaluación separa evidencia funcional, flujo, componentes y seguridad; retirar un control no elimina el flujo y no produce doble penalización.
+- Progreso y puntuaciones permanecen locales; no se modifican capítulos 01–13.
+- Las 25 suites Node, sintaxis, `git diff --check`, Chrome local, responsive, teclado, Escape y reduced motion pasan; axe no está instalado.
+- Chrome Headless/CDP validó cinco laboratorios, capítulo 14, temas claro/oscuro, reevaluación financiera, Escape real y ausencia de errores de consola.
+- Se corrigió la sincronización del tema entre `html` y `body` y el anclaje diferido del capítulo 14 bajo el encabezado sticky.
+
+**Limitaciones auditadas:** las puntuaciones son educativas y deterministas; no son una auditoría de seguridad real. `axe` no está instalado; las capturas visuales se obtuvieron localmente y no equivalen a una validación de GitHub Pages.
+
+**Siguiente actividad:** aprobación explícita y, en una tarea posterior, commit y Pull Request.

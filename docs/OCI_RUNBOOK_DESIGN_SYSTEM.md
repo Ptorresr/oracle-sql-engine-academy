@@ -51,3 +51,7 @@ The UI uses the RunBook redwood accent and neutral surfaces. The module illustra
 Focus indicators use the reference blue/info token, links and active navigation use the accent token, and status colors retain text/border cues instead of relying only on hue. SVG diagrams, Event Inspector, Architecture Builder, timelines and SQL views remain functional and are not replaced by the generated imagery.
 
 The reference site was used for visual analysis only. No HTML, CSS, JavaScript, assets or content were copied into the academy.
+
+## Sprint 7 presentation layer
+
+`assets/presentation-mode.css` mantiene la jerarquía Redwood, contraste para proyección y responsive en la capa ampliada. La capa no sustituye los SVG ni las ilustraciones 3D locales: aumenta la superficie de lectura y delega el estado en los laboratorios. `prefers-reduced-motion` conserva una representación estática y controles de paso.

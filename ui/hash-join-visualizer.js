@@ -118,6 +118,7 @@
     byId("hashNext").disabled = index === timeline.events.length - 1;
     byId("hashEventList").innerHTML = timeline.events.map((candidate, candidateIndex) => `<button type="button" class="hash-event ${candidateIndex === index ? "is-selected" : ""}" data-event-index="${candidateIndex}" aria-current="${candidateIndex === index ? "step" : "false"}"><span>${candidate.step}</span>${candidate.type}</button>`).join("");
     renderInspector(state);
+    globalThis.OraclePresentationMode?.refresh("hash");
   }
 
   function move(nextIndex) {
@@ -218,5 +219,6 @@
   render();
   updateWhatIf();
   describeComponent("SQL Execution Engine");
+  globalThis.OraclePresentationMode?.register({ id: "hash", root, kind: "hash", title: "HASH JOIN — Execution Engine", image: "assets/illustrations/hash-join-tech.png", getState: () => ({ events: timeline.events, index, event: timeline.events[index], speed: Number(byId("hashSpeed").value), playing: Boolean(timer), component: selection.kind === "component" ? selection.id : "SQL Execution Engine", subtitle: `${scenario.label} · flujo conceptual` }), actions: { play: () => byId("hashPlay").click(), pause: () => byId("hashPause").click(), previous: () => byId("hashPrevious").click(), next: () => byId("hashNext").click(), reset: () => byId("hashReset").click(), setSpeed: (value) => { byId("hashSpeed").value = String(value); byId("hashSpeed").dispatchEvent(new Event("change")); }, select: (next) => { stop(); move(next); } } });
   globalThis.OracleHashJoinLab = Object.freeze({ getTimeline: () => timeline, getState: () => engine.stateAt(timeline, index), move });
 })();
