@@ -149,6 +149,17 @@ La información adopta navegación documental inspirada en OCI PoC RunBook: índ
 - Las imágenes son locales, 1280×720, lazy-loaded, con dimensiones explícitas, alt text y procedencia documentada en `docs/VISUAL_ASSETS.md`.
 - La implementación no reinicia motores ni progreso al cambiar tema; sigue siendo estática y compatible con GitHub Pages.
 
+### Visual Design System 2.1 — Animated Data Flow
+
+**Estado:** implementado y validado en `feature/animated-3d-data-flow`; preparado para publicación mediante Pull Request hacia `main`.
+
+- `renderer/animated-data-flow-renderer.js` implementa una capa reutilizable que recibe los eventos de los motores existentes, resuelve anclajes normalizados y dibuja una superposición SVG sobre la ilustración 3D.
+- HASH JOIN, Comparison Lab, AI SQL Intelligence, AI Internals y Architecture Explorer montan la misma capa; no calculan una segunda secuencia ni reemplazan sus timelines.
+- Las rutas solo se dibujan cuando el origen y destino tienen un anclaje semántico definido. Las coordenadas están normalizadas a `0..100` con `preserveAspectRatio="xMidYMid slice"`, por lo que el overlay escala con la imagen.
+- Los botones de componentes conceptuales son la alternativa textual y accesible. Seleccionan el primer evento relacionado y actualizan el timeline, la explicación y el Event Inspector del laboratorio anfitrión.
+- Las partículas y pulsos representan flujo lógico; no representan paquetes, bloques físicos, PGA permanente, tráfico OCI ni telemetría real. `SPILL_TEMP` solo se dibuja cuando aparece en el timeline del motor.
+- `prefers-reduced-motion` conserva la ruta y el estado del evento, pero elimina el desplazamiento continuo y las animaciones CSS. No se reproduce ningún timeline automáticamente.
+
 ## Seguridad y exactitud
 
 - No confundir `EXPLAIN PLAN` con la ejecución real. Explicar estimaciones frente a `DBMS_XPLAN.DISPLAY_CURSOR` y estadísticas reales.

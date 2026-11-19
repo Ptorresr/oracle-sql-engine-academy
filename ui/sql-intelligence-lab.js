@@ -61,6 +61,9 @@
     byId("planGraphView").innerHTML = planRenderer.renderGraph(plan, selectedId);
     byId("planNotes").textContent = plan.metadata.notes.length ? `Notas importadas: ${plan.metadata.notes.join(" ")}` : "No se importaron notas.";
     renderInspector();
+    const animatedTimeline = globalThis.OracleAnimatedDataFlow?.planTimeline(plan);
+    const selectedPlanIndex = plan.nodes.length ? plan.nodes.findIndex((node) => node.id === selectedId) : 0;
+    globalThis.OracleAnimatedDataFlow?.mount(root.querySelector(".intelligence-illustration"), { kind: "intelligence", events: animatedTimeline?.events || [], index: selectedPlanIndex, label: "AI SQL Intelligence · flujo conceptual del plan", onSelect: (next) => { if (plan.nodes[next]) { selectedId = plan.nodes[next].id; renderPlan(); } } });
   }
 
   function renderInsights() {

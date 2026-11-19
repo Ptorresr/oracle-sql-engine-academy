@@ -144,3 +144,19 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 - Responsive 375/768/1440 px, foco visible, teclado, `aria-current`, SVG accesible, GitHub Pages sin backend ni recursos externos.
 
 **Entrega implementada:** sistema de tokens OCI, overrides de laboratorios dinámicos, selector de tema de tres estados, migración de preferencias, cinco ilustraciones 3D, documentación visual y prueba de contrato para temas. Las pruebas de motores permanecen sin cambios.
+
+## Visual Design System 2.1 — Animated 3D Data Flow
+
+**Estado:** completado y validado en `feature/animated-3d-data-flow`; listo para publicación mediante Pull Request hacia `main`.
+
+**Objetivo:** convertir las ilustraciones 3D en vistas conceptuales sincronizadas con los eventos deterministas, sin reemplazar SVG, timelines, Event Inspector o controles existentes.
+
+**Criterios de aceptación**
+
+- Una capa reutilizable recibe un timeline existente y muestra ruta, anchors, partícula, paso activo y componentes seleccionables sobre la imagen correspondiente.
+- HASH JOIN distingue acceso, Buffer Cache, Build, Probe, emisión y TEMP solo según los eventos generados por el motor.
+- Comparison, SQL Intelligence, AI Internals y Architecture Explorer usan el mismo contrato visual; los planes importados solo muestran operadores identificados por el parser.
+- Play/Pause/Previous/Next/Reset, velocidad, selección de timeline, selección textual de componentes, Event Inspector y progreso permanecen sincronizados.
+- SVG relativo, temas Redwood, responsive 375/768/1440, teclado, foco y reduced motion se validan sin dependencias externas.
+
+**Entrega implementada:** `renderer/animated-data-flow-renderer.js`, `assets/animated-data-flow.css`, integraciones incrementales en cinco laboratorios, `planTimeline` para planes importados o secuencia ilustrativa sin plan, pruebas de contrato y evidencia Chrome local.
