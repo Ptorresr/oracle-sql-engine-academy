@@ -11,7 +11,7 @@ vm.createContext(context);
 vm.runInContext(fs.readFileSync(path.join(__dirname, "..", "content/runbook-chapters.js"), "utf8"), context, { filename: "content/runbook-chapters.js" });
 
 const runbook = context.oracleAcademyRunbook;
-assert.deepEqual(JSON.parse(JSON.stringify(runbook.chapters.map((chapter) => chapter.id))), ["que", "como", "simulador", "hashjoin", "comparison", "casos", "dba", "internals", "intelligence", "ai", "reto", "ai-internals", "architecture-explorer"], "RunBook preserves chapters 01–12 and appends Architecture Explorer as chapter 13");
+assert.deepEqual(JSON.parse(JSON.stringify(runbook.chapters.map((chapter) => chapter.id))), ["que", "como", "simulador", "hashjoin", "comparison", "casos", "dba", "internals", "intelligence", "ai", "reto", "ai-internals", "architecture-explorer", "architecture-challenges"], "RunBook preserves chapters 01–13 and appends Architecture Challenges as chapter 14");
 assert.equal(runbook.getChapter("intelligence").order, 9, "Intelligence uses a stable chapter order");
 assert.equal(runbook.getChapter("intelligence").route, "#intelligence", "Intelligence has a stable direct route");
 assert.equal(runbook.previous("intelligence").id, "internals", "previous navigation reaches Internals");
@@ -25,5 +25,9 @@ assert.equal(runbook.getChapter("architecture-explorer").route, "#architecture-e
 assert.equal(runbook.previous("architecture-explorer").id, "ai-internals", "chapter 13 follows AI Internals");
 assert.deepEqual(JSON.parse(JSON.stringify(runbook.getChapter("architecture-explorer").completionActivities)), ["architecture-explored", "component-selected", "flow-ran", "security-reviewed", "alternative-compared"], "Architecture Explorer completion requires educational activities");
 assert.deepEqual(JSON.parse(JSON.stringify(runbook.getChapter("intelligence").completionActivities)), ["plan-imported", "operator-inspected"], "Intelligence completion requires educational activities");
+assert.equal(runbook.getChapter("architecture-challenges").order, 14, "Architecture Challenges uses chapter 14");
+assert.equal(runbook.getChapter("architecture-challenges").route, "#architecture-challenges", "Architecture Challenges has a stable direct route");
+assert.equal(runbook.previous("architecture-challenges").id, "architecture-explorer", "chapter 14 follows Architecture Explorer");
+assert.deepEqual(JSON.parse(JSON.stringify(runbook.getChapter("architecture-challenges").completionActivities)), ["challenge-started", "challenge-evaluated"], "Challenges completion requires educational activities");
 
 console.log("runbook-chapters: passed");

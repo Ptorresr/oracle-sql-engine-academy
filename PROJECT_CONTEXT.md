@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprints 0–5 están integrados en `origin/main`; Sprint 6 y el Visual Design System 2.0 están implementados, auditados y aprobados para publicación desde sus ramas de trabajo.
+**Estado:** Sprints 0–6, Visual Design System 2.0 y Animated 3D Data Flow están integrados en `origin/main`; Sprint 7 está implementado y publicado en `feature/interactive-learning-presentation`, commit `79e40c2`, PR #9 abierto hacia `main` y pendiente únicamente de integración.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 
@@ -159,6 +159,12 @@ La información adopta navegación documental inspirada en OCI PoC RunBook: índ
 - Los botones de componentes conceptuales son la alternativa textual y accesible. Seleccionan el primer evento relacionado y actualizan el timeline, la explicación y el Event Inspector del laboratorio anfitrión.
 - Las partículas y pulsos representan flujo lógico; no representan paquetes, bloques físicos, PGA permanente, tráfico OCI ni telemetría real. `SPILL_TEMP` solo se dibuja cuando aparece en el timeline del motor.
 - `prefers-reduced-motion` conserva la ruta y el estado del evento, pero elimina el desplazamiento continuo y las animaciones CSS. No se reproduce ningún timeline automáticamente.
+
+## Sprint 7 — Interactive Learning & Presentation Experience
+
+`ui/presentation-mode.js` registra los cinco laboratorios compatibles y crea una capa ampliada que delega controles, selección, velocidad y estado en sus motores existentes. No inicia autoplay, no duplica el timeline y permite salir con Escape devolviendo el foco. `docs/PRESENTATION_MODE.md` documenta el contrato y sus límites.
+
+`content/architecture-challenges.js`, `simulation/architecture-challenge-evaluator.js`, `renderer/challenge-feedback-renderer.js` y `ui/architecture-challenges.js` incorporan tres desafíos educativos. El Builder opera sobre clones locales, el evaluador produce hallazgos deterministas y el dashboard guarda únicamente progreso/puntuaciones sintéticas. `docs/ARCHITECTURE_CHALLENGES.md` documenta la ponderación 25/20/20/25/10 y la diferencia entre evaluación didáctica y validación real.
 
 ## Seguridad y exactitud
 

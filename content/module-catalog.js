@@ -43,5 +43,14 @@ window.oracleAcademyModules = Object.freeze([
     action: "Explorar arquitectura",
     target: "architecture-explorer",
     status: "lab"
+  },
+  {
+    id: "architecture-challenges",
+    title: "Architecture Challenges",
+    track: "Evaluación · Disponible",
+    description: "Tres desafíos de Retail, Finanzas y Operaciones para construir y evaluar arquitecturas con evidencia.",
+    action: "Resolver desafíos",
+    target: "architecture-challenges",
+    status: "lab"
   }
 ]);

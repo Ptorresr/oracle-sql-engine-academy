@@ -89,6 +89,7 @@
     byId("comparisonPrevious").disabled = tracks[activeTrack].index === 0;
     byId("comparisonNext").disabled = tracks.left.index === tracks.left.timeline.events.length - 1 && tracks.right.index === tracks.right.timeline.events.length - 1;
     renderInspector();
+    globalThis.OraclePresentationMode?.refresh("comparison");
   }
 
   function move(direction) {
@@ -162,5 +163,6 @@
   }
   render();
   renderWhatIf();
+  globalThis.OraclePresentationMode?.register({ id: "comparison", root, kind: "comparison", title: "SQL Execution Comparison Lab", image: "assets/illustrations/sql-comparison-tech.png", getState: () => { const track = tracks[activeTrack]; return { events: track.timeline.events, index: track.index, event: track.timeline.events[track.index], speed: Number(byId("comparisonSpeed").value), playing: Boolean(timer), component: engine.ALGORITHMS[track.algorithm].label, subtitle: `${scenario.label} · ${engine.ALGORITHMS[track.algorithm].label}` }; }, actions: { play: () => byId("comparisonPlay").click(), pause: () => byId("comparisonPause").click(), previous: () => byId("comparisonPrevious").click(), next: () => byId("comparisonNext").click(), reset: () => byId("comparisonReset").click(), setSpeed: (value) => { byId("comparisonSpeed").value = String(value); byId("comparisonSpeed").dispatchEvent(new Event("change")); }, select: (next) => { stop(); tracks[activeTrack].index = Math.max(0, Math.min(next, tracks[activeTrack].timeline.events.length - 1)); if (byId("comparisonSync").checked) tracks[activeTrack === "left" ? "right" : "left"].index = Math.min(next, tracks[activeTrack === "left" ? "right" : "left"].timeline.events.length - 1); selection = { kind: "event", track: activeTrack }; render(); } } });
   globalThis.OracleJoinComparisonLab = Object.freeze({ getTracks: () => tracks, getScenario: () => scenario, move });
 })();

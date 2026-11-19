@@ -1,5 +1,45 @@
 # Session Handoff — Oracle SQL & AI Database Engine Academy
 
+## Sprint 7 — Interactive Learning & Presentation Experience
+
+- **Fecha:** 2026-11-18
+- **Rama:** `feature/interactive-learning-presentation`, creada desde `origin/main` con PR #8 integrado.
+- **Estado:** implementado y validado; commit `79e40c2` publicado, PR #9 abierto hacia `main`, sin merge.
+- **Alcance:** Presentation Mode para cinco laboratorios y capítulo 14 Architecture Challenges.
+
+### Trabajo realizado
+
+- `ui/presentation-mode.js` y `renderer/presentation-renderer.js` crean una capa ampliada que reutiliza el timeline, acciones, Event Inspector y selección de HASH JOIN, Comparison, AI SQL Intelligence, AI Internals y Architecture Explorer.
+- `content/architecture-challenges.js` declara Retail, Finanzas y Operaciones; `simulation/architecture-challenge-evaluator.js` evalúa criterios con ponderación 25/20/20/25/10.
+- `ui/architecture-challenges.js` reutiliza el grafo y canvas SVG del Explorer, permite construir, cargar referencias, evaluar, seleccionar hallazgos y reiniciar sin mutar datos originales.
+- `assets/presentation-mode.css` mantiene Redwood, responsive, foco y reduced motion. El progreso de desafíos usa una clave local separada y no borra progreso previo.
+
+### Decisiones y límites
+
+- No existe un segundo motor ni una segunda línea de tiempo; Presentation Mode delega en los controles de cada laboratorio.
+- AI SQL Intelligence usa `planTimeline` para que Play/Pause/Previous/Next/Reset recorran los operadores importados; no inventa estadísticas ni relaciones físicas.
+- Las puntuaciones son educativas y deterministas. No son certificación Oracle, validación de seguridad, medición de OCI ni predicción de producción.
+- No hay backend, Oracle Database real, ejecución SQL, LLM, agente autónomo, credenciales ni servicios externos.
+
+### Validación final de esta sesión
+
+- JavaScript syntax, `index.html` y `git diff --check`: superados.
+- 25 suites Node: superadas, incluidas Presentation Mode, Architecture Challenges, navegación y regresiones históricas.
+- Evaluador: las tres arquitecturas de referencia alcanzan `100/100`; una variante vacía queda incompleta y una herramienta Agentic no denegada produce hallazgo de severidad `error`.
+- Corrección de auditoría: la evaluación separa criterios funcionales, de flujo y de seguridad; retirar `AUTHORIZED_CONTEXT` conserva el flujo funcional y solo reduce seguridad, sin doble penalización.
+- Chrome local: cinco botones de Presentation Mode, entrada/salida, paso siguiente, Escape, foco, capítulo 14, carga de referencia y evaluación `100/100` verificados sin errores de consola.
+- Responsive: 375, 768 y 1440 px sin overflow tras corregir el ancho del dashboard guide en `assets/tech-illustrations.css` y versionar la carga local en `assets/portal.js`.
+- Reduced motion: `prefers-reduced-motion` detectado y Play deshabilitado; los estados siguen siendo navegables por pasos.
+- Seguridad: escaneo de firmas de secretos, URLs externas de runtime y temporales limpio.
+- Defecto corregido en esta auditoría: la regresión financiera modelaba la eliminación del enlace completo en lugar de retirar únicamente la evidencia de autorización; la prueba ahora conserva el enlace y cambia su tipo de contexto.
+- Chrome Headless/CDP `157.0.8103.79`: los cinco Presentation Labs abren, avanzan y cierran con Escape real sin errores de consola; Finanzas pasa de `100/100` a `88/100` al retirar `auth` e `iam`, mostrando el hallazgo de filtrado por permisos.
+- Defectos visuales corregidos: sincronización de `data-theme` en `html` y `body`, cache-bust de `portal.js`, y reanclaje diferido de `#architecture-challenges` después de la carga diferida para respetar la barra sticky.
+- Capturas verificadas: `/tmp/oracle-sprint7-presentation-1440-final.png`, `/tmp/oracle-sprint7-challenges-1440-dark-final.png`, `/tmp/oracle-sprint7-challenges-result-final.png`, `/tmp/oracle-sprint7-challenges-1440-light-final.png`, `/tmp/oracle-sprint7-challenges-375-dark-final.png` y `/tmp/oracle-sprint7-challenges-768-dark-final.png`.
+
+### Siguiente actividad
+
+La implementación está publicada para revisión en PR #9. No realizar merge automáticamente. `axe` no está disponible en el entorno; la revisión de accesibilidad fue manual y mediante pruebas locales de teclado, foco, Escape, reduced motion y responsive.
+
 ## Estado actual
 
 - **Fecha:** 2026-11-18
