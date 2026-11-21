@@ -4,8 +4,10 @@
 
 - **Fecha:** 2026-11-20
 - **Rama:** `feature/database-performance-foundation`.
-- **Estado:** implementado y validado localmente; sin commit, push, Pull Request ni merge.
+- **Estado:** cerrado e integrado en `main` mediante el PR #10 (**MERGED**) y el squash commit `9926ba4`. La regresión posterior confirmó 36/36 suites Node correctas.
 - **Alcance:** integra capítulo 15, catálogo, rutas, progreso y Presentation Mode sobre los laboratorios existentes. No crea motores, tipos de eventos, dependencias, backend, LLM, ejecución SQL ni conexiones Oracle.
+
+> **Nota de cierre:** las secciones 8.1–8.6 que siguen registran los estados de cada incremento antes de la integración final. Su estado histórico no sustituye el cierre consolidado de Sprint 8 en `main`.
 
 ### Trabajo realizado
 
@@ -27,7 +29,7 @@
 ### Límites y siguiente actividad
 
 - CDP en macOS no modifica la opción de un `<select>` nativo con flechas y su inyección de Enter no activa el botón nativo aunque Espacio sí lo hace; las comprobaciones físicas de esas teclas siguen pendientes de un navegador de escritorio disponible. No se declara conformidad WCAG completa. El binario `--headless --screenshot` mantiene el defecto de PNG negro; las capturas válidas usan CDP `fromSurface: true`.
-- Las rutas de la aplicación y recursos se validaron con un servidor estático local. No hubo solicitudes de runtime de la aplicación fuera de `127.0.0.1`; extensiones propias de Chrome no se consideran recursos de la aplicación. Falta solo aprobación para cualquier commit/publicación.
+- Las rutas de la aplicación y recursos se validaron con un servidor estático local. No hubo solicitudes de runtime de la aplicación fuera de `127.0.0.1`; extensiones propias de Chrome no se consideran recursos de la aplicación. Sprint 8 queda cerrado; las nuevas actividades requieren una autorización de alcance independiente.
 
 ## Sprint 8.6 — Performance What-If
 
