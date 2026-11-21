@@ -23,5 +23,16 @@ assert.match(planRenderer.renderTable(timingPlan, "0"), /00:00:01.20/, "table sh
 const injected = context.OraclePlanParser.parse("| Id | Operation | Name |\n| 0 | <img src=x> | <script> |\n");
 assert.match(planRenderer.renderTable(injected, "0"), /&lt;img/, "imported text is escaped before rendering");
 assert.match(context.OracleSqlIntelligenceRenderer.renderWhatIf({ observations: ["safe < text"], disclaimer: "no <script>" }), /&lt;script&gt;/, "derived content escapes text");
+assert.match(context.OracleSqlIntelligenceRenderer.renderDiagnosticRecord({ current: { explanation: { how: "safe < text", dba: "no <script>" } }, node: injected.nodes[0], evidence: { format: "DISPLAY", metricNames: [] }, findings: [], cardinality: null }), /&lt;script&gt;/, "diagnostic record escapes imported content");
+
+const ui = fs.readFileSync(path.join(__dirname, "..", "ui/sql-intelligence-lab.js"), "utf8");
+const bootstrap = fs.readFileSync(path.join(__dirname, "..", "ui/sql-intelligence-bootstrap.js"), "utf8");
+const portal = fs.readFileSync(path.join(__dirname, "..", "assets/portal.js"), "utf8");
+const css = fs.readFileSync(path.join(__dirname, "..", "assets/sql-intelligence.css"), "utf8");
+for (const control of ["diagnosticsPrevious", "diagnosticsNext", "diagnosticsPlay", "diagnosticsPause", "diagnosticsReset", "diagnosticsSpeed"]) assert.match(bootstrap, new RegExp(control));
+assert.match(ui, /OraclePlanDiagnosticsTimeline/, "UI consumes the pure diagnostics timeline");
+assert.match(ui, /setDiagnosticIndex/, "all controls share one diagnostic index");
+assert.match(portal, /plan-diagnostics-timeline\.js/, "diagnostics timeline loads locally");
+assert.match(css, /prefers-reduced-motion/, "existing stylesheet retains reduced-motion coverage");
 
 console.log("sql-intelligence-renderer: passed");

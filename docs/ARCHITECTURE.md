@@ -207,3 +207,117 @@ Las ilustraciones narrativas se almacenan en `assets/illustrations/` como PNG lo
 Presentation Mode es un adaptador UI registrado por cada laboratorio. Consume los eventos y acciones existentes, monta la capa SVG animada sobre una ilustración local, muestra el paso y el Event Inspector, y conserva el escenario al entrar/salir. Sus atajos no interceptan formularios y reduced motion desactiva reproducción continua.
 
 Architecture Challenges reutiliza `OracleArchitectureGraphEngine` y `OracleArchitectureCanvasRenderer`. Los desafíos se declaran en `content/architecture-challenges.js`; `OracleArchitectureChallengeEvaluator` calcula una puntuación educativa determinista y hallazgos con evidencia. La evaluación no muta la arquitectura ni los escenarios de referencia, no exige una topología única y no valida OCI real, IAM, costos, latencia o producción.
+
+## Sprint 8.2 — Buffer Cache & I/O
+
+```text
+content/performance-scenarios.js
+  └─ Retail, Finanzas y Data Warehouse inmutables
+       │
+simulation/buffer-cache-engine.js
+  └─ READ_BLOCK → CACHE_HIT/CACHE_MISS → TABLE_ACCESS
+       │        └─ estado FIFO educativo e instantáneas cacheState
+renderer/buffer-cache-renderer.js
+  └─ Developer · Flujo conceptual · Internals SVG accesibles
+       │
+ui/buffer-cache-lab.js
+  └─ único timeline, Event Inspector, SQL relacionado, tutor y What If
+```
+
+`OracleBufferCacheEngine` es puro y determinista: los mismos escenario y parámetros normalizados producen los mismos eventos, resultados y snapshots. Cada solicitud genera una petición lógica de bloque, exactamente un hit o miss conceptual y el acceso que entrega filas sintéticas. Las métricas se llaman explícitamente ilustrativas; un miss solo puede incrementar una lectura física conceptual del modelo y nunca equivale a una lectura observada de Oracle.
+
+La política FIFO, la capacidad y los estados frío/caliente son reglas declaradas para enseñar reutilización. No modelan la gestión real de Buffer Cache, prefetch, RAC, tamaños de bloque, concurrencia, latencia ni estadística de instancia. La UI reutiliza el Event Inspector y `OracleAnimatedDataFlow` con el `kind` `buffer-cache`; no crea una segunda reproducción. En esta etapa se presenta como preview local cargado por `assets/portal.js`: no añade todavía capítulo 15, rutas, progreso ni Presentation Mode.
+
+## Sprint 8.3 — PGA, Work Areas & TEMP
+
+```text
+content/performance-scenarios.js
+  └─ perfiles workareaModel para Retail, Finanzas y Data Warehouse
+       │
+simulation/workarea-temp-engine.js
+  └─ WORKAREA_ALLOCATE → WORKAREA_PROCESS → [TEMP_WRITE → TEMP_READ → WORKAREA_PROCESS]* → WORKAREA_COMPLETE
+       │        └─ clasificación local Optimal / One-Pass / Multi-Pass
+renderer/workarea-temp-renderer.js
+  └─ Developer · Execution Plan · PGA/Work Area/TEMP SVG · Results
+       │
+ui/workarea-temp-lab.js
+  └─ único timeline, Event Inspector, SQL relacionado, tutor local y What If
+```
+
+`OracleWorkareaTempEngine` es puro y determinista. Con parámetros normalizados calcula `ceil(filas × unidades de fila × factor de operación × factor de distribución)` y aplica una regla visible: trabajo hasta el presupuesto es `Optimal`, hasta el doble es `One-Pass` y el resto es `Multi-Pass`, limitado a cuatro pasadas educativas. Cada `TEMP_READ` sigue a su `TEMP_WRITE` y los contadores de fases, workarea y TEMP son instantáneas ilustrativas inmutables.
+
+El laboratorio separa SQL Operation, PGA / Work Area conceptual, TEMP conceptual y Results. No modela la administración real de PGA, workareas automáticas/manuales, particiones, segmentos, bytes, I/O, concurrencia ni diagnósticos de Oracle. `SPILL_TEMP` permanece inalterado en el motor HASH JOIN histórico; el nuevo motor usa `TEMP_WRITE`/`TEMP_READ` porque su secuencia didáctica requiere expresar fases separadas. Como preview local cargado por `assets/portal.js`, no registra capítulo 15, ruta oficial, progreso ni Presentation Mode.
+
+## Sprint 8.4 — Optimizer & Cardinality
+
+```text
+content/performance-scenarios.js
+  └─ optimizerModel inmutable por escenario
+       │
+simulation/optimizer-cardinality-engine.js
+  └─ CARDINALITY_ESTIMATE → ACCESS_PATH_SELECTED → TABLE_ACCESS → EMIT_ROW*
+       │        └─ fórmula, redondeo y decisionBasis educativos
+renderer/optimizer-cardinality-renderer.js
+  └─ Developer · alternativas educativas · SVG de entradas/estimador/resultados
+       │
+ui/optimizer-cardinality-lab.js
+  └─ único timeline, Event Inspector, SQL relacionado, tutor y What If
+```
+
+`OracleOptimizerCardinalityEngine` es puro y determinista. Normaliza filas base, selectividad, estado de estadísticas, índice y distribución sin mutar `optimizerModel` ni los escenarios. La estimación usa `ceil(filas base × selectividad declarada)`; conserva cero cuando una entrada es cero y expone la regla de redondeo. La observación solo existe cuando el escenario la declara y permanece ausente en los demás casos: no se convierte en A-Rows, E-Rows ni dato de producción.
+
+Las alternativas de acceso y JOIN se derivan de umbrales locales expuestos en `decisionBasis`: índice educativo con estadísticas no ausentes, índice declarado y selectividad `≤ 0.1`; Sort Merge educativo con estadísticas disponibles, distribución uniforme y selectividad `≥ 0.5`; Hash Join educativo en los demás casos con filas estimadas. No hay cálculo de coste, simulación del CBO, ejecución SQL ni inferencia de I/O/TEMP. La UI presenta las cuatro vistas desde el mismo índice, se carga de forma secuencial en `assets/portal.js` y no añade capítulo 15, rutas, progreso ni Presentation Mode.
+
+## Sprint 8.5 — Execution Plan Diagnostics
+
+```text
+DBMS_XPLAN text → OraclePlanParser → OraclePlanAnalyzer
+                                      │
+simulation/plan-diagnostics-timeline.js
+  └─ PLAN_OPERATOR_START → PLAN_OPERATOR_END por nodo parseado
+       │
+AI SQL Intelligence UI
+  └─ tabla/árbol/SVG · Inspector · Results · Tutor · What If · Presentation existente
+```
+
+`OraclePlanDiagnosticsTimeline` no reinterpreta ni ejecuta el plan. Produce un recorrido diagnóstico en orden del texto importado y asocia cada evento con `operatorId`; `stateAt` recupera el nodo inmutable, sus métricas originales, cardinalidad derivada cuando procede y hallazgos locales. Los eventos solo usan metadatos ilustrativos sobre el recorrido; `E-Rows`, `A-Rows`, `Starts`, `Buffers`, `Reads`, `A-Time`, memoria y `TempSpc` permanecen en el nodo importado y ausentes cuando no existen.
+
+El motor limita la reproducción a 160 nodos con advertencia explícita, pero mantiene el plan completo en tabla y estado. `PLAN_OPERATOR_START` y `PLAN_OPERATOR_END` representan inicio/cierre de una explicación educativa, no inicio/fin observados de un operador Oracle. La interfaz mantiene el mismo índice para controles, componentes seleccionables, overlay, inspector y Presentation Mode ya registrado; no añade una función de Presentation ni navegación RunBook.
+
+## Sprint 8.6 — Performance What-If
+
+```text
+whatIfModel declarativo
+  └─ snapshots A/B independientes
+       │
+OracleOptimizerCardinalityEngine + OracleBufferCacheEngine + OracleWorkareaTempEngine
+       │
+OraclePerformanceWhatIfEngine
+  └─ tracks compuestos · comparación derivada · regla de comparabilidad
+       │
+Renderer/UI A-B
+  └─ Developer · Plan educativo · Internals · Results · Inspector · Animated Flow
+```
+
+`OraclePerformanceWhatIfEngine` no reimplementa los modelos de rendimiento: normaliza entradas permitidas y llama a las APIs públicas de los tres motores. Cada track mantiene sus timelines y snapshots originales; el compositor solo rebasea pasos para presentar una secuencia de explicación y asocia la procedencia de cada métrica. No añade tipos al contrato de eventos, no combina contadores de distinto alcance como telemetría y no transforma el orden compuesto en una traza de Oracle.
+
+La comparación se fundamenta en identidad declarada. Retail admite hipótesis de selectividad/índice y Finanzas de cache/workarea con la misma población lógica. Data Warehouse permite comparar alternativas sobre población y volumen iguales; al cambiar cualquiera de ellos expone `No comparable`, incluso si las cardinalidades coinciden. El preview integra dos overlays de Animated Data Flow, selección reversible y foco restaurado.
+
+## Sprint 8.7 — Database Performance Integration & Final QA
+
+```text
+content/runbook-chapters.js + content/module-catalog.js
+  └─ capítulo 15 · Database Internals & Performance
+       │
+assets/portal.js
+  └─ resolvedor hash · carga secuencial e idempotente · academy:performance-ready
+       │
+Buffer Cache · PGA/TEMP · Optimizer · AI SQL Intelligence Diagnostics · What-If
+  └─ timelines existentes · progreso local · Presentation Mode existente
+```
+
+El capítulo `database-performance` conserva la fuente declarativa de RunBook, los capítulos 01–14 y la clave `oracle-sql-academy.joins.progress.v1`. Sus rutas internas mantienen el capítulo 15 como único activo, restauran foco en el control de cada laboratorio y esperan la carga diferida antes de resolver el hash. El loader detecta una navegación obsoleta mientras espera y vuelve a resolver la ruta más reciente; sus scripts y hojas locales se insertan una sola vez y emiten `academy:performance-ready` una sola vez.
+
+Cada laboratorio publica una actividad educativa de interfaz sin cambiar el contrato de eventos: `buffer-step-inspected`, `workarea-case-compared`, `cardinality-rule-reviewed`, `plan-diagnostic-inspected` y `performance-comparison-reviewed`. Diagnostics activa la pestaña de plan de AI SQL Intelligence y usa su parser, analyzer y timeline existentes. Buffer Cache añade una vista Results compuesta únicamente desde el estado ya expuesto por su motor; no inventa medidas nuevas.
+
+Los adaptadores de Presentation Mode para Buffer Cache, PGA/TEMP, Optimizer y What-If exponen `getState`, `play`, `pause`, `previous`, `next`, `reset`, `setSpeed` y `select` sobre el mismo timeline local. El gestor común conserva Reduced Motion y no añade temporizadores; What-If presenta el track activo sin eliminar A/B. Esta integración no añade motores, eventos, backend, LLM, SQL ejecutable ni Oracle Database.

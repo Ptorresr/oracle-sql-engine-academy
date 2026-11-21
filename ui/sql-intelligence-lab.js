@@ -2,11 +2,12 @@
   "use strict";
 
   const root = document.getElementById("sqlIntelligenceLab");
-  if (!root || !globalThis.oracleSqlIntelligenceExamples || !globalThis.OraclePlanParser || !globalThis.OraclePlanAnalyzer || !globalThis.OracleSqlAnalyzer || !globalThis.OracleSqlWhatIfEngine || !globalThis.OracleExecutionPlanRenderer || !globalThis.OracleSqlIntelligenceRenderer || !globalThis.OraclePlanOperatorCatalog) return;
+  if (!root || !globalThis.oracleSqlIntelligenceExamples || !globalThis.OraclePlanParser || !globalThis.OraclePlanAnalyzer || !globalThis.OraclePlanDiagnosticsTimeline || !globalThis.OracleSqlAnalyzer || !globalThis.OracleSqlWhatIfEngine || !globalThis.OracleExecutionPlanRenderer || !globalThis.OracleSqlIntelligenceRenderer || !globalThis.OraclePlanOperatorCatalog) return;
 
   const byId = (id) => document.getElementById(id);
   const parser = globalThis.OraclePlanParser;
   const analyzer = globalThis.OraclePlanAnalyzer;
+  const diagnostics = globalThis.OraclePlanDiagnosticsTimeline;
   const sqlAnalyzer = globalThis.OracleSqlAnalyzer;
   const whatIfEngine = globalThis.OracleSqlWhatIfEngine;
   const planRenderer = globalThis.OracleExecutionPlanRenderer;
@@ -15,6 +16,8 @@
   const examples = globalThis.oracleSqlIntelligenceExamples;
   let plan = parser.parse("");
   let analysis = analyzer.analyze(plan);
+  let diagnosticTimeline = diagnostics.createTimeline(plan, analysis);
+  let diagnosticIndex = -1;
   let selectedId = null;
   let expanded = new Set();
   let intelligenceTimer = null;
@@ -23,16 +26,42 @@
   function stopIntelligencePlayback() {
     if (intelligenceTimer) window.clearInterval(intelligenceTimer);
     intelligenceTimer = null;
+    byId("diagnosticsPlay")?.setAttribute("aria-pressed", "false");
+    if (byId("diagnosticsPause")) byId("diagnosticsPause").disabled = true;
   }
 
   function playIntelligencePlayback() {
-    if (intelligenceTimer || !plan.nodes.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (intelligenceTimer || !diagnosticTimeline.events.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (diagnosticIndex >= diagnosticTimeline.events.length - 1) diagnosticIndex = 0;
+    byId("diagnosticsPlay")?.setAttribute("aria-pressed", "true");
+    if (byId("diagnosticsPause")) byId("diagnosticsPause").disabled = false;
     intelligenceTimer = window.setInterval(() => {
-      const current = plan.nodes.findIndex((node) => node.id === selectedId);
-      if (current >= plan.nodes.length - 1) return stopIntelligencePlayback();
-      selectedId = plan.nodes[current + 1]?.id || plan.nodes[0].id;
-      renderPlan();
+      if (diagnosticIndex >= diagnosticTimeline.events.length - 1) return stopIntelligencePlayback();
+      setDiagnosticIndex(diagnosticIndex + 1);
     }, Math.round(1100 / intelligenceSpeed));
+  }
+
+  function diagnosticState() {
+    return diagnostics.stateAt(diagnosticTimeline, diagnosticIndex);
+  }
+
+  function setDiagnosticIndex(nextIndex) {
+    if (!diagnosticTimeline.events.length) return;
+    diagnosticIndex = Math.max(0, Math.min(nextIndex, diagnosticTimeline.events.length - 1));
+    selectedId = diagnosticState().node?.id || selectedId;
+    renderPlan();
+  }
+
+  function syncDiagnosticsControls(state) {
+    const hasEvents = diagnosticTimeline.events.length > 0;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    byId("diagnosticsPrevious").disabled = !hasEvents || diagnosticIndex <= 0;
+    byId("diagnosticsNext").disabled = !hasEvents || diagnosticIndex >= diagnosticTimeline.events.length - 1;
+    byId("diagnosticsPlay").disabled = !hasEvents || reduced;
+    byId("diagnosticsPause").disabled = !intelligenceTimer;
+    byId("diagnosticsSpeed").value = String(intelligenceSpeed);
+    byId("diagnosticsStatus").textContent = state.current ? `${state.current.step}/${diagnosticTimeline.events.length} · ${state.current.type} · ${state.current.label}${state.playbackLimited ? ` ${state.warnings.at(-1)}` : ""}` : "Importe un plan con operadores para iniciar el recorrido diagnóstico.";
+    if (reduced) byId("diagnosticsPlay").title = "Reproducción automática desactivada por preferencia de movimiento reducido";
   }
 
   function selectedNode() {
@@ -51,7 +80,8 @@
   }
 
   function renderInspector() {
-    const node = selectedNode();
+    const state = diagnosticState();
+    const node = state.node || selectedNode();
     if (!node) {
       byId("intelligenceInspectorTitle").textContent = "Seleccione un operador";
       byId("intelligenceInspectorBody").textContent = "Importe un plan y seleccione un operador para ver una explicación contextual.";
@@ -63,24 +93,26 @@
     const parent = plan.nodes.find((candidate) => candidate.id === node.parentId);
     const children = nodeChildren(node);
     byId("intelligenceInspectorTitle").textContent = `${node.id} · ${node.operation}`;
-    byId("intelligenceInspectorBody").textContent = `${details.what} ${details.how} ${details.purpose} Componentes internos posibles: ${details.internals}`;
+    byId("intelligenceInspectorBody").textContent = `${state.current?.explanation?.what || details.what} ${state.current?.explanation?.how || details.how} Componentes internos posibles: ${details.internals}`;
     byId("intelligenceInspectorData").textContent = `Objeto: ${node.object || "no informado"}. Padre: ${parent ? `${parent.id} · ${parent.operation}` : "sin padre identificado"}. Hijos: ${children.length ? children.map((child) => `${child.id} · ${child.operation}`).join("; ") : "ninguno"}. Predicado: ${node.predicate || "no informado"}.`;
     const values = ["eRows", "aRows", "starts", "buffers", "reads", "writes", "oMem", "oneMem", "usedMem", "tempSpc"].filter((name) => node.metrics[name]).map((name) => `${name}: ${node.metrics[name].raw}`).join(" · ");
-    byId("intelligenceInspectorDba").textContent = `${details.dba} Métricas importadas: ${values || "no informadas"}.`;
+    byId("intelligenceInspectorDba").textContent = `${state.current?.explanation?.dba || details.dba} Métricas importadas: ${values || "No informado"}.`;
   }
 
   function renderPlan() {
+    const state = diagnosticState();
+    if (state.node) selectedId = state.node.id;
     if (!selectedId && plan.nodes[0]) selectedId = plan.nodes[0].id;
     const structure = planRenderer.withChildren(plan.nodes);
     if (!expanded.size) structure.byId.forEach((node) => { if (node.children.length) expanded.add(node.id); });
     byId("planTableView").innerHTML = planRenderer.renderTable(plan, selectedId);
     byId("planTreeView").innerHTML = planRenderer.renderTree(plan, selectedId, expanded);
     byId("planGraphView").innerHTML = planRenderer.renderGraph(plan, selectedId);
-    byId("planNotes").textContent = plan.metadata.notes.length ? `Notas importadas: ${plan.metadata.notes.join(" ")}` : "No se importaron notas.";
+    byId("planNotes").textContent = `${plan.metadata.notes.length ? `Notas importadas: ${plan.metadata.notes.join(" ")}` : "No se importaron notas."}${diagnosticTimeline.warnings.length ? ` ${diagnosticTimeline.warnings.join(" ")}` : ""}`;
     renderInspector();
-    const animatedTimeline = globalThis.OracleAnimatedDataFlow?.planTimeline(plan);
-    const selectedPlanIndex = plan.nodes.length ? plan.nodes.findIndex((node) => node.id === selectedId) : 0;
-    globalThis.OracleAnimatedDataFlow?.mount(root.querySelector(".intelligence-illustration"), { kind: "intelligence", events: animatedTimeline?.events || [], index: selectedPlanIndex, label: "AI SQL Intelligence · flujo conceptual del plan", onSelect: (next) => { if (plan.nodes[next]) { selectedId = plan.nodes[next].id; renderPlan(); } } });
+    byId("diagnosticsResults").innerHTML = renderer.renderDiagnosticRecord(state);
+    globalThis.OracleAnimatedDataFlow?.mount(root.querySelector(".intelligence-illustration"), { kind: "intelligence", events: diagnosticTimeline.events, index: diagnosticIndex, label: "AI SQL Intelligence · recorrido diagnóstico educativo", onSelect: (next) => { stopIntelligencePlayback(); setDiagnosticIndex(next); } });
+    syncDiagnosticsControls(state);
     globalThis.OraclePresentationMode?.refresh("intelligence");
   }
 
@@ -97,6 +129,8 @@
     stopIntelligencePlayback();
     plan = parser.parse(byId("planInput").value);
     analysis = analyzer.analyze(plan);
+    diagnosticTimeline = diagnostics.createTimeline(plan, analysis);
+    diagnosticIndex = diagnosticTimeline.events.length ? 0 : -1;
     selectedId = plan.nodes[0]?.id || null;
     expanded = new Set();
     writeStatus();
@@ -132,10 +166,11 @@
 
   function tutorAnswer() {
     const question = byId("intelligenceTutorQuestion").value;
-    const node = selectedNode();
+    const state = diagnosticState();
+    const node = state.node || selectedNode();
     const cardinalityRow = analysis.cardinalities.find((item) => item.nodeId === node?.id);
     const answer = {
-      event: node ? `${node.id} · ${node.operation}: ${catalog.describe(node.operation).how} Esta respuesta procede de reglas locales y el plan importado.` : "Importe un plan para contextualizar la respuesta.",
+      event: node ? `${node.id} · ${node.operation}: ${state.current?.explanation?.what || catalog.describe(node.operation).how} Esta respuesta procede de reglas locales y el plan importado.` : "Importe un plan para contextualizar la respuesta.",
       starts: node?.metrics.starts ? `Starts informado: ${node.metrics.starts.raw}. Puede indicar cuántas veces se inició el operador en el alcance mostrado; relácionelo con sus entradas antes de concluir.` : "El plan no informa Starts para el operador seleccionado.",
       cardinality: cardinalityRow ? `E-Rows: ${cardinalityRow.estimated ?? "no informado"}; A-Rows: ${cardinalityRow.observed ?? "no informado"}; ${cardinalityRow.interpretation}` : "No hay datos de cardinalidad para este operador.",
       evidence: "Para confirmar rendimiento faltan contexto de SQL, estadísticas, binds, datos, configuración y mediciones autorizadas. Este laboratorio no sustituye SQL Monitor, AWR ni DBMS_XPLAN completo."
@@ -163,6 +198,12 @@
   });
   byId("planImport").addEventListener("click", () => importPlan(true));
   byId("planClear").addEventListener("click", () => { byId("planInput").value = ""; importPlan(); });
+  byId("diagnosticsPrevious").addEventListener("click", () => { stopIntelligencePlayback(); setDiagnosticIndex(diagnosticIndex - 1); });
+  byId("diagnosticsNext").addEventListener("click", () => { stopIntelligencePlayback(); setDiagnosticIndex(diagnosticIndex + 1); });
+  byId("diagnosticsPlay").addEventListener("click", playIntelligencePlayback);
+  byId("diagnosticsPause").addEventListener("click", () => { stopIntelligencePlayback(); syncDiagnosticsControls(diagnosticState()); });
+  byId("diagnosticsReset").addEventListener("click", () => { stopIntelligencePlayback(); setDiagnosticIndex(0); });
+  byId("diagnosticsSpeed").addEventListener("change", () => { intelligenceSpeed = Number(byId("diagnosticsSpeed").value) || 1; if (intelligenceTimer) { stopIntelligencePlayback(); playIntelligencePlayback(); } });
   byId("showRelatedSql").addEventListener("click", showRelatedSql);
   byId("analyzeSqlIntelligence").addEventListener("click", renderSqlAnalysis);
   byId("askIntelligenceTutor").addEventListener("click", tutorAnswer);
@@ -176,17 +217,25 @@
       else expanded.add(id);
       renderPlan();
     } else if (node) {
-      selectedId = node.dataset.planNode;
-      renderPlan();
-      if (event.isTrusted) recordLearningActivity("operator-inspected");
+      const index = diagnostics.indexForOperator(diagnosticTimeline, node.dataset.planNode);
+      if (index >= 0) setDiagnosticIndex(index);
+      else {
+        selectedId = node.dataset.planNode;
+        renderPlan();
+      }
+      recordLearningActivity("operator-inspected");
     }
   });
   root.addEventListener("keydown", (event) => {
     if ((event.key === "Enter" || event.key === " ") && event.target.matches("[data-plan-node]")) {
       event.preventDefault();
-      selectedId = event.target.dataset.planNode;
-      renderPlan();
-      if (event.isTrusted) recordLearningActivity("operator-inspected");
+      const index = diagnostics.indexForOperator(diagnosticTimeline, event.target.dataset.planNode);
+      if (index >= 0) setDiagnosticIndex(index);
+      else {
+        selectedId = event.target.dataset.planNode;
+        renderPlan();
+      }
+      recordLearningActivity("operator-inspected");
     }
   });
   [...root.querySelectorAll("[role=tab]")].forEach((tab, index, tabs) => tab.addEventListener("keydown", (event) => {
@@ -198,7 +247,11 @@
     activateTab(target);
   }));
   [...root.querySelectorAll("[role=tab]")].forEach((tab) => tab.addEventListener("click", () => activateTab(tab)));
+  window.addEventListener("academy:diagnostics-launch", () => {
+    activateTab(byId("intelligencePlanTab"));
+    window.requestAnimationFrame(() => byId("planImport")?.focus());
+  });
   byId("planExample").dispatchEvent(new Event("change"));
   renderWhatIf();
-  globalThis.OraclePresentationMode?.register({ id: "intelligence", root, kind: "intelligence", title: "AI SQL Intelligence Lab", image: "assets/illustrations/sql-intelligence-tech.png", getState: () => { const timeline = globalThis.OracleAnimatedDataFlow?.planTimeline(plan)?.events || []; const index = Math.max(0, plan.nodes.findIndex((node) => node.id === selectedId)); return { events: timeline, index, event: timeline[index], speed: intelligenceSpeed, playing: Boolean(intelligenceTimer), component: selectedNode()?.operation || "Plan importado", subtitle: plan.nodes.length ? `${plan.nodes.length} operador(es) importado(s)` : "Sin plan importado" }; }, actions: { play: playIntelligencePlayback, pause: () => { stopIntelligencePlayback(); globalThis.OraclePresentationMode?.refresh("intelligence"); }, previous: () => { stopIntelligencePlayback(); const index = Math.max(0, plan.nodes.findIndex((node) => node.id === selectedId) - 1); selectedId = plan.nodes[index]?.id || selectedId; renderPlan(); }, next: () => { stopIntelligencePlayback(); const index = Math.min(plan.nodes.length - 1, Math.max(0, plan.nodes.findIndex((node) => node.id === selectedId) + 1)); selectedId = plan.nodes[index]?.id || selectedId; renderPlan(); }, reset: () => { stopIntelligencePlayback(); selectedId = plan.nodes[0]?.id || null; renderPlan(); }, setSpeed: (value) => { intelligenceSpeed = Number(value) || 1; if (intelligenceTimer) { stopIntelligencePlayback(); playIntelligencePlayback(); } }, select: (next) => { stopIntelligencePlayback(); selectedId = plan.nodes[next]?.id || selectedId; renderPlan(); } } });
+  globalThis.OraclePresentationMode?.register({ id: "intelligence", root, kind: "intelligence", title: "AI SQL Intelligence Lab", image: "assets/illustrations/sql-intelligence-tech.png", getState: () => { const state = diagnosticState(); return { events: diagnosticTimeline.events, index: Math.max(0, diagnosticIndex), event: state.current, speed: intelligenceSpeed, playing: Boolean(intelligenceTimer), component: state.node?.operation || "Plan importado", subtitle: plan.nodes.length ? `${plan.nodes.length} operador(es) importado(s)` : "Sin plan importado" }; }, actions: { play: playIntelligencePlayback, pause: () => { stopIntelligencePlayback(); syncDiagnosticsControls(diagnosticState()); globalThis.OraclePresentationMode?.refresh("intelligence"); }, previous: () => { stopIntelligencePlayback(); setDiagnosticIndex(diagnosticIndex - 1); }, next: () => { stopIntelligencePlayback(); setDiagnosticIndex(diagnosticIndex + 1); }, reset: () => { stopIntelligencePlayback(); setDiagnosticIndex(0); }, setSpeed: (value) => { intelligenceSpeed = Number(value) || 1; byId("diagnosticsSpeed").value = String(intelligenceSpeed); if (intelligenceTimer) { stopIntelligencePlayback(); playIntelligencePlayback(); } }, select: (next) => { stopIntelligencePlayback(); setDiagnosticIndex(next); } } });
 })();

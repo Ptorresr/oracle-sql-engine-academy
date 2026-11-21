@@ -7,12 +7,12 @@
     {
       id: "retail",
       label: "Retail · clientes y órdenes",
-      objective: "Relacionar clientes y órdenes para entender un HASH JOIN y la cardinalidad de salida.",
+      objective: "Relacionar clientes y órdenes mediante un plan DISPLAY estimado, sin estadísticas observadas de ejecución.",
       sql: "SELECT c.customer_name, o.order_id, o.total_amount\nFROM customers_demo c\nJOIN orders_demo o\n  ON o.customer_id = c.customer_id\nWHERE o.order_date >= DATE '2026-01-01';",
       questions: ["¿Qué predicado se asocia con la unión?", "¿Qué evidencia faltaría para confirmar I/O físico?"],
       relation: "Abre HASH JOIN Visualizer para un recorrido conceptual del método.",
       plan: plan([
-        "Plan hash value: 90432111", "", "--------------------------------------------------------------------------------------------", "| Id  | Operation           | Name          | Starts | E-Rows | A-Rows | Buffers | Reads |", "--------------------------------------------------------------------------------------------", "|   0 | SELECT STATEMENT    |               |      1 |        |      3 |      12 |       |", "|*  1 |  HASH JOIN          |               |      1 |      3 |      3 |      12 |       |", "|*  2 |   TABLE ACCESS FULL | CUSTOMERS_DEMO|      1 |      3 |      3 |       4 |       |", "|*  3 |   TABLE ACCESS FULL | ORDERS_DEMO   |      1 |      5 |      3 |       8 |       |", "--------------------------------------------------------------------------------------------", "", "Predicate Information (identified by operation id):", "---------------------------------------------------", "   1 - access(\"O\".\"CUSTOMER_ID\"=\"C\".\"CUSTOMER_ID\")", "   3 - filter(\"O\".\"ORDER_DATE\">=DATE '2026-01-01')", "", "Note", "-----", `   - ${notice}`
+        "Plan hash value: 90432111", "", "------------------------------------------------------------------", "| Id  | Operation           | Name          | E-Rows | Cost |", "------------------------------------------------------------------", "|   0 | SELECT STATEMENT    |               |        |   12 |", "|*  1 |  HASH JOIN          |               |      3 |   11 |", "|*  2 |   TABLE ACCESS FULL | CUSTOMERS_DEMO|      3 |    4 |", "|*  3 |   TABLE ACCESS FULL | ORDERS_DEMO   |      5 |    7 |", "------------------------------------------------------------------", "", "Predicate Information (identified by operation id):", "---------------------------------------------------", "   1 - access(\"O\".\"CUSTOMER_ID\"=\"C\".\"CUSTOMER_ID\")", "   3 - filter(\"O\".\"ORDER_DATE\">=DATE '2026-01-01')", "", "Note", "-----", `   - ${notice}`
       ])
     },
     {

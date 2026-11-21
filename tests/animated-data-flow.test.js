@@ -10,6 +10,9 @@ const layer = context.globalThis.OracleAnimatedDataFlow;
 assert.deepStrictEqual(Array.from(layer.EVENT_CONTRACT), ["step", "type", "source", "target", "rowIds", "blockIds", "label", "illustrativeMetrics"]);
 assert.deepStrictEqual(Array.from(layer.eventRoute("hash", { source: "Datafile · B1", target: "Database Buffer Cache" }).start), [12, 54]);
 assert.deepStrictEqual(Array.from(layer.eventRoute("hash", { source: "PGA Hash Workarea", target: "TEMP" }).end), [72, 84]);
+assert.notStrictEqual(layer.eventRoute("buffer-cache", { source: "SQL Execution Engine", target: "Datafile · ORDERS-B01" }), null);
+assert.notStrictEqual(layer.eventRoute("workarea-temp", { source: "PGA / Work Area", target: "TEMP" }), null);
+assert.notStrictEqual(layer.eventRoute("optimizer-cardinality", { source: "Cardinality Estimator", target: "Access / JOIN Alternative" }), null);
 assert.strictEqual(layer.eventRoute("hash", { source: "unknown", target: "TEMP" }), null);
 assert.notStrictEqual(layer.eventRoute("comparison", { source: "TABLE ACCESS · CLIENTES", target: "SQL Execution Engine" }), null);
 assert.notStrictEqual(layer.eventRoute("architecture", { source: "retail-user", target: "retail-web" }), null);
@@ -27,7 +30,7 @@ assert.strictEqual(fs.readFileSync("assets/animated-data-flow.css", "utf8").incl
 assert.strictEqual(fs.readFileSync("renderer/animated-data-flow-renderer.js", "utf8").includes("aria-pressed"), true);
 assert.strictEqual(fs.readFileSync("ui/oracle-ai-internals-lab.js", "utf8").includes('id="aiPlay" aria-pressed="false"'), true);
 assert.strictEqual(fs.readFileSync("index.html", "utf8").includes("renderer/animated-data-flow-renderer.js"), true);
-for (const file of ["ui/hash-join-visualizer.js", "ui/join-comparison-lab.js", "ui/sql-intelligence-lab.js", "ui/oracle-ai-internals-lab.js", "ui/architecture-explorer.js"]) {
+for (const file of ["ui/hash-join-visualizer.js", "ui/join-comparison-lab.js", "ui/sql-intelligence-lab.js", "ui/oracle-ai-internals-lab.js", "ui/architecture-explorer.js", "ui/buffer-cache-lab.js", "ui/workarea-temp-lab.js", "ui/optimizer-cardinality-lab.js", "ui/performance-what-if-lab.js"]) {
   assert.strictEqual(fs.readFileSync(file, "utf8").includes("OracleAnimatedDataFlow"), true, `${file} must integrate the animated layer`);
 }
 console.log("animated-data-flow: passed");

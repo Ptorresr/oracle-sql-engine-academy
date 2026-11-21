@@ -1,5 +1,6 @@
 (() => {
   "use strict";
+  const runtimeAssetVersion = "12";
 
   if (!document.querySelector('link[data-tech-illustrations]')) {
     const techStylesheet = document.createElement("link");
@@ -90,7 +91,7 @@
   function loadScript(source) {
     return new Promise((resolve, reject) => {
       const script = document.createElement("script");
-      script.src = source;
+      script.src = `${source}${source.includes("?") ? "&" : "?"}v=${runtimeAssetVersion}`;
       script.async = false;
       script.onload = resolve;
       script.onerror = reject;
@@ -103,10 +104,71 @@
   const progressKey = "oracle-sql-academy.joins.progress.v1";
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const byId = (id) => document.getElementById(id);
+  const stickyHeader = () => document.querySelector(".top");
+  const stickyHeaderClearance = 8;
   const progress = readProgress();
   let activeChapter = 0;
   let pendingChapterId = null;
+  let pendingRouteId = null;
+  let performanceReady = false;
   let chapterObserver = null;
+  let stickyHeaderObserver = null;
+  const performanceRouteTargets = Object.freeze({
+    "buffer-cache-io": Object.freeze({ targetId: "buffer-cache-preview", requiresPerformance: true }),
+    "pga-workareas-temp": Object.freeze({ targetId: "workarea-temp-preview", requiresPerformance: true }),
+    "optimizer-cardinality": Object.freeze({ targetId: "optimizer-cardinality-preview", requiresPerformance: true }),
+    "execution-plan-diagnostics": Object.freeze({ targetId: "execution-plan-diagnostics", requiresPerformance: false }),
+    "performance-what-if": Object.freeze({ targetId: "performance-what-if-preview", requiresPerformance: true })
+  });
+
+  function resolveRoute(routeId) {
+    const chapter = runbook.getChapter(routeId);
+    if (chapter) return Object.freeze({ id: routeId, chapterId: chapter.id, targetId: chapter.id, internal: false, requiresPerformance: false });
+    const target = performanceRouteTargets[routeId];
+    if (!target) return null;
+    return Object.freeze({ id: routeId, chapterId: "database-performance", targetId: target.targetId, internal: true, requiresPerformance: target.requiresPerformance });
+  }
+
+  function getStickyHeaderOffset() {
+    return Math.ceil(stickyHeader()?.getBoundingClientRect().height || 0) + stickyHeaderClearance;
+  }
+
+  function syncStickyHeaderOffset() {
+    document.documentElement.style.setProperty("--portal-sticky-offset", `${getStickyHeaderOffset()}px`);
+  }
+
+  function keepTargetBelowStickyHeader(target) {
+    const overlap = getStickyHeaderOffset() - target.getBoundingClientRect().top;
+    if (overlap > 0) window.scrollBy({ top: -overlap, behavior: "auto" });
+  }
+
+  function settleTargetPosition(target) {
+    window.requestAnimationFrame(() => {
+      syncStickyHeaderOffset();
+      window.requestAnimationFrame(() => keepTargetBelowStickyHeader(target));
+    });
+  }
+
+  function ensurePerformanceChapter() {
+    const chapter = byId("database-performance");
+    const bufferLab = byId("buffer-cache-preview");
+    if (!chapter || !bufferLab || chapter.dataset.performanceChapterReady === "true") return;
+    chapter.dataset.performanceChapterReady = "true";
+    chapter.innerHTML = `<header class="performance-chapter-header"><div class="eyebrow">Capítulo 15 · Database Internals &amp; Performance</div><h2 id="databasePerformanceTitle">Database Internals &amp; Performance</h2><p>Relaciona bloques, memoria de trabajo, cardinalidad, evidencia de planes y comparaciones A/B mediante simulaciones locales y deterministas. Ninguna vista ejecuta SQL ni representa una traza física de Oracle Database.</p><nav class="performance-lab-nav" aria-label="Laboratorios de rendimiento"><a href="#buffer-cache-io">1 · Buffer Cache &amp; I/O</a><a href="#pga-workareas-temp">2 · PGA / Workareas / TEMP</a><a href="#optimizer-cardinality">3 · Optimizer &amp; Cardinality</a><a href="#execution-plan-diagnostics">4 · Execution Plan Diagnostics</a><a href="#performance-what-if">5 · Performance What-If A/B</a></nav></header><section id="execution-plan-diagnostics" class="panel performance-diagnostics-bridge" aria-labelledby="performanceDiagnosticsTitle"><div class="kicker">Laboratorio 4 · Evidencia importada</div><h3 id="performanceDiagnosticsTitle">Execution Plan Diagnostics</h3><p>El importador seguro, parser y recorrido diagnóstico viven en AI SQL Intelligence para conservar un único plan, timeline y Event Inspector. Abre un ejemplo o un plan sanitizado y selecciona un operador para completar esta actividad.</p><a class="btn primary" href="#intelligence" data-performance-diagnostics-launch>Abrir AI SQL Intelligence</a></section>`;
+    chapter.append(bufferLab);
+    bufferLab.dataset.performanceLab = "buffer-cache-io";
+    bufferLab.querySelector(".kicker").textContent = "Laboratorio 1 · Capítulo 15";
+    const bufferLayout = bufferLab.querySelector(".buffer-layout");
+    if (bufferLayout && !byId("bufferResultsView")) {
+      const resultsView = document.createElement("section");
+      resultsView.className = "buffer-view";
+      resultsView.setAttribute("aria-labelledby", "bufferResultsTitle");
+      resultsView.innerHTML = '<div class="kicker">Results · conceptual</div><h3 id="bufferResultsTitle">Estado y filas entregadas</h3><div id="bufferResultsView"></div>';
+      bufferLayout.append(resultsView);
+    }
+    const bufferLegend = bufferLab.querySelector(".buffer-legend");
+    if (bufferLegend) bufferLegend.textContent = "Las métricas con * son ilustrativas. La secuencia separa acceso lógico, caché conceptual y posible lectura física conceptual; no reproduce el algoritmo interno de Oracle.";
+  }
 
   function readProgress() {
     try {
@@ -197,21 +259,34 @@
     });
   }
 
-  function scrollTo(targetId, historyMode = "push") {
-    const target = byId(targetId);
+  function scrollTo(targetId, historyMode = "push", restoreFocus = false) {
+    const route = resolveRoute(targetId);
+    if (route?.requiresPerformance && !performanceReady) {
+      pendingRouteId = route.id;
+      return;
+    }
+    const target = byId(route?.targetId || targetId);
     if (!target) {
-      if (runbook.getChapter(targetId)) pendingChapterId = targetId;
+      if (route) pendingRouteId = route.id;
+      else if (runbook.getChapter(targetId)) pendingChapterId = targetId;
       return;
     }
     pendingChapterId = null;
-    const chapter = runbook.getChapter(targetId);
-    if (chapter && historyMode === "push" && window.location.hash !== chapter.route) window.history.pushState({ chapterId: targetId }, "", chapter.route);
-    const headerHeight = document.querySelector(".top")?.getBoundingClientRect().height || 0;
-    const targetTop = target.getBoundingClientRect().top + window.scrollY - headerHeight - 8;
-    window.scrollTo({ top: Math.max(0, targetTop), behavior: reduceMotion || historyMode === "none" ? "auto" : "smooth" });
+    pendingRouteId = null;
+    const chapter = route ? runbook.getChapter(route.chapterId) : runbook.getChapter(targetId);
+    const routeHash = route ? `#${route.id}` : null;
+    if (chapter && historyMode === "push" && routeHash && window.location.hash !== routeHash) window.history.pushState({ chapterId: chapter.id, routeId: route.id }, "", routeHash);
+    syncStickyHeaderOffset();
+    target.scrollIntoView({ block: "start", behavior: reduceMotion || historyMode === "none" ? "auto" : "smooth" });
+    settleTargetPosition(target);
     if (chapter) {
-      markVisited(targetId);
-      setActiveChapter(runbook.getIndex(targetId));
+      markVisited(chapter.id);
+      setActiveChapter(runbook.getIndex(chapter.id));
+    }
+    if (restoreFocus) {
+      const focusTarget = target.querySelector("[data-performance-focus], button, select, [tabindex='0']") || target;
+      if (focusTarget === target && !target.hasAttribute("tabindex")) target.tabIndex = -1;
+      window.requestAnimationFrame(() => focusTarget.focus({ preventScroll: true }));
     }
   }
 
@@ -239,13 +314,21 @@
   }
 
   function bindChapterNavigation() {
+    syncStickyHeaderOffset();
+    const header = stickyHeader();
+    if (header && "ResizeObserver" in window) {
+      stickyHeaderObserver = new ResizeObserver(syncStickyHeaderOffset);
+      stickyHeaderObserver.observe(header);
+    }
+    window.addEventListener("resize", syncStickyHeaderOffset);
+    window.addEventListener("load", syncStickyHeaderOffset, { once: true });
     const architectureRoutes = new Set(["architecture-explorer", "architecture-retail", "architecture-finance", "architecture-operations"]);
     document.querySelectorAll(".side a[data-chapter], .chapter-nav a").forEach((link) => {
       link.addEventListener("click", (event) => {
         const targetId = link.getAttribute("href").slice(1);
-        if (!byId(targetId)) return;
+        if (!resolveRoute(targetId) && !byId(targetId)) return;
         event.preventDefault();
-        scrollTo(targetId);
+        scrollTo(targetId, "push", Boolean(resolveRoute(targetId)?.internal));
       });
     });
     chapterObserver = new IntersectionObserver((entries) => {
@@ -253,6 +336,8 @@
       if (!visible) return;
       const routeId = window.location.hash.replace(/^#/, "");
       if (architectureRoutes?.has(routeId) && visible.target.id !== "architecture-explorer") return;
+      const resolvedRoute = resolveRoute(routeId);
+      if (resolvedRoute?.chapterId === "database-performance" && visible.target.id !== "database-performance") return;
       const index = chapters.findIndex((chapter) => chapter.id === visible.target.id);
       if (index >= 0) {
         markVisited(visible.target.id);
@@ -264,8 +349,8 @@
       if (section) chapterObserver.observe(section);
     });
     const routeFromHash = () => {
-      const chapterId = window.location.hash.replace(/^#/, "");
-      if (runbook.getChapter(chapterId)) scrollTo(chapterId, "none");
+      const routeId = window.location.hash.replace(/^#/, "");
+      if (resolveRoute(routeId)) scrollTo(routeId, "none", Boolean(resolveRoute(routeId)?.internal));
     };
     window.addEventListener("hashchange", routeFromHash);
     window.addEventListener("popstate", routeFromHash);
@@ -273,6 +358,13 @@
       const section = byId("intelligence");
       if (section) chapterObserver.observe(section);
       if (pendingChapterId === "intelligence" || window.location.hash === "#intelligence") scrollTo("intelligence", "none");
+    });
+    window.addEventListener("academy:performance-ready", () => {
+      performanceReady = true;
+      const section = byId("database-performance");
+      if (section) chapterObserver.observe(section);
+      const routeId = window.location.hash.replace(/^#/, "");
+      if (pendingRouteId === routeId || resolveRoute(routeId)?.requiresPerformance) scrollTo(routeId, "none", true);
     });
     const aiInternalsLabIds = new Set(["ai-vector-search", "hybrid-vector-search", "select-ai-flow", "rag-architecture", "agentic-workflows"]);
     const activateAiChapter = (event) => {
@@ -372,6 +464,7 @@
     });
   }
 
+  ensurePerformanceChapter();
   renderCatalog();
   renderRunbookNavigation();
   updateProgress();
@@ -380,11 +473,40 @@
   bindWorkspace();
   bindProgressReset();
   updateWorkspace();
-  const initialChapterId = window.location.hash.replace(/^#/, "");
-  if (runbook.getChapter(initialChapterId)) window.setTimeout(() => scrollTo(initialChapterId, "none"), 250);
-  window.addEventListener("academy:intelligence-activity", (event) => recordActivity("intelligence", event.detail?.activity));
+  const initialRouteId = window.location.hash.replace(/^#/, "");
+  if (resolveRoute(initialRouteId)) window.setTimeout(() => scrollTo(initialRouteId, "none", Boolean(resolveRoute(initialRouteId)?.internal)), 250);
+  document.addEventListener("click", (event) => {
+    if (event.target.closest("[data-performance-diagnostics-launch]")) window.dispatchEvent(new CustomEvent("academy:diagnostics-launch"));
+  });
+  window.addEventListener("academy:intelligence-activity", (event) => {
+    const activity = event.detail?.activity;
+    recordActivity("intelligence", activity);
+    if (activity === "operator-inspected") recordActivity("database-performance", "plan-diagnostic-inspected");
+  });
+  window.addEventListener("academy:performance-activity", (event) => recordActivity("database-performance", event.detail?.activity));
   window.addEventListener("academy:architecture-activity", (event) => recordActivity("architecture-explorer", event.detail?.activity));
   window.addEventListener("academy:architecture-challenge-activity", (event) => recordActivity("architecture-challenges", event.detail?.activity));
+
+  let performanceFoundationPromise = null;
+  function loadPerformanceFoundation() {
+    if (window.OraclePerformanceEventAdapter) return Promise.resolve();
+    if (!performanceFoundationPromise) {
+      const files = ["content/performance-scenarios.js", "simulation/performance-event-adapter.js"];
+      performanceFoundationPromise = files.reduce((chain, source) => chain.then(() => loadScript(source)), Promise.resolve());
+    }
+    return performanceFoundationPromise;
+  }
+
+  function ensureStylesheet(source, key) {
+    const existing = document.querySelector(`link[data-runtime-style="${key}"]`);
+    if (existing) return existing;
+    const stylesheet = document.createElement("link");
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = `${source}${source.includes("?") ? "&" : "?"}v=${runtimeAssetVersion}`;
+    stylesheet.dataset.runtimeStyle = key;
+    document.head.append(stylesheet);
+    return stylesheet;
+  }
 
   function loadSqlIntelligenceLab() {
     const stylesheet = document.createElement("link");
@@ -396,6 +518,7 @@
       "content/sql-intelligence-examples.js",
       "simulation/oracle-plan-parser.js",
       "simulation/oracle-plan-analyzer.js",
+      "simulation/plan-diagnostics-timeline.js",
       "simulation/oracle-sql-analyzer.js",
       "simulation/sql-what-if-engine.js",
       "renderer/execution-plan-renderer.js",
@@ -403,7 +526,7 @@
       "ui/sql-intelligence-bootstrap.js",
       "ui/sql-intelligence-lab.js"
     ];
-    files.reduce((chain, source) => chain.then(() => loadScript(source)), Promise.resolve()).then(() => {
+    return loadPerformanceFoundation().then(() => files.reduce((chain, source) => chain.then(() => loadScript(source)), Promise.resolve())).then(() => {
       window.dispatchEvent(new CustomEvent("academy:intelligence-ready"));
     }).catch(() => {
       byId("portalFeedback").textContent = "No se pudo cargar AI SQL Intelligence Lab localmente.";
@@ -411,6 +534,79 @@
   }
 
   loadSqlIntelligenceLab();
+  function loadBufferCacheLab() {
+    if (window.OracleBufferCacheLab) return Promise.resolve();
+    if (!byId("bufferCacheLab")) return Promise.reject(new Error("No se encontró el montaje de Buffer Cache & I/O."));
+    ensureStylesheet("assets/buffer-cache-lab.css", "buffer-cache-lab");
+    const files = [
+      "simulation/buffer-cache-engine.js",
+      "renderer/buffer-cache-renderer.js",
+      "ui/buffer-cache-lab.js"
+    ];
+    return loadPerformanceFoundation().then(() => files.reduce((chain, source) => chain.then(() => loadScript(source)), Promise.resolve())).catch(() => {
+      byId("portalFeedback").textContent = "No se pudo cargar Buffer Cache & I/O Lab localmente.";
+      throw new Error("Buffer Cache & I/O Lab no se pudo cargar.");
+    });
+  }
+  function loadWorkareaTempLab() {
+    if (window.OracleWorkareaTempLab) return Promise.resolve();
+    ensureStylesheet("assets/workarea-temp-lab.css", "workarea-temp-lab");
+    const files = [
+      "simulation/workarea-temp-engine.js",
+      "renderer/workarea-temp-renderer.js",
+      "ui/workarea-temp-lab.js"
+    ];
+    return files.reduce((chain, source) => chain.then(() => loadScript(source)), Promise.resolve()).catch(() => {
+      byId("portalFeedback").textContent = "No se pudo cargar PGA, Work Areas & TEMP Lab localmente.";
+      throw new Error("PGA, Work Areas & TEMP Lab no se pudo cargar.");
+    });
+  }
+  function loadOptimizerCardinalityLab() {
+    if (window.OracleOptimizerCardinalityLab) return Promise.resolve();
+    ensureStylesheet("assets/optimizer-cardinality-lab.css", "optimizer-cardinality-lab");
+    const files = [
+      "simulation/optimizer-cardinality-engine.js",
+      "renderer/optimizer-cardinality-renderer.js",
+      "ui/optimizer-cardinality-lab.js"
+    ];
+    return files.reduce((chain, source) => chain.then(() => loadScript(source)), Promise.resolve()).catch(() => {
+      byId("portalFeedback").textContent = "No se pudo cargar Optimizer & Cardinality Lab localmente.";
+      throw new Error("Optimizer & Cardinality Lab no se pudo cargar.");
+    });
+  }
+  function loadPerformanceWhatIfLab() {
+    if (window.OraclePerformanceWhatIfLab) return Promise.resolve();
+    ensureStylesheet("assets/performance-what-if-lab.css", "performance-what-if-lab");
+    const files = [
+      "simulation/performance-what-if-engine.js",
+      "renderer/performance-what-if-renderer.js",
+      "ui/performance-what-if-lab.js"
+    ];
+    return files.reduce((chain, source) => chain.then(() => loadScript(source)), Promise.resolve()).catch(() => {
+      byId("portalFeedback").textContent = "No se pudo cargar Performance What-If Lab localmente.";
+      throw new Error("Performance What-If Lab no se pudo cargar.");
+    });
+  }
+  let performanceLabsPromise = null;
+  function loadPerformanceLabs() {
+    if (!performanceLabsPromise) {
+      performanceLabsPromise = loadBufferCacheLab()
+        .then(loadWorkareaTempLab)
+        .then(loadOptimizerCardinalityLab)
+        .then(loadPerformanceWhatIfLab)
+        .then(() => {
+          const labs = ["OracleBufferCacheLab", "OracleWorkareaTempLab", "OracleOptimizerCardinalityLab", "OraclePerformanceWhatIfLab"];
+          if (!labs.every((name) => Boolean(window[name]))) throw new Error("La integración de rendimiento quedó incompleta.");
+          window.dispatchEvent(new CustomEvent("academy:performance-ready", { detail: { labs: Object.freeze([...labs]) } }));
+        })
+        .catch(() => {
+          byId("portalFeedback").textContent = "No se pudo completar la integración local de Database Performance.";
+          throw new Error("Database Performance no se pudo inicializar.");
+        });
+    }
+    return performanceLabsPromise;
+  }
+  loadPerformanceLabs().catch(() => {});
   function loadOracleAiInternalsLab() {
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";

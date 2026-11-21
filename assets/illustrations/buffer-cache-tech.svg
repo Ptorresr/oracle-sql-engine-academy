@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Flujo conceptual Buffer Cache e I/O</title>
+  <desc id="desc">Ilustración isométrica de bloques de datos, una caché de memoria y un motor SQL conectados por circuitos luminosos. Es un apoyo visual; el diagrama técnico interactivo conserva el detalle educativo.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#160e0c"/><stop offset="0.55" stop-color="#2b1714"/><stop offset="1" stop-color="#090f19"/></linearGradient>
+    <linearGradient id="redwood" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4b8ad"/><stop offset="0.45" stop-color="#c74634"/><stop offset="1" stop-color="#5f2b24"/></linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8fbff"/><stop offset="0.5" stop-color="#58c9d1"/><stop offset="1" stop-color="#1e6978"/></linearGradient>
+    <linearGradient id="slate" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#426174"/><stop offset="1" stop-color="#162536"/></linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#f4b8ad" stroke-opacity=".08"/></pattern>
+  </defs>
+  <rect width="1280" height="720" fill="url(#background)"/>
+  <rect width="1280" height="720" fill="url(#grid)"/>
+  <ellipse cx="657" cy="610" rx="510" ry="68" fill="#060a10" opacity=".55"/>
+  <g fill="none" stroke="#58c9d1" stroke-linecap="round" filter="url(#glow)">
+    <path d="M160 514H312V426H512" stroke-width="5"/><path d="M160 560H270V594H618" stroke-width="3"/><path d="M802 342H1014V250H1126" stroke-width="5"/><path d="M796 474H928V560H1110" stroke-width="3"/>
+    <circle cx="312" cy="426" r="8" fill="#d8fbff"/><circle cx="1014" cy="250" r="8" fill="#d8fbff"/><circle cx="928" cy="560" r="8" fill="#d8fbff"/>
+  </g>
+  <g transform="translate(134 246)">
+    <path d="M0 88L122 18L244 88V232L122 302L0 232Z" fill="#0d1925" stroke="#58c9d1" stroke-width="3"/>
+    <path d="M0 88L122 158L244 88" fill="none" stroke="#58c9d1" stroke-width="3"/>
+    <path d="M122 158V302" stroke="#58c9d1" stroke-width="3"/>
+    <g transform="translate(43 92)"><path d="M0 28L79 0L158 28L79 56Z" fill="url(#cyan)"/><path d="M0 28V88L79 116V56Z" fill="#17465a"/><path d="M158 28V88L79 116V56Z" fill="#287987"/></g>
+    <g transform="translate(43 158)"><path d="M0 28L79 0L158 28L79 56Z" fill="url(#cyan)"/><path d="M0 28V88L79 116V56Z" fill="#17465a"/><path d="M158 28V88L79 116V56Z" fill="#287987"/></g>
+    <text x="122" y="-12" fill="#d8fbff" font-family="system-ui, sans-serif" font-weight="700" font-size="24" text-anchor="middle">DATA BLOCKS</text>
+  </g>
+  <g transform="translate(484 168)">
+    <path d="M0 124L174 24L348 124V322L174 422L0 322Z" fill="#182734" stroke="#f4b8ad" stroke-width="4"/>
+    <path d="M0 124L174 224L348 124" fill="none" stroke="#f4b8ad" stroke-width="4"/>
+    <path d="M174 224V422" stroke="#f4b8ad" stroke-width="4"/>
+    <g transform="translate(67 92)"><path d="M0 45L107 0L214 45L107 90Z" fill="url(#redwood)"/><path d="M0 45V88L107 133V90Z" fill="#742d25"/><path d="M214 45V88L107 133V90Z" fill="#a63f31"/></g>
+    <g transform="translate(67 162)"><path d="M0 45L107 0L214 45L107 90Z" fill="url(#redwood)"/><path d="M0 45V88L107 133V90Z" fill="#742d25"/><path d="M214 45V88L107 133V90Z" fill="#a63f31"/></g>
+    <g transform="translate(67 232)"><path d="M0 45L107 0L214 45L107 90Z" fill="url(#redwood)"/><path d="M0 45V88L107 133V90Z" fill="#742d25"/><path d="M214 45V88L107 133V90Z" fill="#a63f31"/></g>
+    <text x="174" y="-12" fill="#f7e8e4" font-family="system-ui, sans-serif" font-weight="700" font-size="27" text-anchor="middle">BUFFER CACHE</text>
+  </g>
+  <g transform="translate(936 254)">
+    <path d="M0 112L118 42L236 112V250L118 320L0 250Z" fill="url(#slate)" stroke="#d8fbff" stroke-width="4"/>
+    <path d="M0 112L118 182L236 112" fill="none" stroke="#d8fbff" stroke-width="4"/>
+    <path d="M118 182V320" stroke="#d8fbff" stroke-width="4"/>
+    <circle cx="118" cy="151" r="48" fill="#152a3b" stroke="#58c9d1" stroke-width="4" filter="url(#glow)"/>
+    <path d="M84 151H152M118 117V185M94 127L142 175M142 127L94 175" stroke="#d8fbff" stroke-width="4" stroke-linecap="round"/>
+    <text x="118" y="11" fill="#d8fbff" font-family="system-ui, sans-serif" font-weight="700" font-size="25" text-anchor="middle">SQL ENGINE</text>
+  </g>
+  <g fill="#f4b8ad" opacity=".9"><circle cx="321" cy="426" r="5"/><circle cx="512" cy="426" r="5"/><circle cx="802" cy="342" r="5"/><circle cx="1014" cy="250" r="5"/></g>
+  <text x="640" y="674" fill="#f7e8e4" font-family="system-ui, sans-serif" font-size="20" text-anchor="middle">Conceptual data flow · interactive timeline provides the technical explanation</text>
+</svg>

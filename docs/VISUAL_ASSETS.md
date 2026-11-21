@@ -13,6 +13,9 @@ These assets support the educational portal presentation layer. They are context
 | `assets/illustrations/sql-intelligence-tech.png` | Plan import, evidence, analysis and What If | PNG, 1280×720 | Original project illustration generated with Codex ImageGen; no third-party asset or license identified |
 | `assets/illustrations/ai-internals-tech.png` | Vector Search, Hybrid Search, Select AI, RAG and Agentic flows | PNG, 1280×720 | Original project illustration generated with Codex ImageGen; no third-party asset or license identified |
 | `assets/illustrations/architecture-explorer-tech.png` | Enterprise architecture, trust boundary and data flows | PNG, 1280×720 | Original project illustration generated with Codex ImageGen; no third-party asset or license identified |
+| `assets/illustrations/buffer-cache-tech.svg` | Conceptual data blocks, Buffer Cache and SQL Execution Engine | Project-native SVG, 1280×720 viewBox | Created in this repository for Sprint 8.2; no third-party asset, code or license dependency |
+| `assets/illustrations/workarea-temp-tech.svg` | Conceptual SQL operation, PGA Work Area, conditional TEMP and result | Project-native SVG, 1280×720 viewBox | Created in this repository for Sprint 8.3; no third-party asset, code or license dependency |
+| `assets/illustrations/optimizer-cardinality-tech.svg` | Declared statistics, cardinality estimate, educational alternatives and logical result | Project-native SVG, 1280×720 viewBox | Created in this repository for Sprint 8.4; no third-party asset, code or license dependency |
 
 ## Usage rules
 

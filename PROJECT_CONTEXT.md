@@ -1,6 +1,6 @@
 # Project Context — Oracle SQL & AI Database Engine Academy
 
-**Estado:** Sprints 0–6, Visual Design System 2.0 y Animated 3D Data Flow están integrados en `origin/main`; Sprint 7 está implementado y publicado en `feature/interactive-learning-presentation`, commit `79e40c2`, PR #9 abierto hacia `main` y pendiente únicamente de integración.
+**Estado:** Sprints 0–7, Visual Design System 2.0 y Animated 3D Data Flow están integrados en `origin/main` (`ec05173`). Sprint 8.1–8.7 está implementado y validado localmente en `feature/database-performance-foundation`, aún sin commit, push, Pull Request ni merge.
 **Runtime objetivo:** GitHub Pages, totalmente estático y sin secretos.
 **Audiencia:** desarrolladores Oracle SQL, DBAs, arquitectos y estudiantes técnicos.
 
@@ -120,6 +120,14 @@ Los tipos iniciales previstos incluyen `READ_BLOCK`, `CACHE_HIT`, `CACHE_MISS`, 
 ### Motor de simulaciones
 
 El diseño debe poder modelar SQL Execution Engine, operadores y planes, SGA/Database Buffer Cache, Shared Pool, PGA/workareas, datafiles/bloques, flujo conceptual de filas, accesos lógicos y físicos, uso de TEMP y métricas educativas. Los modos Developer y DBA cambian el énfasis de la explicación, no el resultado del modelo.
+
+Sprint 8 introduce una capa de rendimiento local e incremental. Buffer Cache & I/O separa solicitud lógica, hit/miss conceptual, entrega de filas y lectura física conceptual ilustrativa; PGA/Work Areas/TEMP modela clasificaciones educativas de trabajo; Optimizer & Cardinality aplica reglas visibles sobre filas base, selectividad declarada, estado de estadísticas, disponibilidad de índice y distribución; y Execution Plan Diagnostics recorre evidencia ya importada por `DBMS_XPLAN`. Este último usa eventos diagnósticos inmutables por operador, preserva métricas ausentes y distingue evidencia, cálculo derivado, interpretación, hipótesis y límites; no transforma el recorrido en una traza Oracle. Los previews reutilizan el contrato de eventos, el Event Inspector y Animated Data Flow; no modifican simuladores anteriores ni añaden Oracle Database, backend, LLM, credenciales o llamadas externas.
+
+Performance What-If compone snapshots A/B de esos tres motores de rendimiento sin fusionar sus métricas como si tuvieran el mismo alcance. Cada track conserva sus parámetros y timeline inmutables; los resúmenes derivados explicitan su procedencia. La comparabilidad exige población e identidad lógica declaradas: cardinalidades iguales no bastan y Data Warehouse marca volumen o población distinta como no comparable. El orden del track es un recorrido explicativo de modelos locales, no ejecución física, temporal ni predicción del optimizador.
+
+Sprint 8.7 integra esos cinco laboratorios dentro del capítulo 15 **Database Internals & Performance**. `assets/portal.js` centraliza las rutas de rendimiento, conserva los IDs de preview para compatibilidad y espera el evento idempotente `academy:performance-ready` antes de resolver un enlace que dependa de carga diferida. El capítulo registra visitas y cinco actividades educativas en la clave local de progreso existente; una visita aislada no completa el módulo. Presentation Mode reutiliza el gestor común y las acciones del timeline de Buffer Cache, PGA/TEMP, Optimizer y What-If; Diagnostics continúa delegado en AI SQL Intelligence. Esta capa no crea motores, tipos de evento, timers paralelos, backend ni conexiones externas.
+
+El segundo preview, PGA, Work Areas & TEMP, aplica una fórmula local visible sobre filas, unidades de fila, operación y distribución. Su motor emite asignación, procesamiento, escritura/lectura temporal y finalización para clasificar escenarios como Optimal, One-Pass o Multi-Pass educativos. Esta clasificación no reproduce la administración de PGA, los criterios de workarea, el uso de TEMP ni las métricas de Oracle; `SPILL_TEMP` del simulador HASH JOIN histórico permanece con su semántica original. El preview conserva un único timeline, Event Inspector, SQL relacionado, tutor de reglas y Animated Data Flow, y no añade aún capítulo 15, rutas, progreso ni Presentation Mode.
 
 ### Contrato educativo
 
