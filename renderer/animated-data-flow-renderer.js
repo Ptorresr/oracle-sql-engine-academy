@@ -7,6 +7,22 @@
       datafile: [12, 54], buffer: [31, 54], engine: [51, 54], workarea: [73, 54], temp: [72, 84], result: [90, 54],
       components: Object.freeze(["Datafiles / blocks", "Database Buffer Cache", "SQL Execution Engine", "PGA Hash Workarea", "TEMP"])
     }),
+    "buffer-cache": Object.freeze({
+      datafile: [16, 56], buffer: [50, 46], engine: [82, 55],
+      components: Object.freeze(["Datafiles / blocks", "Database Buffer Cache", "SQL Execution Engine"])
+    }),
+    "workarea-temp": Object.freeze({
+      sql: [14, 55], workarea: [47, 43], temp: [50, 78], results: [84, 55],
+      components: Object.freeze(["SQL Operation", "PGA / Work Area", "TEMP", "Results"])
+    }),
+    "optimizer-cardinality": Object.freeze({
+      statistics: [14, 55], estimator: [38, 45], alternative: [63, 55], results: [86, 55],
+      components: Object.freeze(["Statistics & Predicate Inputs", "Cardinality Estimator", "Access / JOIN Alternative", "Logical Result Set"])
+    }),
+    "performance-what-if": Object.freeze({
+      inputs: [12, 48], cache: [39, 42], workarea: [62, 42], temp: [62, 77], results: [88, 48],
+      components: Object.freeze(["Entradas declaradas", "Buffer Cache", "PGA / Work Area", "TEMP condicional", "Resultado lógico"])
+    }),
     comparison: Object.freeze({
       left: [16, 42], right: [16, 68], join: [51, 52], workarea: [68, 76], result: [88, 52],
       components: Object.freeze(["Entrada izquierda", "Entrada derecha", "Operador seleccionado", "Workarea", "Resultado lógico"])
@@ -30,6 +46,23 @@
     hash: Object.freeze({
       datafile: ["datafile", "storage", "datafiles", "block"], buffer: ["buffer cache", "sga"], engine: ["sql execution engine", "table access", "hash join"],
       workarea: ["pga", "workarea", "hash probe", "hash build"], temp: ["temp"], result: ["resultado"]
+    }),
+    "buffer-cache": Object.freeze({
+      datafile: ["datafile", "datafiles", "block", "bloque"], buffer: ["buffer cache", "sga", "cache"], engine: ["sql execution engine", "table access", "sql engine"]
+    }),
+    "workarea-temp": Object.freeze({
+      sql: ["sql operation", "hash join", "sort"], workarea: ["pga", "work area", "workarea", "workarea allocate", "workarea process", "workarea complete"],
+      temp: ["temp", "temp write", "temp read"], results: ["results", "result", "workarea complete"]
+    }),
+    "optimizer-cardinality": Object.freeze({
+      statistics: ["statistics", "statistic", "predicate", "selectivity", "selectividad"], estimator: ["cardinality", "estimator", "estimate", "estimación"],
+      alternative: ["access", "join", "alternative", "index", "scan", "acceso"], results: ["logical result", "results", "result", "resultado", "emit"]
+    }),
+    "performance-what-if": Object.freeze({
+      inputs: ["statistics", "predicate", "selectivity", "cardinality", "estimator", "access", "alternative", "sql execution engine"],
+      cache: ["buffer cache", "cache", "datafile", "block", "table access"],
+      workarea: ["pga", "work area", "workarea", "sort", "hash join"],
+      temp: ["temp"], results: ["results", "result", "resultado", "emit", "logical result"]
     }),
     comparison: Object.freeze({
       left: ["left", "entrada izquierda", "comparación a", "customers", "clientes", "source"], right: ["right", "entrada derecha", "comparación b", "orders", "pedidos", "target"], join: ["hash", "nested", "merge", "join", "loops", "sql execution engine", "operador seleccionado"],

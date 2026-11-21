@@ -3,12 +3,13 @@
   --portal-glow: rgba(76, 217, 223, .16);
   --portal-panel: rgba(16, 25, 39, .88);
   --portal-shadow: 0 20px 50px rgba(0, 0, 0, .24);
+  --portal-sticky-offset: 0px;
 }
 
 .skip-link { position: fixed; top: 12px; left: 12px; z-index: 20; padding: 9px 13px; background: var(--cyan); color: #07131d; border-radius: 8px; transform: translateY(-180%); font-weight: 800; text-decoration: none; }
 .skip-link:focus { transform: translateY(0); }
 .top { position: sticky; top: 0; z-index: 10; box-shadow: 0 10px 30px rgba(0, 0, 0, .16); }
-.section { scroll-margin-top: 84px; }
+.section { scroll-margin-top: var(--portal-sticky-offset); }
 .brand { color: var(--text); text-decoration: none; }
 .portal-action { border: 1px solid #36536e; background: transparent; border-radius: 8px; color: var(--muted); padding: 7px 10px; font-size: .82rem; }
 .portal-action:hover { color: var(--text); border-color: var(--cyan); }
@@ -67,6 +68,12 @@ button.module-card { cursor: pointer; font: inherit; }
 .side a[data-completed]::after { content: "✓"; float: right; color: var(--green); font-weight: 900; }
 .chapter-nav { display: flex; justify-content: space-between; gap: 14px; align-items: center; margin-top: 34px; padding-top: 20px; border-top: 1px solid var(--line); }
 .chapter-nav span { color: var(--muted); font-size: .88rem; text-align: center; }
+.performance-chapter-header { display: grid; gap: 12px; padding: clamp(18px, 3vw, 30px); border: 1px solid var(--oci-border); border-radius: var(--oci-radius); background: var(--oci-surface); box-shadow: var(--oci-shadow); }
+.performance-chapter-header h2, .performance-diagnostics-bridge h3 { margin: 0; }
+.performance-lab-nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; }
+.performance-lab-nav a { min-width: 0; padding: 10px; border: 1px solid var(--oci-border); border-radius: var(--oci-radius); background: var(--oci-surface-soft); color: var(--oci-text); font-weight: 750; text-decoration: none; }
+.performance-lab-nav a:hover, .performance-lab-nav a:focus-visible { border-color: var(--oci-accent); background: var(--oci-hover); }
+.performance-diagnostics-bridge { margin: 18px 0; }
 .case-grid > div { min-width: 0; }
 .case-grid .diagram,
 .case-grid .scroll { max-width: 100%; }
@@ -78,6 +85,7 @@ button.module-card { cursor: pointer; font: inherit; }
   .shell, .side, .main { min-width: 0; width: 100%; }
   .side { max-width: 100%; }
   .workspace { margin: 20px 16px 0; }
+  .performance-lab-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .workspace-heading { display: block; }
   .workspace-status { margin-top: 12px; max-width: none; }
   .breadcrumbs { padding-left: 18px; padding-right: 18px; }
@@ -95,6 +103,7 @@ button.module-card { cursor: pointer; font: inherit; }
   .chapter-nav { flex-wrap: wrap; }
   .chapter-nav .btn { flex: 1 1 160px; text-align: center; }
   .chapter-nav span { flex-basis: 100%; order: -1; }
+  .performance-lab-nav { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {

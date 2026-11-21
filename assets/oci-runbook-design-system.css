@@ -59,6 +59,7 @@ html[data-theme="dark"] {
   --oci-muted: #d6d3d1;
   --oci-subtle: #a8a29e;
   --oci-border: #44403c;
+  --oci-accent-strong: #f4b8ad;
   --oci-accent-soft: rgba(199, 70, 52, 0.18);
   --oci-focus: #f4b8ad;
   --oci-hover: #2f2a27;

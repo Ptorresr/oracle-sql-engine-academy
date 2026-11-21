@@ -27,6 +27,8 @@ assert.equal(finance.nodes.find((node) => node.id === "3").parentId, "1", "inden
 assert.equal(finance.warnings.length, 0, "root indentation does not produce a false ambiguity warning");
 
 const retail = parser.parse(examples.find((example) => example.id === "retail").plan);
+assert.equal(retail.format, "DISPLAY", "retail fixture remains an estimated DISPLAY plan");
+assert.equal(retail.nodes.some((node) => node.metrics.aRows || node.metrics.starts), false, "DISPLAY fixture does not manufacture observed metrics");
 assert.equal(retail.nodes.find((node) => node.id === "1").predicateMarker, true, "asterisk identifier is preserved");
 assert.match(retail.nodes.find((node) => node.id === "3").predicate, /filter/i, "filter predicate associates by id");
 assert.ok(retail.metadata.notes.some((note) => note.includes("ilustrativo")), "notes are preserved");

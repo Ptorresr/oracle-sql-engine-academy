@@ -11,7 +11,7 @@ vm.createContext(context);
 vm.runInContext(fs.readFileSync(path.join(__dirname, "..", "content/runbook-chapters.js"), "utf8"), context, { filename: "content/runbook-chapters.js" });
 
 const runbook = context.oracleAcademyRunbook;
-assert.deepEqual(JSON.parse(JSON.stringify(runbook.chapters.map((chapter) => chapter.id))), ["que", "como", "simulador", "hashjoin", "comparison", "casos", "dba", "internals", "intelligence", "ai", "reto", "ai-internals", "architecture-explorer", "architecture-challenges"], "RunBook preserves chapters 01–13 and appends Architecture Challenges as chapter 14");
+assert.deepEqual(JSON.parse(JSON.stringify(runbook.chapters.map((chapter) => chapter.id))), ["que", "como", "simulador", "hashjoin", "comparison", "casos", "dba", "internals", "intelligence", "ai", "reto", "ai-internals", "architecture-explorer", "architecture-challenges", "database-performance"], "RunBook preserves chapters 01–14 and appends Database Performance as chapter 15");
 assert.equal(runbook.getChapter("intelligence").order, 9, "Intelligence uses a stable chapter order");
 assert.equal(runbook.getChapter("intelligence").route, "#intelligence", "Intelligence has a stable direct route");
 assert.equal(runbook.previous("intelligence").id, "internals", "previous navigation reaches Internals");
@@ -29,5 +29,11 @@ assert.equal(runbook.getChapter("architecture-challenges").order, 14, "Architect
 assert.equal(runbook.getChapter("architecture-challenges").route, "#architecture-challenges", "Architecture Challenges has a stable direct route");
 assert.equal(runbook.previous("architecture-challenges").id, "architecture-explorer", "chapter 14 follows Architecture Explorer");
 assert.deepEqual(JSON.parse(JSON.stringify(runbook.getChapter("architecture-challenges").completionActivities)), ["challenge-started", "challenge-evaluated"], "Challenges completion requires educational activities");
+assert.equal(runbook.getChapter("database-performance").order, 15, "Database Performance uses chapter 15");
+assert.equal(runbook.getChapter("database-performance").route, "#database-performance", "Database Performance has a stable direct route");
+assert.equal(runbook.previous("database-performance").id, "architecture-challenges", "chapter 15 follows Architecture Challenges");
+assert.equal(runbook.next("database-performance"), null, "chapter 15 ends the RunBook");
+assert.deepEqual(JSON.parse(JSON.stringify(runbook.getChapter("database-performance").routes)), ["buffer-cache-io", "pga-workareas-temp", "optimizer-cardinality", "execution-plan-diagnostics", "performance-what-if"], "Database Performance declares the five internal routes");
+assert.deepEqual(JSON.parse(JSON.stringify(runbook.getChapter("database-performance").completionActivities)), ["buffer-step-inspected", "workarea-case-compared", "cardinality-rule-reviewed", "plan-diagnostic-inspected", "performance-comparison-reviewed"], "Database Performance completion requires valid lab activities");
 
 console.log("runbook-chapters: passed");

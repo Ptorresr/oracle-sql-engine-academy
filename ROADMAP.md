@@ -4,6 +4,38 @@
 
 Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Pages y no presenta métricas educativas como telemetría real. Las historias de simulación se aceptan solo si el modelo determinista, el contenido y las vistas sincronizadas están definidos antes del renderizado.
 
+## Sprint 8 — Advanced Database Internals & Performance Lab
+
+**Estado:** implementado y validado localmente en `feature/database-performance-foundation`. La planificación parte de `origin/main` (`ec05173`), que ya incluye Sprint 7 integrado. Los incrementos 8.1–8.7 están preservados sin commit, push, Pull Request ni merge; la publicación queda pendiente de aprobación.
+
+**Objetivo:** ampliar la academia con cinco laboratorios educativos, deterministas y locales sobre Buffer Cache & I/O, PGA/Work Areas/TEMP, Optimizer & Cardinality, Execution Plan Diagnostics y Performance What-If.
+
+**Criterios de aceptación de planificación**
+
+- El inventario prioriza reutilizar los motores HASH JOIN/Comparison, parser/analyzer de planes, Event Inspector, Animated Data Flow, Presentation Mode, RunBook y persistencia local existentes.
+- El contrato conserva los campos base de eventos y propone extensiones compatibles; no introduce un segundo Event Inspector, parser, comparador ni controlador global de reproducción.
+- Cada laboratorio declara las preguntas educativas, tres casos de uso sintéticos, SQL de referencia, supuestos, límites, métricas ilustrativas y perspectivas Developer/DBA.
+- La propuesta reserva el capítulo 15 `#database-performance` y rutas internas sin modificar ni renumerar los capítulos 01–14.
+- La estrategia de pruebas cubre determinismo, seguridad, planes, temas, reduced motion, responsive, navegación, Presentation Mode y GitHub Pages sin Oracle Database real.
+
+**Incrementos propuestos:** 8.1 Foundation & Event Model; 8.2 Buffer Cache & I/O; 8.3 PGA & TEMP; 8.4 Optimizer & Cardinality; 8.5 Execution Plan Diagnostics; 8.6 Performance What-If; 8.7 RunBook, Presentation & QA.
+
+**Documentos de decisión:** `docs/SPRINT8_ARCHITECTURE_PLAN.md`, `docs/SPRINT8_EVENT_CONTRACT.md`, `docs/SPRINT8_SCENARIOS.md` y `docs/SPRINT8_ACCEPTANCE_CRITERIA.md`.
+
+**Entrega 8.1:** `content/performance-scenarios.js` aporta tres escenarios sintéticos e inmutables; `simulation/performance-event-adapter.js` valida/adapta el contrato compatible de eventos, y `tests/performance-event-contract.test.js` cubre contrato, inmutabilidad, determinismo y casos inválidos. Esta fundación no se carga todavía en el runtime ni altera capítulos 01–14.
+
+**Entrega 8.2:** `simulation/buffer-cache-engine.js` materializa el primer motor puro de rendimiento con una regla FIFO educativa, escenarios frío/caliente y patrones declarados, secuenciales o reutilizados. `renderer/buffer-cache-renderer.js`, `ui/buffer-cache-lab.js`, `assets/buffer-cache-lab.css` y `assets/illustrations/buffer-cache-tech.svg` aportan Developer, Flujo conceptual e Internals sincronizados con el único timeline, Event Inspector, SQL relacionado, tutor local y What If. El preview se carga localmente mediante `assets/portal.js`; no añade aún capítulo 15, rutas, progreso ni Presentation Mode. Las métricas y el posible I/O son explícitamente ilustrativos, no telemetría ni algoritmo real de Oracle.
+
+**Entrega 8.3:** `simulation/workarea-temp-engine.js` aplica una fórmula local, visible y determinista para clasificar HASH JOIN o SORT como Optimal, One-Pass o Multi-Pass educativos. Emite `WORKAREA_ALLOCATE`, `WORKAREA_PROCESS`, `TEMP_WRITE`, `TEMP_READ` y `WORKAREA_COMPLETE`; TEMP aparece solo en los dos últimos tipos cuando la regla requiere fases adicionales. `renderer/workarea-temp-renderer.js`, `ui/workarea-temp-lab.js`, `assets/workarea-temp-lab.css` y `assets/illustrations/workarea-temp-tech.svg` presentan SQL Operation, PGA / Work Area, TEMP y Results sobre un único timeline con Event Inspector, SQL relacionado, tutor local, What If y Animated Data Flow. El preview se carga localmente mediante `assets/portal.js`; no añade capítulo 15, rutas, progreso ni Presentation Mode. La clasificación, unidades, pasadas y métricas son ilustrativas y no reproducen la administración de PGA ni los criterios internos de Oracle.
+
+**Entrega 8.4:** `optimizerModel` añade perfiles inmutables de cardinalidad a los tres escenarios. `OracleOptimizerCardinalityEngine` normaliza filas base, selectividad de 0 a 1, estado de estadísticas, índice y distribución; aplica `ceil(filas base × selectividad declarada)` y conserva cero como cero. Su timeline único emite `CARDINALITY_ESTIMATE` → `ACCESS_PATH_SELECTED` → `TABLE_ACCESS` → filas lógicas declaradas. `renderer/optimizer-cardinality-renderer.js`, `ui/optimizer-cardinality-lab.js`, `assets/optimizer-cardinality-lab.css` y `assets/illustrations/optimizer-cardinality-tech.svg` presentan Developer, Execution Plan educativo, Internals, Results, Event Inspector, SQL relacionado, tutor local, What If y Animated Data Flow. Las alternativas son reglas locales visibles, con `decisionBasis`; no son costes ni decisiones del CBO y una observación declarada nunca se presenta como A-Rows. El preview se carga localmente mediante `assets/portal.js` y no añade capítulo 15, rutas, progreso ni Presentation Mode.
+
+**Entrega 8.5:** `simulation/plan-diagnostics-timeline.js` transforma exclusivamente nodos ya parseados y analizados en un único recorrido reversible `PLAN_OPERATOR_START` → `PLAN_OPERATOR_END` por operador. Conserva el plan y sus métricas importadas congelados, limita de forma explícita la reproducción de planes grandes sin ocultar la tabla completa y no rellena ausencias. `ui/sql-intelligence-lab.js` reutiliza el laboratorio Intelligence, Event Inspector, Animated Data Flow, AI Tutor, What If y Presentation Mode existentes para sincronizar la selección de tabla, árbol, SVG y timeline. El preview añade controles locales, evidencia/resultados diagnósticos y la leyenda persistente de que no es una traza física o temporal de Oracle. No crea parser, capítulo 15, rutas, progreso ni Presentation Mode nuevo.
+
+**Entrega 8.6:** `whatIfModel` añade snapshots declarativos y reglas de comparabilidad a Retail, Finanzas y Data Warehouse. `OraclePerformanceWhatIfEngine` compone los contratos públicos de Optimizer, Buffer Cache y Workarea en tracks A/B independientes, sin tipos de evento ni métricas inventadas. `renderer/performance-what-if-renderer.js`, `ui/performance-what-if-lab.js`, `assets/performance-what-if-lab.css` y una infografía SVG local muestran Developer, Execution Plan educativo, Internals, Results, Event Inspector, SQL relacionado, Tutor y Animated Data Flow por track. La equivalencia requiere identidad declarada de población y resultado; en Data Warehouse, cambiar volumen o población marca la comparación como no comparable. No registra capítulo 15, rutas, progreso ni Presentation Mode.
+
+**Entrega 8.7:** `content/runbook-chapters.js`, `content/module-catalog.js`, `index.html` y `assets/portal.js` integran el capítulo 15 **Database Internals & Performance** sin renumerar 01–14. Las rutas internas resuelven de forma centralizada, esperan la carga local e idempotente de los cuatro laboratorios nativos y emiten `academy:performance-ready`; Execution Plan Diagnostics delega en AI SQL Intelligence sin duplicar parser, analyzer ni timeline. El progreso conserva `oracle-sql-academy.joins.progress.v1` y exige una actividad educativa válida por laboratorio. Buffer Cache, PGA/TEMP, Optimizer y What-If registran adaptadores de Presentation Mode que delegan en sus propios timelines. La validación local incluye 36 suites Node, sintaxis, recursos, seguridad estática y Chrome/CDP a 375/768/1440 px; no se añaden motores, eventos, dependencias, backend ni conexiones Oracle.
+
 ## Sprint 0 — Foundation & Development Environment
 
 **Objetivo:** establecer reglas, arquitectura, trazabilidad y evaluación de dependencias sin crear nuevas simulaciones.
@@ -163,7 +195,7 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 ## Sprint 7 — Interactive Learning & Presentation Experience
 
-**Estado:** auditado, validado y publicado en `feature/interactive-learning-presentation`, commit `79e40c2`, PR #9 abierto hacia `main`; pendiente de integración.
+**Estado:** auditado, validado e integrado en `origin/main` mediante PR #9 (merge `ec05173`).
 
 **Criterios de aceptación:**
 

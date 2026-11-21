@@ -1,10 +1,263 @@
 # Session Handoff — Oracle SQL & AI Database Engine Academy
 
+## Sprint 8.7 — Database Performance Integration & Final QA
+
+- **Fecha:** 2026-11-20
+- **Rama:** `feature/database-performance-foundation`.
+- **Estado:** implementado y validado localmente; sin commit, push, Pull Request ni merge.
+- **Alcance:** integra capítulo 15, catálogo, rutas, progreso y Presentation Mode sobre los laboratorios existentes. No crea motores, tipos de eventos, dependencias, backend, LLM, ejecución SQL ni conexiones Oracle.
+
+### Trabajo realizado
+
+- `content/runbook-chapters.js` declara el capítulo 15 `database-performance` con sus cinco rutas y actividades; `content/module-catalog.js` incorpora su tarjeta y `index.html` incorpora el contenedor semántico sin alterar capítulos 01–14.
+- `assets/portal.js` centraliza la resolución de rutas, mueve una sola vez los previews nativos al capítulo, conserva sus IDs, espera la carga secuencial/idempotente y emite `academy:performance-ready`. La ruta de Diagnostics abre el puente hacia AI SQL Intelligence sin duplicar parser, analyzer ni timeline.
+- Buffer Cache añade Results desde datos existentes. Buffer Cache, PGA/TEMP, Optimizer y What-If registran adaptadores completos de Presentation Mode y actividades de progreso; Diagnostics reutiliza el adaptador de Intelligence. El cambio de tema conserva el índice y reduced motion impide Play, manteniendo avance manual.
+- Se corrigieron etiquetas heredadas de los previews en sus plantillas de origen: PGA/TEMP, Optimizer y What-If se presentan como laboratorios 2, 3 y 5 del capítulo 15. No se modificaron sus motores ni escenarios.
+- `tests/database-performance-integration.test.js` cubre de forma estática los contratos de capítulo, rutas, señal de disponibilidad, progreso, Results, APIs de adaptadores y ausencia de nuevos tipos de eventos.
+
+### Validación local
+
+- Seguimiento posterior a la auditoría: `assets/portal.js` mide la barra sticky mediante `ResizeObserver`, sincroniza `--portal-sticky-offset` y corrige solo solapamientos tras el layout; `assets/portal.css` consume ese token con `scroll-margin-top`. CDP comprobó hashes directos con carga diferida, Back/Forward, encabezados visibles y ausencia de overflow a 375/768/1440 px en claro/oscuro. Reduced motion mantiene avance manual con Play deshabilitado. Evidencia temporal: `/private/tmp/oracle-sprint8-close-buffer-375-light.png`, `/private/tmp/oracle-sprint8-close-workarea-768-dark.png`, `/private/tmp/oracle-sprint8-close-optimizer-1440-light.png`, `/private/tmp/oracle-sprint8-close-whatif-1440-dark.png` y `/private/tmp/oracle-sprint8-close-buffer-375-reduced.png`.
+- Preparación de cierre: 36/36 suites Node, sintaxis, recursos locales, secretos y `git diff --check` siguen correctos; la regresión de rutas 01–15 pasó a 375 px. CDP confirmó Tab/Shift+Tab y foco visible, Espacio en los cinco laboratorios, Presentation Mode mediante Espacio/flechas/Escape y reduced motion. El entorno no activa Enter ni flechas de `<select>` nativo mediante inyección CDP, por lo que ambas comprobaciones físicas de escritorio siguen pendientes y no se atribuyen a un defecto de la aplicación.
+- 36/36 suites Node correctas, incluido contrato de eventos, RunBook, Presentation Mode y regresiones previas; `node --check` para módulos, `git diff --check` y sintaxis completados sin error.
+- Chrome/CDP local con caché deshabilitada confirmó capítulo 15 único y cinco roots sin duplicación; rutas directas restauran foco en Buffer, Workarea, Optimizer, Diagnostics y What-If. Las cuatro interacciones y la selección de operador diagnóstico completaron las cinco actividades sin borrar el progreso anterior. Back/Forward conservó el capítulo 15 activo y restauró el foco; Espacio sobre el control Buffer Next avanzó el índice de 0 a 1 con foco visible.
+- Presentation Mode registró y abrió Buffer Cache, PGA/TEMP, Optimizer, What-If e Intelligence; Play/Pause de Buffer usó su mismo estado y Escape cerró/restauró foco. Una carga nueva con reduced motion dejó Play de Presentation deshabilitado. 375/768/1440 px no mostraron overflow del documento ni errores de consola; el cambio de tema conservó el índice. Tras la carga, una interacción What-If sigue funcionando offline; el arranque frío offline no es una capacidad PWA verificada.
+- Evidencia temporal no versionada: `/private/tmp/oracle-sprint87-chapter15-1440-dark-final.png`, `/private/tmp/oracle-sprint87-buffer-cache-io-375-light-final.png`, `/private/tmp/oracle-sprint87-optimizer-cardinality-768-dark-final.png`, `/private/tmp/oracle-sprint87-performance-what-if-1440-light-final.png` y `/private/tmp/oracle-sprint87-buffer-presentation-1440-final.png`.
+
+### Límites y siguiente actividad
+
+- CDP en macOS no modifica la opción de un `<select>` nativo con flechas y su inyección de Enter no activa el botón nativo aunque Espacio sí lo hace; las comprobaciones físicas de esas teclas siguen pendientes de un navegador de escritorio disponible. No se declara conformidad WCAG completa. El binario `--headless --screenshot` mantiene el defecto de PNG negro; las capturas válidas usan CDP `fromSurface: true`.
+- Las rutas de la aplicación y recursos se validaron con un servidor estático local. No hubo solicitudes de runtime de la aplicación fuera de `127.0.0.1`; extensiones propias de Chrome no se consideran recursos de la aplicación. Falta solo aprobación para cualquier commit/publicación.
+
+## Sprint 8.6 — Performance What-If
+
+- **Fecha:** 2026-11-20
+- **Rama:** `feature/database-performance-foundation`.
+- **Estado:** implementado y validado localmente; sin commit, push, Pull Request ni merge.
+- **Alcance:** preview técnico A/B fuera del RunBook. No añade capítulo 15, rutas, progreso ni registro nuevo en Presentation Mode; esas integraciones siguen reservadas para 8.7.
+
+### Trabajo realizado
+
+- `content/performance-scenarios.js` incorpora `whatIfModel` inmutable por escenario, con parámetros permitidos, valores iniciales, restricciones, identidad de población/resultado y reglas de comparabilidad. Retail separa selectividad/índice, Finanzas cache/workarea y Data Warehouse detecta volumen/población distinta.
+- `simulation/performance-what-if-engine.js` expone `normalizeVariant`, `createTrack`, `createComparison` y `stateAt`. Compone mediante las APIs públicas de Optimizer, Buffer Cache y Workarea; cada track conserva timeline, snapshots, procedencia de métricas e identidad lógica. No agrega eventos ni campos al contrato base.
+- `renderer/performance-what-if-renderer.js`, `ui/performance-what-if-lab.js`, `assets/performance-what-if-lab.css` y `assets/illustrations/performance-what-if-tech.svg` ofrecen tracks A/B, modo sincronizado/independiente, controles, cuatro vistas, Event Inspector, SQL relacionado, Tutor local, dos overlays Animated Data Flow y leyendas de limitación.
+- `assets/portal.js` carga el preview local después de Buffer Cache, Workarea y Optimizer. `renderer/animated-data-flow-renderer.js` añade solo anchors/aliases para el nuevo `kind`; no altera rutas anteriores.
+- Se corrigieron dos defectos confirmados durante CDP: el contenedor de tracks tenía overflow móvil por `min-width` heredado y `stateAt` no aceptaba las claves `A/B` de UI. La selección de eventos por teclado ahora restaura el foco después del re-render.
+
+### Validación
+
+- `tests/performance-what-if-engine.test.js` y `tests/performance-what-if-renderer.test.js` cubren determinismo, inmutabilidad, contrato de evento, independencia A/B, Reset, métricas con procedencia, NULL/duplicados declarados, cero, comparabilidad y entradas no permitidas. La regresión final pasó 35/35 suites Node; sintaxis JavaScript, recursos de raíz, `git diff --check`, marcadores de merge, firmas de secretos y llamadas externas en rutas 8.6 también pasaron.
+- Chrome CDP confirmó dos tracks visibles, sincronización con ambos eventos activos resaltados, independencia, selección reversible, foco en el evento re-renderizado, SQL relacionado, Tutor, temas, 375/768/1440 sin overflow propio y `prefers-reduced-motion` con Play deshabilitado y Next manual disponible.
+- Evidencia temporal no versionada: `/private/tmp/oracle-sprint86-whatif-1440.png`, `/private/tmp/oracle-sprint86-whatif-1440-dark-or-light.png`, `/private/tmp/oracle-sprint86-whatif-768.png` y `/private/tmp/oracle-sprint86-whatif-375.png`.
+
+### Límites y siguiente actividad
+
+- El orden del track es un recorrido de explicación entre modelos independientes, no una ejecución física/temporal de Oracle. No hay costes, tiempos, I/O real, CBO, Oracle Database, backend, LLM, servicios externos ni credenciales. Cardinalidad igual no implica equivalencia lógica.
+- No iniciar Sprint 8.7 sin autorización explícita. Mantener intactos los cambios locales 8.1–8.6 y repetir la regresión completa si se alteran los contratos, cargadores, tokens o navegación.
+
+## Sprint 8.5 — Execution Plan Diagnostics
+
+- **Fecha:** 2026-11-20
+- **Rama:** `feature/database-performance-foundation`.
+- **Estado:** implementado y validado localmente; sin commit, push, Pull Request ni merge.
+- **Alcance:** preview técnico local dentro de AI SQL Intelligence. No añade capítulo 15, rutas, progreso, navegación RunBook ni Presentation Mode nuevo; esos cambios siguen reservados para 8.7.
+
+### Trabajo realizado
+
+- Se creó `simulation/plan-diagnostics-timeline.js` con `createTimeline(plan, analysis)` y `stateAt(timeline, index)`. Usa `OraclePerformanceEventAdapter` para emitir pares inmutables `PLAN_OPERATOR_START`/`PLAN_OPERATOR_END` por cada operador ya parseado, con `operatorId`, explicación y `decisionBasis`.
+- El timeline retiene el plan y analyzer originales; `stateAt` devuelve el nodo importado, evidencia disponible, cálculo de cardinalidad ya derivado y hallazgos relacionados. Las estadísticas originales no se copian como métricas ilustrativas ni se completan si faltan.
+- Se estableció `MAX_PLAYBACK_NODES = 160`: un plan grande conserva todos sus nodos importados para tabla/árbol, pero limita de forma explícita la reproducción y muestra una advertencia honesta.
+- Retail se corrigió a fixture `DISPLAY` estimado sin A-Rows/Starts. Finanzas sigue siendo `DISPLAY_CURSOR` con Starts > 1; Data Warehouse conserva Buffers, memoria y `TempSpc` solo en los operadores cuyo texto los contiene.
+- `ui/sql-intelligence-lab.js` usa un único índice diagnóstico para tabla, árbol, SVG, Event Inspector, Results, overlay Animated Data Flow y el registro existente de Presentation Mode. Añade controles Play/Pause/Previous/Next/Reset/velocidad, sin crear una segunda reproducción ni una nueva función de Presentation.
+- `renderer/sql-intelligence-renderer.js` presenta Results como evidencia importada, cálculo derivado, interpretación educativa, hallazgos y límites. `assets/portal.js` carga la fundación de rendimiento una vez antes de Intelligence para garantizar que el adaptador está disponible.
+
+### Validación
+
+- 33 suites Node correctas después de añadir `tests/plan-diagnostics-timeline.test.js`; sintaxis JavaScript y `git diff --check` correctos.
+- El motor prueba determinismo, inmutabilidad, pasos secuenciales, eventos reversibles, DISPLAY sin observación, DISPLAY_CURSOR, Starts > 1 y = 0, E-Rows cero, valores abreviados, NULL/ausencia de métricas, operador desconocido, raíces múltiples, fila completa de plan incompleto, contenido hostil y reproducción limitada sin pérdida de nodos.
+- Chrome CDP validó Retail como `DISPLAY` (4 operadores, 8 eventos, sin A-Rows), Finanzas como `DISPLAY_CURSOR` con cálculo `A-Rows/Starts`, Data Warehouse con `TempSpc` explícito al seleccionar SORT, y un plan de 163 nodos que conserva 163 filas mientras limita el recorrido. HTML/script importado no creó nodos ejecutables ni modificó `window`.
+- Enter selecciona una fila del plan y sincroniza Inspector/Results/timeline; Play/Pause/Reset y 4× recorren el mismo índice. No hubo errores de consola. Las capturas `fromSurface: true` confirmaron 1440 claro/oscuro y 375/768 oscuro sin overflow; reduced motion deshabilita Play y conserva Next manual.
+- Evidencia temporal no versionada: `/private/tmp/oracle-sprint85-retail-1440-light.png`, `/private/tmp/oracle-sprint85-warehouse-plan-1440-dark.png`, `/private/tmp/oracle-sprint85-warehouse-768-dark.png` y `/private/tmp/oracle-sprint85-warehouse-375-dark.png`.
+
+### Límites y siguiente actividad
+
+- El recorrido es una lectura diagnóstica del texto importado, no una traza temporal/física ni un diagnóstico Oracle. DISPLAY no implica estadísticas observadas; DISPLAY_CURSOR depende de sus opciones y columnas presentes. SORT/HASH no infieren TEMP y A-Time/Cost no se convierten en duración.
+- No hay Oracle Database, ejecución SQL, backend, LLM, servicios externos, credenciales ni dependencia nueva. Los hallazgos, Tutor y What If son reglas locales y no recomendaciones del CBO.
+- Esta condición fue superada con autorización al iniciar Sprint 8.6. Mantener los cambios locales 8.1–8.6 intactos y repetir la regresión completa si se altera el contrato de eventos, el parser o los cargadores.
+
+## Sprint 8.4 — Optimizer & Cardinality
+
+- **Fecha:** 2026-11-20
+- **Rama:** `feature/database-performance-foundation`.
+- **Estado:** implementado y validado localmente; sin commit, push, Pull Request ni merge.
+- **Alcance:** preview técnico local de cardinalidad, selectividad, estadísticas declaradas, índices, distribución y alternativas educativas de acceso/JOIN. No añade capítulo 15, navegación RunBook oficial, rutas directas, progreso ni Presentation Mode; esas integraciones siguen reservadas para 8.7.
+
+### Trabajo realizado
+
+- `content/performance-scenarios.js` declara `optimizerModel` inmutable para Retail, Finanzas y Data Warehouse. Cada perfil define filas base, selectividad, estado de estadísticas, índice, distribución, resultado lógico, tratamiento de NULL y observación declarada opcional; los SQL, filas y bloques de origen no cambian.
+- `simulation/optimizer-cardinality-engine.js` normaliza parámetros, usa `ceil(filas base × selectividad declarada)`, conserva cero, expone el redondeo y crea un timeline inmutable `CARDINALITY_ESTIMATE` → `ACCESS_PATH_SELECTED` → `TABLE_ACCESS` → `EMIT_ROW`. El estado separa estimación, observación declarada y ausencia de observación.
+- Las reglas son visibles mediante `decisionBasis`: índice educativo con estadísticas no ausentes, índice disponible y selectividad `≤ 0.1`; Sort Merge educativo con estadísticas disponibles, distribución uniforme y selectividad `≥ 0.5`; Hash Join educativo en los demás casos con filas estimadas. Son hipótesis del laboratorio, no costes ni decisiones del CBO.
+- `renderer/optimizer-cardinality-renderer.js`, `ui/optimizer-cardinality-lab.js`, `assets/optimizer-cardinality-lab.css` y `assets/illustrations/optimizer-cardinality-tech.svg` ofrecen Developer, Execution Plan educativo, Internals, Results, Event Inspector, SQL relacionado, tutor local, What If y Animated Data Flow sincronizados con el mismo timeline. `assets/portal.js` los carga secuencialmente después de Buffer Cache y PGA/TEMP.
+- Se corrigió un defecto visual confirmado: `--oci-accent-strong` no tenía un valor de alto contraste para tema oscuro. El token central ahora usa `#f4b8ad` en oscuro, lo que corrige también los consumidores existentes sin cambiar sus motores.
+- Se reconciliaron referencias desactualizadas: `origin/main` ya contiene Sprint 7 mediante `ec05173`; no queda un PR #9 pendiente en el contexto de Sprint 8.
+
+### Validación
+
+- 32 suites Node correctas: incluye las nuevas `tests/optimizer-cardinality-engine.test.js` y `tests/optimizer-cardinality-renderer.test.js`, además de regresión completa de HASH JOIN, Comparison, Intelligence, AI Internals, Architecture, Presentation, Buffer Cache y PGA/TEMP.
+- Sintaxis correcta en los nuevos archivos y puntos de integración; `git diff --check` sin salida. Las suites cubren determinismo, inmutabilidad, redondeo, selectividad 0/1, cardinalidad cero, estadísticas disponibles/desactualizadas/ausentes, índice, distribución sesgada/uniforme, NULL, duplicados, observación ausente/declarada y compatibilidad de eventos/Animated Data Flow.
+- Chrome CDP local validó selección por teclado de fila, bloque, operador, componente SVG y evento del timeline; el Inspector mantiene un único evento activo, resalta el elemento seleccionado y abre SQL relacionado con `aria-expanded`. El tutor responde con reglas locales. Play/Pause/Previous/Next/Reset y 1×/2×/4× usan el mismo timeline; el cambio de tema conserva el paso activo y no reinicia los seis eventos de Data Warehouse.
+- `Page.captureScreenshot({ fromSurface: true, captureBeyondViewport: true })` produjo evidencia válida en 1440 px claro/oscuro y 375/768 px oscuro. No se detectó overflow horizontal; la grilla pasa a una columna en tablet/móvil y los controles permanecen visibles. Evidencia temporal no versionada: `/private/tmp/oracle-sprint84-optimizer-clip-1440-light.png`, `/private/tmp/oracle-sprint84-optimizer-contrast-1440-dark.png`, `/private/tmp/oracle-sprint84-optimizer-contrast-768-dark.png` y `/private/tmp/oracle-sprint84-optimizer-contrast-375-dark.png`.
+- Una instancia independiente con `--force-prefers-reduced-motion=reduce` confirmó `matchMedia` activo, Play deshabilitado, navegación Next manual disponible y animación continua eliminada. Chrome no reportó errores de consola durante las interacciones verificadas.
+
+### Límites y siguiente actividad
+
+- El laboratorio no ejecuta SQL, no consulta Oracle, no incorpora backend, LLM, credenciales ni dependencias externas. No diagnostica planes, estadísticas, índices, costes, TEMP o rendimiento reales. La observación declarada es una fila lógica de escenario y no A-Rows.
+- No se inicia Sprint 8.5 sin autorización explícita. Antes de ese incremento, mantener todos los cambios locales 8.1–8.4 y repetir la regresión completa si se modifica el contrato de eventos o los tokens centrales.
+
+## Sprint 8.3 — PGA, Work Areas & TEMP
+
+- **Fecha:** 2026-11-19
+- **Rama:** `feature/database-performance-foundation`.
+- **Estado:** implementado y validado localmente; sin commit, push, Pull Request ni merge.
+- **Alcance:** preview técnico local de PGA, Work Areas & TEMP. No añade capítulo 15, navegación RunBook oficial, rutas directas, progreso ni Presentation Mode; esas integraciones siguen reservadas para 8.7.
+
+### Trabajo realizado
+
+- `content/performance-scenarios.js` declara un `workareaModel` inmutable por escenario: Retail inicia Optimal, Finanzas One-Pass y Data Warehouse Multi-Pass con parámetros visibles de operación, filas, unidades de fila, presupuesto y distribución.
+- `simulation/workarea-temp-engine.js` normaliza HASH JOIN/SORT y aplica una fórmula local reproducible: `ceil(filas × unidades de fila × factor de operación × factor de distribución)`. La clasificación es Optimal hasta el presupuesto, One-Pass hasta el doble y Multi-Pass a partir de ahí, con cuatro pasadas temporales educativas como máximo.
+- El timeline emite `WORKAREA_ALLOCATE`, `WORKAREA_PROCESS`, pares ordenados de `TEMP_WRITE`/`TEMP_READ` cuando corresponden y `WORKAREA_COMPLETE`. `workareaState` e `illustrativeMetrics` son snapshots congelados y el adaptador valida presupuesto, trabajo, pasadas y clasificación.
+- `renderer/workarea-temp-renderer.js`, `ui/workarea-temp-lab.js`, `assets/workarea-temp-lab.css` y `assets/illustrations/workarea-temp-tech.svg` implementan las cuatro zonas SQL Operation, PGA / Work Area, TEMP y Results. Reutilizan el único timeline, Event Inspector, SQL relacionado, tutor local, What If y Animated Data Flow con el `kind` `workarea-temp`.
+- `assets/portal.js` carga el preview y sus recursos de forma local y secuencial después de Buffer Cache. `tests/workarea-temp-engine.test.js` y `tests/workarea-temp-renderer.test.js` cubren el motor, renderer e integración estática; las suites de contrato y flujo animado cubren las extensiones compartidas.
+- Se corrigió un defecto confirmado: al cambiar de escenario, los `<select>` conservaban sus primeras opciones en vez del perfil `workareaModel`. `applyScenarioDefaults()` ahora sincroniza los parámetros de escenario antes de crear el timeline y una prueba estática protege esa inicialización.
+
+### Decisiones y límites
+
+- Optimal, One-Pass y Multi-Pass son etiquetas de una regla educativa visible; no son políticas ni diagnósticos de Oracle. PGA/Work Area no se representa como Buffer Cache y TEMP no se infiere desde HASH JOIN ni SORT.
+- Un cache hit no participa en este motor. `TEMP_WRITE` y `TEMP_READ` describen fases lógicas del modelo; no muestran bytes, segmentos, I/O, latencia, concurrencia, particiones ni administración automática/manual de workareas.
+- `SPILL_TEMP` sigue intacto en `OracleHashJoinEngine`. El nuevo motor no lo emite: usa los dos eventos explícitos de lectura/escritura para no cambiar el significado del timeline histórico.
+- No hay Oracle Database, SQL ejecutable, backend, LLM, credenciales, dependencias nuevas ni URLs externas de runtime. Los datos SQL, filas y bloques siguen siendo sintéticos e inmutables.
+
+### Validación
+
+- 30 suites Node correctas después de añadir las dos suites de Sprint 8.3; se cubren determinismo, inmutabilidad, límites, HASH JOIN/SORT, filas cero, pares TEMP balanceados, resultados, contrato y Animated Data Flow.
+- Chrome CDP confirmó One-Pass (Finanzas) y Multi-Pass (Data Warehouse) con el mismo timeline para Previous/Next/Play/Pause/Reset y velocidad 4×. Una doble activación de Play no crea timers duplicados; Pause mantiene el paso y el cambio de tema conserva el estado.
+- Teclado real mediante CDP: Enter/Espacio activan Previous/Next/Reset/Play/Pause y el timeline. Enter selecciona fila, bloque, operador y nodo PGA / Work Area; el inspector conserva el paso activo y actualiza sus datos. SQL relacionado se abre con `aria-expanded="true"`; el tutor responde con reglas locales del evento.
+- Capturas `Page.captureScreenshot({ fromSurface: true })` válidas a 375 px Claro, 768 px Oscuro y 1440 px Claro/Oscuro; no hay overflow horizontal. Se verificaron controles, clasificación, SQL, Event Inspector y las cuatro zonas. Evidencia temporal no versionada: `/private/tmp/oracle-sprint83-workarea-verified-optimal-375-light-header-safe.png`, `/private/tmp/oracle-sprint83-workarea-verified-one-pass-768-dark.png`, `/private/tmp/oracle-sprint83-workarea-verified-one-pass-1440-light.png` y `/private/tmp/oracle-sprint83-workarea-verified-multi-pass-1440-dark.png`.
+- Una instancia nueva de Chrome con `--force-prefers-reduced-motion=reduce` confirmó `matchMedia` activo, Play deshabilitado con explicación, `animation: none`, `transition: 0s` y Next manual disponible.
+- `Google Chrome --headless --screenshot` sigue generando PNG negro por `CVDisplayLinkCreateWithCGDisplay` en este entorno macOS. No se modificó la aplicación por este defecto del capturador; CDP `fromSurface: true` es la evidencia visual válida.
+
+### Siguiente actividad
+
+Sprint 8.3 queda listo para aprobación definitiva como preview técnico. No iniciar Sprint 8.4 sin autorización explícita. Antes del gate 8.7, volver a validar la navegación RunBook, progreso y Presentation Mode al integrar el capítulo 15.
+
+## Sprint 8.2 — Buffer Cache & I/O
+
+- **Fecha:** 2026-11-19
+- **Rama:** `feature/database-performance-foundation`.
+- **Estado:** implementado y validado localmente; sin commit, push, Pull Request ni merge.
+- **Alcance:** preview técnico local de Buffer Cache & I/O. No añade capítulo 15, navegación RunBook oficial, rutas directas, progreso ni Presentation Mode; esas integraciones siguen en 8.7.
+
+### Trabajo realizado
+
+- `simulation/buffer-cache-engine.js` crea eventos inmutables y reproducibles `READ_BLOCK`, `CACHE_HIT`/`CACHE_MISS` y `TABLE_ACCESS`. Usa una capacidad normalizada, estado frío/caliente y patrones declarados, secuenciales o reutilizados sobre los tres escenarios comunes.
+- `simulation/performance-event-adapter.js` admite el snapshot opcional e inmutable `cacheState`; `renderer/animated-data-flow-renderer.js` incorpora anchors y aliases de `buffer-cache` sin modificar otros timelines.
+- `renderer/buffer-cache-renderer.js`, `ui/buffer-cache-lab.js` y `assets/buffer-cache-lab.css` entregan Developer, Flujo conceptual e Internals sincronizados con un único índice, selección de eventos/filas/bloques/operadores/componentes, Event Inspector, SQL relacionado, tutor local y What If.
+- `assets/portal.js` carga de forma secuencial y local el preview; `index.html` solo incorpora su contenedor. `assets/illustrations/buffer-cache-tech.svg` complementa el laboratorio y está registrado como SVG nativo en `docs/VISUAL_ASSETS.md`; los diagramas técnicos interactivos continúan siendo SVG funcional.
+- Se añadieron `tests/buffer-cache-engine.test.js` y `tests/buffer-cache-renderer.test.js`; las pruebas de contrato y Animated Data Flow cubren las extensiones compatibles.
+
+### Decisiones y límites
+
+- FIFO es una regla explícita del modelo educativo, no una implementación ni una afirmación sobre la política de Buffer Cache de Oracle.
+- Una solicitud lógica, un hit/miss conceptual, la entrega de filas y una lectura física conceptual se muestran separados. Todas las métricas son ilustrativas y no son AWR, ASH, telemetría, latencia, estadística de instancia ni I/O real.
+- No hay Oracle Database, SQL ejecutable, backend, LLM, credenciales, URL de runtime externa ni dependencia nueva. Los escenarios y resultados base permanecen inmutables.
+- El laboratorio reutiliza un único timeline e inspector. No se registra aún en Presentation Mode para no exponer controles incompletos.
+
+### Validación
+
+- 28 suites Node correctas, incluidas las nuevas de Buffer Cache, contrato y flujo animado; regresiones de JOINs, HASH JOIN, Comparison, SQL Intelligence, AI Internals, Architecture y Presentation también superadas.
+- Sintaxis Node de los módulos añadidos, `test -s index.html`, detección de marcadores de merge y `git diff --check`: correctos.
+- Chrome CDP con `Page.captureScreenshot({ fromSurface: true })` entregó evidencia visual válida en claro a 1440 px, oscuro a 1440 px, y oscuro a 768/375 px, sin overflow de página o del laboratorio. Se revisaron controles, SQL, tarjetas Developer/Plan/Internals, ilustración, SVG técnico, timeline e inspector; no se observan superposiciones ni texto cortado en esas capturas.
+- Los estados visuales verifican `CACHE_MISS`, `CACHE_HIT` y reemplazo FIFO con capacidad uno. El hit conserva una lectura física conceptual de `1` tras dos solicitudes; el segundo miss sustituye el bloque residente y eleva solamente el contador conceptual declarado. Las leyendas visibles mantienen la separación entre solicitud lógica, I/O conceptual y métrica ilustrativa.
+- Play, Pause, Previous, Next y Reset operan sobre el único timeline. A 750 ms, 1× conserva el paso inicial, 2× avanza un paso y 4× avanza dos; Pause conserva el índice. Enter y Espacio activan botones nativos, Tab/Shift+Tab avanzan/restauran foco visible, Enter selecciona un evento del timeline y Espacio selecciona un componente SVG. El selector de velocidad es un `<select>` nativo; Chrome headless no aplicó `ArrowDown` en la inyección CDP de macOS, por lo que esa única interacción de plataforma permanece como comprobación manual recomendada.
+- Un proceso Chrome nuevo con `--force-prefers-reduced-motion=reduce` confirmó que Play se deshabilita con explicación, Next continúa disponible y la ruta animada usa `animation: none`.
+- `Google Chrome --headless --screenshot`, incluso con SwiftShader, produce PNG negro por `CVDisplayLinkCreateWithCGDisplay` en este entorno macOS. No se modificó la aplicación para compensar un defecto del capturador. CDP `fromSurface: true` es la alternativa fiable utilizada; la variante `fromSurface: false` permanece negra.
+- Evidencia temporal no versionada: `/private/tmp/oracle-sprint82-buffer-desktop-light.png`, `/private/tmp/oracle-sprint82-buffer-cache-miss-dark.png`, `/private/tmp/oracle-sprint82-buffer-cache-hit-dark.png`, `/private/tmp/oracle-sprint82-buffer-fifo-replacement-dark.png`, `/private/tmp/oracle-sprint82-buffer-mobile-dark.png` y `/private/tmp/oracle-sprint82-buffer-tablet-dark.png`.
+
+### Siguiente actividad
+
+Sprint 8.2 queda listo para aprobación definitiva como preview técnico. No iniciar Sprint 8.3 sin autorización explícita. Antes del gate 8.7, realizar una comprobación manual del selector nativo con flechas en un navegador de escritorio y volver a validar navegación RunBook, progreso y Presentation Mode cuando exista el capítulo 15.
+
+## Sprint 8.1 — Foundation & Event Model
+
+- **Fecha:** 2026-11-19
+- **Rama:** `feature/database-performance-foundation`, creada desde la rama de planificación basada en `origin/main` (`ec05173`).
+- **Estado:** implementado y validado localmente; sin commit, push, Pull Request ni merge.
+- **Alcance:** modelo de escenarios y adaptador de contrato únicamente. No se carga código Sprint 8 en `index.html` ni se alteran RunBook, capítulos 01–14, CSS, UI o simuladores existentes.
+
+### Trabajo realizado
+
+- `content/performance-scenarios.js` declara escenarios inmutables de Retail, Finanzas y Data Warehouse con SQL de referencia, bloques/filas sintéticos, NULL visible, patrones de acceso, estadísticas/memoria educativas, supuestos y límites.
+- `simulation/performance-event-adapter.js` conserva los ocho campos base, reconoce los eventos existentes y candidatos, valida extensiones opcionales, congela eventos/timelines y permite advertencias explícitas de tipos desconocidos durante una migración.
+- `tests/performance-event-contract.test.js` cubre esquema, IDs, inmutabilidad, NULL, retrocompatibilidad con `READ_BLOCK`, explicación estructurada, determinismo, secuencia de pasos y entradas inválidas.
+- La documentación de planificación, contrato, escenarios, criterios y roadmap refleja el estado real de 8.1.
+
+### Decisiones y límites
+
+- El adaptador no genera eventos y no modifica `OracleHashJoinEngine`, `OracleJoinComparisonEngine`, `OraclePlanParser`, `OraclePlanAnalyzer`, Event Inspector, Animated Data Flow ni Presentation Mode.
+- Los eventos candidatos de workarea, TEMP, cardinalidad y plan se validan como nombres compatibles, pero todavía no describen una ejecución funcional ni aparecen en la interfaz.
+- Todas las métricas del catálogo son parámetros o unidades educativas. No hay conexión Oracle, SQL ejecutable, plan importado nuevo, LLM, backend, cronómetro de rendimiento ni credencial.
+- La fundación no se incorpora al loader para evitar exponer un laboratorio incompleto; la carga diferida y el capítulo 15 pertenecen a 8.7.
+
+### Validación
+
+- Sintaxis Node de los tres archivos nuevos: correcta.
+- `tests/performance-event-contract.test.js`: correcta.
+- Regresión completa: 26 suites Node correctas, incluidas HASH JOIN, Comparison, parser/analyzer, AI Internals, Architecture, Presentation, RunBook y temas.
+- `test -s index.html`, detección de marcadores de merge y `git diff --check`: correctos.
+
+### Siguiente actividad
+
+Solicitar aprobación para **Sprint 8.2 — Buffer Cache & I/O**. Antes de comenzar, confirmar las reglas educativas de capacidad/reemplazo conceptual y el diseño de la vista sin representar un algoritmo de Buffer Cache real.
+
+## Sprint 8 — Architecture & Implementation Planning
+
+- **Fecha:** 2026-11-19
+- **Rama:** `docs/sprint8-architecture-plan`, creada desde `origin/main` en `ec05173`.
+- **Estado:** planificación documental completada; Sprint 8 no está implementado, no hay commit, push, Pull Request ni merge.
+- **Base verificada:** `origin/main` incluye la integración de Sprint 7 mediante el merge de PR #9.
+
+### Trabajo realizado
+
+- Se verificaron los contratos reales de `OracleHashJoinEngine`, `OracleJoinComparisonEngine`, `OraclePlanParser`, `OraclePlanAnalyzer`, `OracleSqlWhatIfEngine`, `OracleAnimatedDataFlow`, `OraclePresentationMode`, el RunBook y sus cargadores locales.
+- Se creó `docs/SPRINT8_ARCHITECTURE_PLAN.md` con inventario reutilizable, cinco capas, diseño de los cinco laboratorios, estrategia visual, propuesta de capítulo 15, siete incrementos, riesgos y límites de veracidad educativa.
+- Se creó `docs/SPRINT8_EVENT_CONTRACT.md` con el contrato implementado, reglas de retrocompatibilidad, taxonomía existente, eventos candidatos, determinismo y tratamiento de métricas.
+- Se creó `docs/SPRINT8_SCENARIOS.md` con tres casos sintéticos de Retail, Finanzas y Data Warehouse para cada laboratorio, SQL de referencia y límites.
+- Se creó `docs/SPRINT8_ACCEPTANCE_CRITERIA.md` con gates por incremento, casos negativos, regresión, accesibilidad, responsive, seguridad y definición de terminado.
+- Se actualizó `ROADMAP.md` exclusivamente para registrar Sprint 8 como planificado.
+
+### Decisiones y límites
+
+- No se modificaron simuladores, renderers, UI, navegación, `index.html`, motores, estilos, recursos, dependencias ni `main`.
+- Los ocho campos base del contrato de eventos permanecen obligatorios; `WORKAREA_ALLOCATE`, `WORKAREA_GROW`, `SORT_RUN`, `TEMP_WRITE`, `TEMP_READ`, `CARDINALITY_ESTIMATE`, `ACCESS_PATH_SELECTED`, `PLAN_OPERATOR_START` y `PLAN_OPERATOR_END` son candidatos, no implementaciones ni decisiones finales.
+- La futura integración reutilizará el único Event Inspector, el parser de `DBMS_XPLAN`, los tracks de Comparison y `OraclePresentationMode`; no se crearán controladores ni comparadores paralelos.
+- Todo valor de rendimiento sintético será ilustrativo. Los valores importados de `DBMS_XPLAN` conservarán su alcance y ausencia; no se inventarán estadísticas de ejecución ni se presentará Cost como tiempo.
+- La propuesta de capítulo 15 y sus rutas está documentada, pero la navegación real de capítulos 01–14 permanece intacta.
+
+### Validación de esta sesión
+
+- `git status` inicial limpio y `git fetch origin --prune` ejecutado antes de crear la rama de planificación.
+- Se inspeccionaron exports y contratos reales de los módulos existentes antes de proponer nombres, campos o reutilización.
+- No se ejecutaron suites Node nuevas: esta rama contiene solo documentación y no implementa código de Sprint 8. Las 25 suites de Sprint 7 permanecen como regresión obligatoria planificada para 8.7.
+
+### Siguiente actividad
+
+Solicitar aprobación explícita para iniciar **Sprint 8.1 — Foundation & Event Model**. Antes de implementar, revisar y aprobar los eventos candidatos, el schema declarativo de escenarios, los IDs/rutas definitivos del capítulo 15 y la matriz de pruebas. Mantener la rama de planificación sin commit, push, Pull Request ni merge hasta nueva autorización.
+
 ## Sprint 7 — Interactive Learning & Presentation Experience
 
 - **Fecha:** 2026-11-18
 - **Rama:** `feature/interactive-learning-presentation`, creada desde `origin/main` con PR #8 integrado.
-- **Estado:** implementado y validado; commit `79e40c2` publicado, PR #9 abierto hacia `main`, sin merge.
+- **Estado histórico reconciliado:** implementado y validado; commit `79e40c2` fue integrado en `origin/main` mediante PR #9 (merge `ec05173`).
 - **Alcance:** Presentation Mode para cinco laboratorios y capítulo 14 Architecture Challenges.
 
 ### Trabajo realizado

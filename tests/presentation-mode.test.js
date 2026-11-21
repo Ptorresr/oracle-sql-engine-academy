@@ -11,6 +11,6 @@ assert.ok(manager.includes("isFormField"));
 assert.ok(manager.includes("supportsPlayback === false"));
 assert.ok(css.includes("prefers-reduced-motion"));
 assert.ok(css.includes("presentation-mode"));
-for (const file of ["ui/hash-join-visualizer.js", "ui/join-comparison-lab.js", "ui/sql-intelligence-lab.js", "ui/oracle-ai-internals-lab.js", "ui/architecture-explorer.js"]) assert.ok(fs.readFileSync(file, "utf8").includes("OraclePresentationMode"), file);
+for (const file of ["ui/hash-join-visualizer.js", "ui/join-comparison-lab.js", "ui/sql-intelligence-lab.js", "ui/oracle-ai-internals-lab.js", "ui/architecture-explorer.js", "ui/buffer-cache-lab.js", "ui/workarea-temp-lab.js", "ui/optimizer-cardinality-lab.js", "ui/performance-what-if-lab.js"]) assert.ok(fs.readFileSync(file, "utf8").includes("OraclePresentationMode"), file);
 assert.ok(fs.readFileSync("content/runbook-chapters.js", "utf8").includes('id: "architecture-challenges"'));
 console.log("presentation-mode: passed");

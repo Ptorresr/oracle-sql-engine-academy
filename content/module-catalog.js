@@ -18,6 +18,15 @@ window.oracleAcademyModules = Object.freeze([
     status: "available"
   },
   {
+    id: "database-performance",
+    title: "Database Internals & Performance",
+    track: "Oracle Database · Laboratorio local",
+    description: "Cinco experiencias deterministas sobre Buffer Cache, PGA/TEMP, cardinalidad, diagnóstico de planes y comparación de hipótesis.",
+    action: "Abrir Performance Lab",
+    target: "database-performance",
+    status: "lab"
+  },
+  {
     id: "ai-database",
     title: "AI SQL Intelligence",
     track: "Planes DBMS_XPLAN · Laboratorio local",
