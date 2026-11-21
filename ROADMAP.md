@@ -6,11 +6,11 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 
 ## Sprint 8 — Advanced Database Internals & Performance Lab
 
-**Estado:** implementado y validado localmente en `feature/database-performance-foundation`. La planificación parte de `origin/main` (`ec05173`), que ya incluye Sprint 7 integrado. Los incrementos 8.1–8.7 están preservados sin commit, push, Pull Request ni merge; la publicación queda pendiente de aprobación.
+**Estado:** completado e integrado en `main` mediante el PR #10 (**MERGED**) y el squash commit `9926ba4`. El capítulo 15 **Database Internals & Performance** ya está disponible con sus cinco actividades educativas; la regresión posterior confirmó 36/36 suites Node correctas.
 
 **Objetivo:** ampliar la academia con cinco laboratorios educativos, deterministas y locales sobre Buffer Cache & I/O, PGA/Work Areas/TEMP, Optimizer & Cardinality, Execution Plan Diagnostics y Performance What-If.
 
-**Criterios de aceptación de planificación**
+**Criterios de aceptación cumplidos**
 
 - El inventario prioriza reutilizar los motores HASH JOIN/Comparison, parser/analyzer de planes, Event Inspector, Animated Data Flow, Presentation Mode, RunBook y persistencia local existentes.
 - El contrato conserva los campos base de eventos y propone extensiones compatibles; no introduce un segundo Event Inspector, parser, comparador ni controlador global de reproducción.
@@ -18,9 +18,13 @@ Cada sprint conserva la experiencia previa, entrega valor visible en GitHub Page
 - La propuesta reserva el capítulo 15 `#database-performance` y rutas internas sin modificar ni renumerar los capítulos 01–14.
 - La estrategia de pruebas cubre determinismo, seguridad, planes, temas, reduced motion, responsive, navegación, Presentation Mode y GitHub Pages sin Oracle Database real.
 
-**Incrementos propuestos:** 8.1 Foundation & Event Model; 8.2 Buffer Cache & I/O; 8.3 PGA & TEMP; 8.4 Optimizer & Cardinality; 8.5 Execution Plan Diagnostics; 8.6 Performance What-If; 8.7 RunBook, Presentation & QA.
+**Incrementos completados:** 8.1 Foundation & Event Model; 8.2 Buffer Cache & I/O; 8.3 PGA & TEMP; 8.4 Optimizer & Cardinality; 8.5 Execution Plan Diagnostics; 8.6 Performance What-If; 8.7 RunBook, Presentation & QA.
 
 **Documentos de decisión:** `docs/SPRINT8_ARCHITECTURE_PLAN.md`, `docs/SPRINT8_EVENT_CONTRACT.md`, `docs/SPRINT8_SCENARIOS.md` y `docs/SPRINT8_ACCEPTANCE_CRITERIA.md`.
+
+### Registro histórico de incrementos
+
+Las entregas 8.1–8.6 describen el alcance de cada incremento antes de su integración final. Sprint 8.7 consolidó esos laboratorios en el capítulo 15, por lo que las referencias a previews o a integración futura se conservan únicamente como contexto histórico.
 
 **Entrega 8.1:** `content/performance-scenarios.js` aporta tres escenarios sintéticos e inmutables; `simulation/performance-event-adapter.js` valida/adapta el contrato compatible de eventos, y `tests/performance-event-contract.test.js` cubre contrato, inmutabilidad, determinismo y casos inválidos. Esta fundación no se carga todavía en el runtime ni altera capítulos 01–14.
 
